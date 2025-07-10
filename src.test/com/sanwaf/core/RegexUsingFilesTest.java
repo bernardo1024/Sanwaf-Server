@@ -33,7 +33,7 @@ public class RegexUsingFilesTest {
 
     request = new MockHttpServletRequest();
     request.addParameter("regex1", "123-456-7890");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -44,7 +44,7 @@ public class RegexUsingFilesTest {
 
     request = new MockHttpServletRequest();
     request.addParameter("regex2", "123-456-7890");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -55,7 +55,7 @@ public class RegexUsingFilesTest {
 
     request = new MockHttpServletRequest();
     request.addParameter("string", "123456");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
 }

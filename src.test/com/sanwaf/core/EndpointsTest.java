@@ -35,7 +35,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("char", "a");
     Boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -56,7 +56,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("endpointRegex", "foo@bar.com");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
@@ -66,19 +66,19 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "10");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "100");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "20");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -102,7 +102,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -117,7 +117,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("required", "a");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -132,7 +132,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("open", "(123) 456-7890 abz ABZ");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
@@ -141,13 +141,13 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "(123) 456-7890 abz ABZ");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "(123) 456-7890 zba ZBA");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -237,7 +237,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -254,14 +254,14 @@ public class EndpointsTest {
     request.addParameter("related-simple-child", "aaa");
     request.addParameter("related-simple-parent", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-child", "aaa");
     request.addParameter("related-simple-parent", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -279,28 +279,28 @@ public class EndpointsTest {
     request.addParameter("related-invalid-child", "aaa");
     request.addParameter("related-invalid-parent", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-invalid-child", "aaa");
     request.addParameter("related-invalid-parent", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-invalid-child", "");
     request.addParameter("related-invalid-parent", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/invalid-uri/test.jsp");
     request.addParameter("related-invalid-child", "");
     request.addParameter("related-invalid-parent", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     // related-invalidX-child<related>(related-invalidX1-parent)(related-invalidX2-parent)</related>
     request = new MockHttpServletRequest();
@@ -308,7 +308,7 @@ public class EndpointsTest {
     request.addParameter("related-invalidX-child", "");
     request.addParameter("related-invalidX1-parent", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
@@ -329,7 +329,7 @@ public class EndpointsTest {
     request.addParameter("related-equals-child", "aaa");
     request.addParameter("related-equals-parent", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -401,7 +401,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-or-no-parent-child", "");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -415,7 +415,7 @@ public class EndpointsTest {
     request.addParameter("related-simple-or-no-parent-child", "abcdefg");
     request.addParameter("related-simple-or-no-parent-parent", "Yes");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
@@ -426,14 +426,14 @@ public class EndpointsTest {
     request.addParameter("related-simple-or-child", "aaa");
     request.addParameter("related-simple-or-parent", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-or-child", "aaa");
     request.addParameter("related-simple-or-parent", "bbb");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -454,7 +454,7 @@ public class EndpointsTest {
     request.addParameter("related-simple-or-child", "aaa");
     request.addParameter("related-simple-or-parent", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
@@ -466,7 +466,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "aaa");
     request.addParameter("related-or-parent2", "ccc");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -474,7 +474,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "bbb");
     request.addParameter("related-or-parent2", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -482,7 +482,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "");
     request.addParameter("related-or-parent2", "ccc");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -506,7 +506,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "");
     request.addParameter("related-or-parent2", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -514,7 +514,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "");
     request.addParameter("related-or-parent2", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
@@ -527,7 +527,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "ccc");
     request.addParameter("related-and-or-parent3", "eee");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -536,7 +536,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "");
     request.addParameter("related-and-or-parent3", "eee");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -563,7 +563,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "");
     request.addParameter("related-and-or-parent3", "eee");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -572,7 +572,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "");
     request.addParameter("related-and-or-parent3", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -581,7 +581,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "ccc");
     request.addParameter("related-and-or-parent3", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     // related-and-or-childX<related>(related-and-or-parentX1:aaa||bbb)&&(related-and-or-parentX2:ccc||ddd)||(related-and-or-parentX3:eee||fff)||(related-and-or-parentX4)</related>
     request = new MockHttpServletRequest();
@@ -635,7 +635,7 @@ public class EndpointsTest {
     request.addParameter("parm1", "aaa");
     request.addParameter("parm2", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictTrue.jsp");
@@ -650,7 +650,7 @@ public class EndpointsTest {
     request.addParameter("parm2", "aaa");
     request.addParameter("parm3", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictTrue.jsp");
@@ -668,13 +668,13 @@ public class EndpointsTest {
     request.addParameter("parm3", "aaa");
     request.addParameter("parmEXTRA", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/notstrictNoTag.jsp");
     request.addParameter("foobar", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLess.jsp");
@@ -690,7 +690,7 @@ public class EndpointsTest {
     request.addParameter("parm1", "aaa");
     request.addParameter("parm2", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLess.jsp");
@@ -698,7 +698,7 @@ public class EndpointsTest {
     request.addParameter("parm2", "aaa");
     request.addParameter("parm3", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLessWord.jsp");
@@ -714,7 +714,7 @@ public class EndpointsTest {
     request.addParameter("parm1", "aaa");
     request.addParameter("parm2", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
 }

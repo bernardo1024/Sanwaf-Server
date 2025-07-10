@@ -34,7 +34,7 @@ public class AttributesTest {
     request.addParameter("numericdelimited", "aaaaaaaaaa");
     request.addParameter("numericdelimited", "bbbbbbbbbb");
     boolean threat = sanwaf.isThreatDetected(request);
-    assertTrue(!threat);
+    assertFalse(threat);
     resetSanwafAtts();
   }
 
@@ -47,7 +47,7 @@ public class AttributesTest {
     request.addParameter("numericdelimited", "aaaaaaaaaa");
     request.addParameter("numericdelimited", "bbbbbbbbbb");
     boolean threat = sanwaf.isThreatDetected(request);
-    assertTrue(!threat);
+    assertFalse(threat);
     resetSanwafAtts();
   }
 

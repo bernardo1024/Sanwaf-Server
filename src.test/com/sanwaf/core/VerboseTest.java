@@ -36,14 +36,14 @@ public class VerboseTest {
   public void verboseDisabledTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf.xml");
     String s = outContent.toString();
-    assertTrue(!s.contains("Settings:"));
-    assertTrue(!s.contains("RegexAlways=true"));
-    assertTrue(!s.contains("Shield Secured List: *Ignored*"));
-    assertTrue(!s.contains("Except for (exclusion list):"));
-    assertTrue(!s.contains("StringRegexs:"));
-    assertTrue(!s.contains("customPatterns:"));
-    assertTrue(!s.contains("Configured/Secured Entries:"));
-    assertTrue(!s.contains("customPatterns"));
+    assertFalse(s.contains("Settings:"));
+    assertFalse(s.contains("RegexAlways=true"));
+    assertFalse(s.contains("Shield Secured List: *Ignored*"));
+    assertFalse(s.contains("Except for (exclusion list):"));
+    assertFalse(s.contains("StringRegexs:"));
+    assertFalse(s.contains("customPatterns:"));
+    assertFalse(s.contains("Configured/Secured Entries:"));
+    assertFalse(s.contains("customPatterns"));
   }
 
   @Test
@@ -51,7 +51,7 @@ public class VerboseTest {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-verbose.xml");
     String s = outContent.toString();
     assertTrue(s.contains("Settings:"));
-    assertTrue(!s.contains("RegexAlways=true"));
+    assertFalse(s.contains("RegexAlways=true"));
     assertTrue(s.contains("StringRegexs:"));
     assertTrue(s.contains("customPatterns:"));
     assertTrue(s.contains("Secured Items:"));
@@ -65,7 +65,7 @@ public class VerboseTest {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-forceRegex.xml");
       MockHttpServletRequest request = new MockHttpServletRequest();
       request.addParameter("modeParameter", "foobarfoobar");
-      assertTrue(!sanwaf.isThreatDetected(request));
+      assertFalse(sanwaf.isThreatDetected(request));
 
       request = new MockHttpServletRequest();
       request.addParameter("xxxx", "<script>");
@@ -82,7 +82,7 @@ public class VerboseTest {
     assertTrue(s.contains("forceStringPatterns=true"));
     assertTrue(s.contains("Shield Secured List: *Ignored*"));
     assertTrue(s.contains("Except for (exclusion list):"));
-    assertTrue(!s.contains("Configured/Secured Entries:"));
+    assertFalse(s.contains("Configured/Secured Entries:"));
     assertTrue(s.contains("customPatterns"));
     assertTrue(s.contains("date="));
   }

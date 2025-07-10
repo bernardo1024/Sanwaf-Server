@@ -163,7 +163,7 @@ public class SanwafTest {
     boolean xssAlways = shield.regexAlways;
     shield.regexAlways = true;
     boolean b = sanwaf.isThreatDetected(null);
-    assertTrue(!b);
+    assertFalse(b);
 
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();

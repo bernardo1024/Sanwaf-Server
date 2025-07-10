@@ -39,7 +39,7 @@ public class SanwafIsThreatTest {
   @Test
   public void testThreatWithNull() {
     boolean b = sanwaf.isThreat(null);
-    assertTrue(!b);
+    assertFalse(b);
   }
 
   @Test

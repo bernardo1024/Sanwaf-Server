@@ -38,7 +38,7 @@ public class SanwafChildShieldTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "javascript: should pass short string has no javascript: test");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertTrue(!result);
+    assertFalse(result);
   }
 
   @Test
@@ -53,7 +53,7 @@ public class SanwafChildShieldTest {
   public void testIsThreatNoMaxViolation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     String value = "javascript: should pass short string has no javascript: test";
     Boolean result = sanwaf.isThreat(value);
-    assertTrue(!result);
+    assertFalse(result);
   }
 
   @Test
