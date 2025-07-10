@@ -168,7 +168,7 @@ public class ItemFactory {
   static final String SEP_START = "{";
   static final String SEP_END = "}";
   static final String XML_ERROR_MSG = "errorMessages";
-  static final String XML_ERROR_MSG_ALHPANUMERIC = "alphanumeric";
+  static final String XML_ERROR_MSG_ALPHANUMERIC = "alphanumeric";
   static final String XML_ERROR_MSG_ALPHANUMERIC_AND_MORE = "alphanumericAndMore";
   static final String XML_ERROR_MSG_CHAR = "char";
   static final String XML_ERROR_MSG_NUMERIC = "numeric";
@@ -189,7 +189,7 @@ public class ItemFactory {
 
   static void setErrorMessages(Map<String, String> map, Xml xmlString) {
     Xml xml = new Xml(xmlString.get(XML_ERROR_MSG));
-    map.put(String.valueOf(Types.ALPHANUMERIC), xml.get(XML_ERROR_MSG_ALHPANUMERIC));
+    map.put(String.valueOf(Types.ALPHANUMERIC), xml.get(XML_ERROR_MSG_ALPHANUMERIC));
     map.put(String.valueOf(Types.ALPHANUMERIC_AND_MORE), xml.get(XML_ERROR_MSG_ALPHANUMERIC_AND_MORE));
     map.put(String.valueOf(Types.CHAR), xml.get(XML_ERROR_MSG_CHAR));
     map.put(String.valueOf(Types.NUMERIC), xml.get(XML_ERROR_MSG_NUMERIC));
