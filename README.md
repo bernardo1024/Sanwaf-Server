@@ -224,21 +224,21 @@ Also note the **secured section** contains the following groups: endpoints, para
 	<cookies></cookies>		- list of cookies to secure
 	
 #### Endpoint Structure
-	- Endpoints are groupings of parameters so additional validation can occur, such as strict parameters values and simple to complex relationships
-	- <mode></mode> defines how the endpoint will be processed. valid modes are: BLOCK/DISABLED/DETECT/DETECT_ALL
+        - Endpoints are groupings of parameters so additional validation can occur, such as strict parameter values and simple to complex relationships
+        - <mode></mode> defines how the endpoint will be processed. valid modes are: BLOCK/DISABLED/DETECT/DETECT_ALL
 		where:
 		  BLOCK      - request will be blocked for the given endpoint
 		  DISABLED   - endpoint will be ignored
 		  DETECT     - log hits to warnings log the first item detected
 		  DETECT_ALL - log hits to warnings log all items that match 
 	- <uri></uri> defines the endpoint (use the ::: separator to specify multiple URIs)
-	- <strict></strict> indicates to fail if any items specfied are missing 
+        - <strict></strict> indicates to fail if any items specified are missing
 	   or if non-defined items are in the request (missing or extra parms cause failure)
 	   if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  
 	   Use "<" or "less" to not fail if there are less parameters than specified.
 	- Endpoints have a list of Items to secure for the specific URI
-	- See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declaritive data validation
-	- Sanwaf-ui-2-server can  automatically generate endpoint entries from annotated html/jsp files.
+        - See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declarative data validation
+        - Sanwaf-ui-2-server can automatically generate endpoint entries from annotated html/jsp files.
 		- for example, the Sanwaf-UI project allows you to add attributes to html elements that perform validation on the browser
 			the Sanwaf-ui-2-server scans your files looking for the attributes and automatically generates the XML
 	<endpoints>
