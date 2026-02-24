@@ -1,26 +1,28 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.IOException;
 
-public class CustomPropertiesFooTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class CustomPropertiesFooTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @Test
-  public void fooXmlResourceTest() {
-    try {
+  public void fooXmlResourceTest()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-foo.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
 

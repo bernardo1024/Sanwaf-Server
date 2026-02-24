@@ -1,29 +1,37 @@
 package com.sanwaf.core;
 
-public class UnitTestResult {
+public class UnitTestResult
+{
   long start = 0;
   long end = 0;
   int pass = 0;
   int fail = 0;
   StringBuilder errors = new StringBuilder();
 
-  public void start() {
+  public void start()
+  {
     start = System.nanoTime();
   }
 
-  public void end() {
+  public void end()
+  {
     end = System.nanoTime();
   }
 
-  public final long getTestTime() {
+  public final long getTestTime()
+  {
     return end - start;
   }
 
-  public long getAvgTime() {
+  public long getAvgTime()
+  {
     int i = pass + fail;
-    if (i > 0) {
+    if (i > 0)
+    {
       return (end - start) / (pass + fail);
-    } else {
+    }
+    else
+    {
       return end - start;
     }
   }

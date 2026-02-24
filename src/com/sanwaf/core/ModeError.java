@@ -1,12 +1,14 @@
 package com.sanwaf.core;
 
 //used to return true/false/null
-class ModeError {
+class ModeError
+{
   boolean error = false;
   boolean isSize = false;
   boolean isUri = false;
-  
-  ModeError(boolean error){
+
+  ModeError(boolean error)
+  {
     this.error = error;
   }
 }

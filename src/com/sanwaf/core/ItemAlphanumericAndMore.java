@@ -1,11 +1,12 @@
 package com.sanwaf.core;
 
+import jakarta.servlet.ServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.servlet.ServletRequest;
-
-final class ItemAlphanumericAndMore extends ItemAlphanumeric {
+final class ItemAlphanumericAndMore extends ItemAlphanumeric
+{
   static final String INVALID_AN_MORE = "Invalid Alphanumeric And More: ";
   static final String SPACE = "\\s";
   static final String TAB = "\\t";
@@ -18,44 +19,59 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
 
   char[] moreChars = new char[0];
 
-  ItemAlphanumericAndMore(ItemData id) {
+  ItemAlphanumericAndMore(ItemData id)
+  {
     super(id);
     setMoreChars(id.type);
   }
 
   @Override
-  List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(final Shield shield, final String value)
+  {
     List<Point> points = new ArrayList<>();
-    if (value == null || maskError.length() > 0) {
+    if (value == null || maskError.length() > 0)
+    {
       return points;
     }
     int start = -1;
     int len = value.length();
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++)
+    {
       char c = value.charAt(i);
-      if (isNotAlphanumeric(c)) {
+      if (isNotAlphanumeric(c))
+      {
         start = processNotAlphanumeric(points, start, i, c);
-      } else {
-        if (start >= 0) {
+      }
+      else
+      {
+        if (start >= 0)
+        {
           points.add(new Point(start, i));
           start = -1;
         }
       }
     }
-    if (start >= 0) {
+    if (start >= 0)
+    {
       points.add(new Point(start, len));
     }
     return points;
   }
 
-  private int processNotAlphanumeric(List<Point> points, int start, int i, char c) {
-    if (!isInMoreChars(c)) {
-      if (start < 0) {
+  private int processNotAlphanumeric(List<Point> points, int start, int i, char c)
+  {
+    if (!isInMoreChars(c))
+    {
+      if (start < 0)
+      {
         start = i;
       }
 
-    } else {
-      if (start >= 0) {
+    }
+    else
+    {
+      if (start >= 0)
+      {
         points.add(new Point(start, i));
         start = -1;
       }
@@ -64,24 +80,31 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
+  {
     ModeError me = isModeError(req, value);
-    if (me != null) {
+    if (me != null)
+    {
       //return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
       return true;
     }
-    for (int i = 0; i < value.length(); i++) {
+    for (int i = 0; i < value.length(); i++)
+    {
       char c = value.charAt(i);
-      if (isNotAlphanumeric(c) && !isInMoreChars(c)) {
+      if (isNotAlphanumeric(c) && !isInMoreChars(c))
+      {
         return true;
       }
     }
     return false;
   }
 
-  private boolean isInMoreChars(char c) {
-    for (char more : moreChars) {
-      if (c == more) {
+  private boolean isInMoreChars(char c)
+  {
+    for (char more : moreChars)
+    {
+      if (c == more)
+      {
         return true;
       }
     }
@@ -89,15 +112,18 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   }
 
   @Override
-  String modifyErrorMsg(ServletRequest req, String errorMsg) {
+  String modifyErrorMsg(ServletRequest req, String errorMsg)
+  {
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
-    if (i >= 0) {
+    if (i >= 0)
+    {
       return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }
 
-  static String handleSpecialChars(char[] chars) {
+  static String handleSpecialChars(char[] chars)
+  {
     String s = String.valueOf(chars);
     s = replaceString(s, " ", SPACE_LONG);
     s = replaceString(s, "\t", TAB_LONG);
@@ -106,7 +132,8 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     return s;
   }
 
-  static char[] getMoreCharArray(String s) {
+  static char[] getMoreCharArray(String s)
+  {
     s = replaceString(s, SPACE, " ");
     s = replaceString(s, TAB, "\t");
     s = replaceString(s, NEWLINE, "\n");
@@ -114,15 +141,18 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     return s.toCharArray();
   }
 
-  static String replaceString(String s, String from, String to) {
+  static String replaceString(String s, String from, String to)
+  {
     int i = s.indexOf(from);
-    if (i >= 0) {
+    if (i >= 0)
+    {
       s = s.substring(0, i) + to + s.substring(i + from.length(), s.length());
     }
     return s;
   }
 
-  private void setMoreChars(String value) {
+  private void setMoreChars(String value)
+  {
     int start = value.indexOf(ItemFactory.SEP_START);
     int end = value.lastIndexOf(ItemFactory.SEP_END);
     char[] array = getMoreCharArray(value.substring(start + ItemFactory.SEP_START.length(), end));
@@ -130,12 +160,14 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   }
 
   @Override
-  String getProperties() {
+  String getProperties()
+  {
     return "\"morechars\":\"" + Metadata.jsonEncode(new String(moreChars)) + "\"";
   }
 
   @Override
-  Types getType() {
+  Types getType()
+  {
     return Types.ALPHANUMERIC_AND_MORE;
   }
 }

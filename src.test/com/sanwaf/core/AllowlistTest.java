@@ -1,32 +1,36 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
 import jakarta.servlet.http.Cookie;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.IOException;
 
-public class AllowlistTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class AllowlistTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-Allowlist.xml");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testHeader() {
+  public void testHeader()
+  {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addHeader("allowlistedHeader", "found");
     req.addHeader("notAllowlistedHeader", "found");
@@ -40,7 +44,8 @@ public class AllowlistTest {
   }
 
   @Test
-  public void testCookie() {
+  public void testCookie()
+  {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setCookies(new Cookie("allowlistedCookie", "found"), new Cookie("notAllowlistedCookie", "notFound"));
 
@@ -53,7 +58,8 @@ public class AllowlistTest {
   }
 
   @Test
-  public void testNullCookie() {
+  public void testNullCookie()
+  {
     MockHttpServletRequest req = new MockHttpServletRequest();
     String value = sanwaf.getAllowListedValue("allowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
     assertEquals(true, value == null);
@@ -65,7 +71,8 @@ public class AllowlistTest {
   }
 
   @Test
-  public void testParameter() {
+  public void testParameter()
+  {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addParameter("allowlistedParameter", "found");
     req.addParameter("notAllowlistedParameter", "notFound");
@@ -79,7 +86,8 @@ public class AllowlistTest {
   }
 
   @Test
-  public void testNullType() {
+  public void testNullType()
+  {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addHeader("allowlistedHeader", "found");
     req.setCookies(new Cookie("allowlistedCookie", "found"));
@@ -94,13 +102,15 @@ public class AllowlistTest {
   }
 
   @Test
-  public void testNullRequest() {
+  public void testNullRequest()
+  {
     String value = sanwaf.getAllowListedValue("allowlistedParameter", Sanwaf.AllowListType.PARAMETER, null);
     assertEquals(true, value == null);
   }
 
   @Test
-  public void testNullName() {
+  public void testNullName()
+  {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addParameter("allowlistedParameter", "found");
     String value = sanwaf.getAllowListedValue(null, Sanwaf.AllowListType.PARAMETER, req);

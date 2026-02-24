@@ -2,88 +2,92 @@
 <!DOCTYPE xml>
 
 <sanwaf>
-	<global-settings>
-		<enabled>true</enabled>
-		<verbose>true</verbose>
-		<app.version>=${yourapp.release.version}</app.version>	
-		<errorHandling>
-      <provideTrackId>true</provideTrackId>
-      <provideErrors>true</provideErrors>
-      <logErrors>true</logErrors>
-      <logErrorsVerbose>true</logErrorsVerbose>
-      <provideDetects>true</provideDetects>
-      <logDetects>true</logDetects>
-      <logDetectsVerbose>true</logDetectsVerbose>
-		</errorHandling>
-		<errorMessages>
-			<numeric><![CDATA[  Numeric error msg]]></numeric>
-			<numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
-			<alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
-			<alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
-			<char><![CDATA[  Character error msg]]></char>
-			<string><![CDATA[  String error msg]]></string>
-			<regex><![CDATA[  Regex error msg]]></regex>
-			<java><![CDATA[  Java error msg]]></java>
-			<constant><![CDATA[  Constant error msg {0}]]></constant>
-      <format><![CDATA[  Failed to conform to format]]></format>
-      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
-      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
-      <required><![CDATA[  <br/>Is a Required field]]></required>
-		</errorMessages>
-	</global-settings>
-	
-	<shields>
-    <shield>
-      <shield-settings>
-        <mode>block</mode>
-        <name>XSS</name>
-        <minLen>2</minLen>
-        <maxLen>9999</maxLen>
-        <child></child>
-      </shield-settings>
-      <regex-config>
-        <minLen>5</minLen>
-        <forceStringPatterns>
-          <enabled>false</enabled>
-          <exclusions>
-            <item>unitTestStringExcluded</item>
-          </exclusions>
-        </forceStringPatterns>
-        <stringPatterns>
-          <item>
-            <key>xss-DETECT-ALL</key>
-            <mode>detect-all</mode>
-            <value><![CDATA[(?:sDETECTALL)]]></value>
-          </item>
-        </stringPatterns>
-      </regex-config>
-      <metadata>
-        <enabled>
-          <endpoints>true</endpoints>
-          <parameters>true</parameters>
-          <headers>true</headers>
-          <cookies>true</cookies>
-        </enabled>
-        <caseSensitive>
-          <endpoints>true</endpoints>
-          <parameters>true</parameters>
-          <headers>true</headers>
-          <cookies>true</cookies>
-        </caseSensitive>
-        <secured>
-          <endpoints>
-            <endpoint>
-              <strict>false</strict>
-              <uri>/sanwaf-AaSimpleTest.xml</uri>
-              <mode>detect-all</mode>
-              <items>
-                <item><mode>detect_all</mode><name>estring_DETECT_ALL</name><type>s</type></item>
-              </items>
-            </endpoint>
-          </endpoints>
-        </secured>
-      </metadata>
-    </shield>
-	</shields>
+    <global-settings>
+        <enabled>true</enabled>
+        <verbose>true</verbose>
+        <app.version>=${yourapp.release.version}</app.version>
+        <errorHandling>
+            <provideTrackId>true</provideTrackId>
+            <provideErrors>true</provideErrors>
+            <logErrors>true</logErrors>
+            <logErrorsVerbose>true</logErrorsVerbose>
+            <provideDetects>true</provideDetects>
+            <logDetects>true</logDetects>
+            <logDetectsVerbose>true</logDetectsVerbose>
+        </errorHandling>
+        <errorMessages>
+            <numeric><![CDATA[  Numeric error msg]]></numeric>
+            <numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
+            <alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
+            <alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
+            <char><![CDATA[  Character error msg]]></char>
+            <string><![CDATA[  String error msg]]></string>
+            <regex><![CDATA[  Regex error msg]]></regex>
+            <java><![CDATA[  Java error msg]]></java>
+            <constant><![CDATA[  Constant error msg {0}]]></constant>
+            <format><![CDATA[  Failed to conform to format]]></format>
+            <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
+            <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+            <required><![CDATA[  <br/>Is a Required field]]></required>
+        </errorMessages>
+    </global-settings>
+
+    <shields>
+        <shield>
+            <shield-settings>
+                <mode>block</mode>
+                <name>XSS</name>
+                <minLen>2</minLen>
+                <maxLen>9999</maxLen>
+                <child></child>
+            </shield-settings>
+            <regex-config>
+                <minLen>5</minLen>
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                    <exclusions>
+                        <item>unitTestStringExcluded</item>
+                    </exclusions>
+                </forceStringPatterns>
+                <stringPatterns>
+                    <item>
+                        <key>xss-DETECT-ALL</key>
+                        <mode>detect-all</mode>
+                        <value><![CDATA[(?:sDETECTALL)]]></value>
+                    </item>
+                </stringPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <endpoints>true</endpoints>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </enabled>
+                <caseSensitive>
+                    <endpoints>true</endpoints>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </caseSensitive>
+                <secured>
+                    <endpoints>
+                        <endpoint>
+                            <strict>false</strict>
+                            <uri>/sanwaf-AaSimpleTest.xml</uri>
+                            <mode>detect-all</mode>
+                            <items>
+                                <item>
+                                    <mode>detect_all</mode>
+                                    <name>estring_DETECT_ALL</name>
+                                    <type>s</type>
+                                </item>
+                            </items>
+                        </endpoint>
+                    </endpoints>
+                </secured>
+            </metadata>
+        </shield>
+    </shields>
 </sanwaf>
 

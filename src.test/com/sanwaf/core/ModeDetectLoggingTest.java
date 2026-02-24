@@ -1,21 +1,19 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
-public class ModeDetectLoggingTest {
+import static org.junit.Assert.assertTrue;
+
+public class ModeDetectLoggingTest
+{
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
 
@@ -23,36 +21,44 @@ public class ModeDetectLoggingTest {
   static Shield shield;
 
   @Before
-  public void setUpStreams() {
+  public void setUpStreams()
+  {
     System.setOut(new PrintStream(outContent));
   }
 
   @After
-  public void restoreStreams() {
+  public void restoreStreams()
+  {
     System.setOut(originalOut);
   }
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-modes.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testDatatypeDetect1() {
+  public void testDatatypeDetect1()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("endpointRegex", "abc");
     sanwaf.isThreatDetected(request, true);
     String s = outContent.toString();
     assertTrue(s.contains("\"DETECT\",\"type\":\"INLINE_REGEX\""));
   }
-  
+
   @Test
-  public void testDatatypeDetect() {
+  public void testDatatypeDetect()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("numericdelimited", "abc");

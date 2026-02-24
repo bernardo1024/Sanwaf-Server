@@ -1,32 +1,35 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.IOException;
 
-public class StringRegexMixedBlockDetectTest {
+import static org.junit.Assert.assertTrue;
+
+public class StringRegexMixedBlockDetectTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-stringRegexMixedBlockDetect.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testParmsRun() {
+  public void testParmsRun()
+  {
     //<item><mode>block</mode><name>modeParameter-BLOCK</name><type>s</type></item>
     //<item><mode>detect</mode><name>modeParameter-DETECT</name><type>s</type></item>
     //<item><mode>detect-all</mode><name>modeParameter-DETECT_ALL</name><type>s</type></item>
@@ -41,18 +44,21 @@ public class StringRegexMixedBlockDetectTest {
     request = new MockHttpServletRequest();
     request.addParameter("string", "DETECT_ALL");
     assertTrue(!sanwaf.isThreatDetected(request));
-}
+  }
 
   @Test
-  public void testAllStringDetectsRun() {
+  public void testAllStringDetectsRun()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("string", "DETECT_ALL DETECT DETECT_ALL DETECT BLOCK");
     assertTrue(sanwaf.isThreatDetected(request));
 
   }
+
   @Test
-  public void testAllStringDetectsRun2() {
+  public void testAllStringDetectsRun2()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("string", "DETECT_ALL DETECT DETECT_ALL DETECT");

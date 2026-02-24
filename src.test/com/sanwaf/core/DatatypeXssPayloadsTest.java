@@ -1,16 +1,14 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.IOException;
 
-public class DatatypeXssPayloadsTest {
+import static org.junit.Assert.assertTrue;
+
+public class DatatypeXssPayloadsTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
@@ -19,17 +17,22 @@ public class DatatypeXssPayloadsTest {
   static boolean logErrors = true;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void XssFormElements() {
+  public void XssFormElements()
+  {
     UnitTestResult result = UnitTestUtil.runTestsUsingFile(shield, "src.test/resources/xssFormPayloads.txt", iterations, doHex, logErrors);
     UnitTestUtil.log("XSS-SanWaf", result);
   }

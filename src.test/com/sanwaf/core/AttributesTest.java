@@ -1,32 +1,35 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.IOException;
 
-public class AttributesTest {
+import static org.junit.Assert.assertTrue;
+
+public class AttributesTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-modes.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testAttributesAllOn() {
+  public void testAttributesAllOn()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     setSanwafAtts(true);
     request.addParameter("regexParmNoModeWithRegexDetectMode", "AAAAAAA");
@@ -39,7 +42,8 @@ public class AttributesTest {
   }
 
   @Test
-  public void testAttributesAllOff() {
+  public void testAttributesAllOff()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     setSanwafAtts(false);
     request.addParameter("regexParmNoModeWithRegexDetectMode", "AAAAAAA");
@@ -59,7 +63,8 @@ public class AttributesTest {
   static boolean onErrorLogParmErrors = false;
   static boolean onErrorLogParmErrorsVerbose = false;
 
-  private void setSanwafAtts(boolean b) {
+  private void setSanwafAtts(boolean b)
+  {
     onErrorAddParmDetections = sanwaf.onErrorAddParmDetections;
     onErrorAddParmErrors = sanwaf.onErrorAddParmErrors;
     onErrorAddTrackId = sanwaf.onErrorAddTrackId;
@@ -76,7 +81,8 @@ public class AttributesTest {
     sanwaf.onErrorLogParmErrorsVerbose = b;
   }
 
-  private static void resetSanwafAtts() {
+  private static void resetSanwafAtts()
+  {
     sanwaf.onErrorAddParmDetections = onErrorAddParmDetections;
     sanwaf.onErrorAddParmErrors = onErrorAddParmErrors;
     sanwaf.onErrorAddTrackId = onErrorAddTrackId;

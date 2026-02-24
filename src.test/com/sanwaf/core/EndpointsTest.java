@@ -1,36 +1,39 @@
 package com.sanwaf.core;
 
-import org.junit.Test;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.mock.web.MockHttpServletRequest;
-
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
-
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import static org.junit.Assert.assertTrue;
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class EndpointsTest {
+public class EndpointsTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testEndpointChar() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointChar() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("char", "a");
@@ -45,7 +48,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRegex() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRegex() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("endpointRegex", "a");
@@ -60,7 +64,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointMaxMinValue() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointMaxMinValue() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -112,7 +117,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRequired() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRequired() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("required", "a");
@@ -127,7 +133,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointOpen() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointOpen() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("open", "(123) 456-7890 abz ABZ");
@@ -136,7 +143,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointFormat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointFormat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "(123) 456-7890 abz ABZ");
@@ -247,7 +255,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedSimple() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedSimple() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -272,7 +281,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedInvalidConfig() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedInvalidConfig() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-invalid-child<related>related-invalid</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -312,7 +322,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedEqualsNoParent() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedEqualsNoParent() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-equals-req-parent", "aaa");
@@ -320,9 +331,10 @@ public class EndpointsTest {
     boolean isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
   }
-  
+
   @Test
-  public void testEndpointRelatedEquals() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedEquals() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-equals-child<related>related-equals-parent:=</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -395,7 +407,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedNoParentDefined() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedNoParentDefined() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-simple-or-no-parent-parent:Yes<
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -419,7 +432,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedSimpleOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedSimpleOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-simple-or-child<related>related-simple-or-parent:aaa||bbb</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -458,7 +472,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-or-child<related>(related-or-parent1:aaa||bbb)||(related-or-parent2:ccc||ddd)</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -518,7 +533,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedAndOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedAndOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-and-or-child<related>(related-and-or-parent1:aaa||bbb)||(related-and-or-parent2:ccc||ddd)&&(related-and-or-parent3:eee|fff)</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -596,7 +612,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedRemoveSpace() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedRemoveSpace() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // <related> ( related-and-or-parentY1 : aaa || bbb ) || (
     // related-and-or-parentY2 : ccc || ddd ) && ( related-and-or-parentY3 : eee
     // || fff ) || ( related-and-or-parentY4 : ggg || hhh ) && (
@@ -615,9 +632,9 @@ public class EndpointsTest {
 
   }
 
-  
   @Test
-  public void testEndpointStrictWithLess() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointStrictWithLess() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
@@ -628,7 +645,8 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointStrictTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointStrictTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");

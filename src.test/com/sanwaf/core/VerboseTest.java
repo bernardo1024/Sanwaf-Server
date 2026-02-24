@@ -1,21 +1,19 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
+import static org.junit.Assert.assertTrue;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
-
-public class VerboseTest {
+public class VerboseTest
+{
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
 
@@ -23,17 +21,20 @@ public class VerboseTest {
   static Shield shield;
 
   @Before
-  public void setUpStreams() {
+  public void setUpStreams()
+  {
     System.setOut(new PrintStream(outContent));
   }
 
   @After
-  public void restoreStreams() {
+  public void restoreStreams()
+  {
     System.setOut(originalOut);
   }
 
   @Test
-  public void verboseDisabledTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void verboseDisabledTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf.xml");
     String s = outContent.toString();
     assertTrue(!s.contains("Settings:"));
@@ -47,7 +48,8 @@ public class VerboseTest {
   }
 
   @Test
-  public void verboseEnabledTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void verboseEnabledTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-verbose.xml");
     String s = outContent.toString();
     assertTrue(s.contains("Settings:"));
@@ -60,8 +62,10 @@ public class VerboseTest {
   }
 
   @Test
-  public void testForceString() {
-    try {
+  public void testForceString()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-forceRegex.xml");
       MockHttpServletRequest request = new MockHttpServletRequest();
       request.addParameter("modeParameter", "foobarfoobar");
@@ -70,13 +74,16 @@ public class VerboseTest {
       request = new MockHttpServletRequest();
       request.addParameter("xxxx", "<script>");
       assertTrue(sanwaf.isThreatDetected(request));
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void verboseEnabledRegexTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void verboseEnabledRegexTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-verboseRegexAlways.xml");
     String s = outContent.toString();
     assertTrue(s.contains("forceStringPatterns=true"));
@@ -88,7 +95,8 @@ public class VerboseTest {
   }
 
   @Test
-  public void verboseChildShieldTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void verboseChildShieldTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-childShield.xml");
     String s = outContent.toString();
     assertTrue(s.contains("child-shield=XSS-CHILD"));

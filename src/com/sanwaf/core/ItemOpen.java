@@ -1,27 +1,33 @@
 package com.sanwaf.core;
 
+import jakarta.servlet.ServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.servlet.ServletRequest;
-
-class ItemOpen extends Item {
-  ItemOpen(ItemData id) {
+class ItemOpen extends Item
+{
+  ItemOpen(ItemData id)
+  {
     super(id);
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
+  {
     ModeError me = isModeError(req, value);
-    if (me != null) {
+    if (me != null)
+    {
       return true;
     }
     return false;
   }
 
   @Override
-  List<Point> getErrorPoints(Shield shield, String value) {
-    if (maskError.length() > 0) {
+  List<Point> getErrorPoints(Shield shield, String value)
+  {
+    if (maskError.length() > 0)
+    {
       return new ArrayList<>();
     }
     List<Point> points = new ArrayList<>();
@@ -30,7 +36,8 @@ class ItemOpen extends Item {
   }
 
   @Override
-  Types getType() {
+  Types getType()
+  {
     return Types.OPEN;
   }
 }

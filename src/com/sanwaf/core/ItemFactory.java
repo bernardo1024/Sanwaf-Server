@@ -2,7 +2,8 @@ package com.sanwaf.core;
 
 import java.util.Map;
 
-public class ItemFactory {
+public class ItemFactory
+{
   static final String INTEGER = "i";
   static final String INTEGER_DELIMITED = "i{";
   static final String NUMERIC = "n";
@@ -36,17 +37,20 @@ public class ItemFactory {
   static final String XML_ITEM_RELATED = "related";
   static final String XML_ITEM_MASK_ERROR = "mask-err";
 
-  ItemFactory() {
+  ItemFactory()
+  {
     // no instances allowed
   }
 
-  static Item parseItem(Shield shield, Xml xml, com.sanwaf.log.Logger logger) {
+  static Item parseItem(Shield shield, Xml xml, com.sanwaf.log.Logger logger)
+  {
     // TODO: Cache the dynamic creation of Items - hash regex as key and look up
     // in table. if found, return, else build new
     return parseItem(shield, xml, false, logger);
   }
 
-  static Item parseItem(Shield shield, Xml xml, boolean includeEnpointAttributes, com.sanwaf.log.Logger logger) {
+  static Item parseItem(Shield shield, Xml xml, boolean includeEnpointAttributes, com.sanwaf.log.Logger logger)
+  {
     String name = xml.get(XML_ITEM_NAME);
     Modes mode = Modes.getMode(xml.get(XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
     String display = xml.get(XML_ITEM_DISPLAY);
@@ -58,22 +62,28 @@ public class ItemFactory {
 
     int max = Integer.MAX_VALUE;
     int min = 0;
-    if (sMax.length() > 0) {
+    if (sMax.length() > 0)
+    {
       max = Integer.parseInt(sMax);
     }
-    if (sMin.length() > 0) {
+    if (sMin.length() > 0)
+    {
       min = Integer.parseInt(sMin);
     }
-    if (max == -1) {
+    if (max == -1)
+    {
       max = Integer.MAX_VALUE;
     }
-    if (min == -1) {
+    if (min == -1)
+    {
       min = Integer.MIN_VALUE;
     }
-    if (min < -1) {
+    if (min < -1)
+    {
       min = 0;
     }
-    if(display != null && display.length() > 0 && display.contains(":::")) {
+    if (display != null && display.length() > 0 && display.contains(":::"))
+    {
       display = name;
     }
     Item item = getNewItem(new ItemData(shield, name, mode, display, type, msg, uri, max, min));
@@ -82,28 +92,33 @@ public class ItemFactory {
 
     item.maxValue = Integer.MAX_VALUE;
     String sMaxVal = xml.get(XML_ITEM_MAX_VAL);
-    if (sMaxVal.length() > 0) {
+    if (sMaxVal.length() > 0)
+    {
       item.maxValue = Double.valueOf(sMaxVal);
     }
 
     item.minValue = Integer.MIN_VALUE;
     String sMinVal = xml.get(XML_ITEM_MIN_VAL);
-    if (sMinVal.length() > 0) {
+    if (sMinVal.length() > 0)
+    {
       item.minValue = Double.valueOf(sMinVal);
     }
 
     item.maskError = xml.get(XML_ITEM_MASK_ERROR);
 
-    if (includeEnpointAttributes) {
+    if (includeEnpointAttributes)
+    {
       item.related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
     }
-    if (item instanceof ItemDependentFormat) {
+    if (item instanceof ItemDependentFormat)
+    {
       ((ItemDependentFormat) item).setAdditionalFields();
     }
     return item;
   }
 
-  private static String removeRelatedSpace(String related) {
+  private static String removeRelatedSpace(String related)
+  {
     related = related.trim();
     related = related.replaceAll("\\)\\s+&&\\s+\\(", ")&&(");
     related = related.replaceAll("\\s+\\|\\|\\s+", "||");
@@ -113,53 +128,82 @@ public class ItemFactory {
     return related;
   }
 
-  static Item getNewItem(String name, Item item) {
+  static Item getNewItem(String name, Item item)
+  {
     item.name = name;
     return item;
   }
 
-  static Item getNewItem(ItemData id) {
+  static Item getNewItem(ItemData id)
+  {
     String t = id.type.toLowerCase();
     int pos = t.indexOf(ItemFactory.SEP_START);
-    if (pos > 0) {
+    if (pos > 0)
+    {
       t = t.substring(0, pos + ItemFactory.SEP_START.length());
     }
-    if (t.equals(NUMERIC)) {
+    if (t.equals(NUMERIC))
+    {
       return new ItemNumeric(id, false);
-    } else if (t.equals(OPEN)) {
+    }
+    else if (t.equals(OPEN))
+    {
       return new ItemOpen(id);
-    } else if (t.equals(INTEGER)) {
+    }
+    else if (t.equals(INTEGER))
+    {
       return new ItemNumeric(id, true);
-    } else if (t.equals(ALPHANUMERIC)) {
+    }
+    else if (t.equals(ALPHANUMERIC))
+    {
       return new ItemAlphanumeric(id);
-    } else if (t.equals(CHAR)) {
+    }
+    else if (t.equals(CHAR))
+    {
       return new ItemChar(id);
     }
 
     id.type = ensureComplexTypeFormat(id.type);
 
-    if (t.equals(NUMERIC_DELIMITED)) {
+    if (t.equals(NUMERIC_DELIMITED))
+    {
       return new ItemNumericDelimited(id, false);
-    } else if (t.equals(INTEGER_DELIMITED)) {
+    }
+    else if (t.equals(INTEGER_DELIMITED))
+    {
       return new ItemNumericDelimited(id, true);
-    } else if (t.equals(ALPHANUMERIC_AND_MORE)) {
+    }
+    else if (t.equals(ALPHANUMERIC_AND_MORE))
+    {
       return new ItemAlphanumericAndMore(id);
-    } else if (t.equals(REGEX) || t.equals(INLINE_REGEX)) {
+    }
+    else if (t.equals(REGEX) || t.equals(INLINE_REGEX))
+    {
       return new ItemRegex(id);
-    } else if (t.equals(JAVA)) {
+    }
+    else if (t.equals(JAVA))
+    {
       return new ItemJava(id);
-    } else if (t.equals(CONSTANT)) {
+    }
+    else if (t.equals(CONSTANT))
+    {
       return new ItemConstant(id);
-    } else if (t.equals(FORMAT)) {
+    }
+    else if (t.equals(FORMAT))
+    {
       return new ItemFormat(id);
-    } else if (t.equals(DEPENDENT_FORMAT)) {
+    }
+    else if (t.equals(DEPENDENT_FORMAT))
+    {
       return new ItemDependentFormat(id);
     }
     return new ItemString(id);
   }
 
-  private static String ensureComplexTypeFormat(String type) {
-    if (!type.endsWith(ItemFactory.SEP_END)) {
+  private static String ensureComplexTypeFormat(String type)
+  {
+    if (!type.endsWith(ItemFactory.SEP_END))
+    {
       return type + ItemFactory.SEP_END;
     }
     return type;
@@ -187,7 +231,8 @@ public class ItemFactory {
   static final String XML_ERROR_MSG_PLACEHOLDER1 = "{0}";
   static final String XML_ERROR_MSG_PLACEHOLDER2 = "{1}";
 
-  static void setErrorMessages(Map<String, String> map, Xml xmlString) {
+  static void setErrorMessages(Map<String, String> map, Xml xmlString)
+  {
     Xml xml = new Xml(xmlString.get(XML_ERROR_MSG));
     map.put(String.valueOf(Types.ALPHANUMERIC), xml.get(XML_ERROR_MSG_ALHPANUMERIC));
     map.put(String.valueOf(Types.ALPHANUMERIC_AND_MORE), xml.get(XML_ERROR_MSG_ALPHANUMERIC_AND_MORE));

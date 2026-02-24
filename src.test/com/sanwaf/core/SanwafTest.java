@@ -1,37 +1,40 @@
 package com.sanwaf.core;
 
-import org.junit.Test;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.mock.web.MockHttpServletRequest;
-
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SanwafTest {
+public class SanwafTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testXssNoThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testXssNoThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "abcdefghij");
     Boolean result = sanwaf.isThreatDetected(request);
@@ -39,7 +42,8 @@ public class SanwafTest {
   }
 
   @Test
-  public void testXssWithThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testXssWithThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1);</script>");
     Boolean result = sanwaf.isThreatDetected(request);
@@ -47,7 +51,8 @@ public class SanwafTest {
   }
 
   @Test
-  public void testTrackIdAndGetErrorsNumbersDelimited() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testTrackIdAndGetErrorsNumbersDelimited() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
@@ -65,7 +70,8 @@ public class SanwafTest {
   }
 
   @Test
-  public void testTrackIdAndGetErrorsAlphanumericAndMore() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testTrackIdAndGetErrorsAlphanumericAndMore() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("AlphanumericAndMore", "Some Bad! data;----?? ");
@@ -80,7 +86,8 @@ public class SanwafTest {
   }
 
   @Test
-  public void testTrackIdDisabled() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testTrackIdDisabled() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
@@ -100,7 +107,7 @@ public class SanwafTest {
     assertTrue(result.equals(true));
     assertTrue(Sanwaf.getTrackingId(request) == null);
     s = Sanwaf.getErrors(request);
-    System.out.println("**********"+s);
+    System.out.println("**********" + s);
     assertTrue(s == null);
 
     sanwaf.onErrorAddTrackId = trackID;
@@ -108,58 +115,79 @@ public class SanwafTest {
   }
 
   @Test
-  public void testSanwafReload() {
-    try {
+  public void testSanwafReload()
+  {
+    try
+    {
       Sanwaf sw = new Sanwaf();
       assertTrue(sw != null);
       sw.reLoad();
       assertTrue(sw != null);
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
     }
   }
 
   @Test
-  public void testSanwafInstatiateLoggerOnly() {
-    try {
+  public void testSanwafInstatiateLoggerOnly()
+  {
+    try
+    {
       Sanwaf sw = new Sanwaf(new com.sanwaf.log.SimpleLogger());
       assertTrue(sw != null);
       sw.reLoad();
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
     }
   }
 
   @Test
-  public void testSanwafInstantiate() {
-    try {
+  public void testSanwafInstantiate()
+  {
+    try
+    {
       Sanwaf sw = new Sanwaf();
       assertTrue(sw != null);
       sw.reLoad();
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
     }
   }
 
   @Test
-  public void testSanWafInvalidXML() {
-    try {
+  public void testSanWafInvalidXML()
+  {
+    try
+    {
       new Sanwaf(new UnitTestLogger(), "invalidXmlFilename.foobar");
       fail("Error, Sanwaf instanciated with invalid xml file");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(ioe instanceof IOException);
     }
   }
 
   @Test
-  public void testSanWafLoggerAndFile() {
-    try {
+  public void testSanWafLoggerAndFile()
+  {
+    try
+    {
       Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf.xml");
       assertTrue(sw != null);
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       fail("exception Raised");
     }
   }
 
   @Test
-  public void TestNonMappedParamDefaultToStingWithRegexAlwaysEnabled() {
+  public void TestNonMappedParamDefaultToStingWithRegexAlwaysEnabled()
+  {
     boolean xssAlways = shield.regexAlways;
     shield.regexAlways = true;
     boolean b = sanwaf.isThreatDetected(null);

@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <sanwaf>
-	<global-settings>
-    <enabled>true</enabled>
-    <verbose>true</verbose>
-	</global-settings>
-	
-	<shields>
-		<shield>
-      <shield-settings>
-  			<name>XSS</name>
-      </shield-settings>
-			<metadata>
-				<enabled>
-					<parameters>true</parameters>
-				</enabled>
-				<secured>
-					<parameters>
-						<item><name>Numeric</name><type>n</type></item>
-					</parameters>
-				</secured>
-			</metadata>
-		</shield>
-	</shields>
+    <global-settings>
+        <enabled>true</enabled>
+        <verbose>true</verbose>
+    </global-settings>
+
+    <shields>
+        <shield>
+            <shield-settings>
+                <name>XSS</name>
+            </shield-settings>
+            <metadata>
+                <enabled>
+                    <parameters>true</parameters>
+                </enabled>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>Numeric</name>
+                            <type>n</type>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+    </shields>
 </sanwaf>
 

@@ -2,77 +2,86 @@
 <!DOCTYPE xml>
 
 <sanwaf>
-	<global-settings>
-		<enabled>true</enabled>
-		<verbose>true</verbose>
-		<app.version>=${yourapp.release.version}</app.version>	
-		<errorHandling>
-			<provideTrackId>true</provideTrackId>
-			<provideErrors>true</provideErrors>
-		</errorHandling>
-		<errorMessages>
-			<numeric><![CDATA[  Numeric error msg]]></numeric>
-			<numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
-			<alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
-			<alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
-			<char><![CDATA[  Character error msg]]></char>
-			<string><![CDATA[  String error msg]]></string>
-			<regex><![CDATA[  Regex error msg]]></regex>
-			<java><![CDATA[  Java error msg]]></java>
-			<constant><![CDATA[  Constant error msg {0}]]></constant>
-      <format><![CDATA[  Failed to conform to format]]></format>
-      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
-      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
-      <required><![CDATA[  <br/>Is a Required field]]></required>
-		</errorMessages>
-	</global-settings>
-	
-	<shields>
-    <shield>
-      <shield-settings>
-        <name>XSS</name>
-        <minLen>1</minLen>
-        <maxLen>9999</maxLen>
-      </shield-settings>
-      <regex-config>
-        <minLen>1</minLen>
-        <stringPatterns>
-          <item>
-            <key>javascriptExpressionNoKey</key>
-            <value><![CDATA[file=/regexUsingFilesNoKey.xml]]></value>
-          </item>
-          <item>
-            <key>javascriptExpressionKey</key>
-            <value><![CDATA[file=/regexUsingFilesWithKey.xml|key]]></value>
-          </item>
-        </stringPatterns>
-        <customPatterns>
-          <item>
-            <key>customjavascriptExpressionNoKey</key>
-            <value><![CDATA[file=/regexUsingFilesNoKey.xml]]></value>
-          </item>
-          <item>
-            <key>customjavascriptExpressionKey</key>
-            <value><![CDATA[file=/regexUsingFilesWithKey.xml|key]]></value>
-          </item>
-        </customPatterns>
-      </regex-config>
-      <metadata>
-        <enabled>
-          <parameters>true</parameters>
-        </enabled>
-        <caseSensitive>
-          <parameters>true</parameters>
-        </caseSensitive>
-        <secured>
-          <parameters>
-            <item><name>regex1</name><type>r{customjavascriptExpressionNoKey}</type></item>
-            <item><name>regex2</name><type>r{customjavascriptExpressionKey}</type></item>
-            <item><name>string</name><type>s</type></item>
-          </parameters>
-        </secured>
-      </metadata>
-    </shield>
-	</shields>
+    <global-settings>
+        <enabled>true</enabled>
+        <verbose>true</verbose>
+        <app.version>=${yourapp.release.version}</app.version>
+        <errorHandling>
+            <provideTrackId>true</provideTrackId>
+            <provideErrors>true</provideErrors>
+        </errorHandling>
+        <errorMessages>
+            <numeric><![CDATA[  Numeric error msg]]></numeric>
+            <numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
+            <alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
+            <alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
+            <char><![CDATA[  Character error msg]]></char>
+            <string><![CDATA[  String error msg]]></string>
+            <regex><![CDATA[  Regex error msg]]></regex>
+            <java><![CDATA[  Java error msg]]></java>
+            <constant><![CDATA[  Constant error msg {0}]]></constant>
+            <format><![CDATA[  Failed to conform to format]]></format>
+            <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
+            <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+            <required><![CDATA[  <br/>Is a Required field]]></required>
+        </errorMessages>
+    </global-settings>
+
+    <shields>
+        <shield>
+            <shield-settings>
+                <name>XSS</name>
+                <minLen>1</minLen>
+                <maxLen>9999</maxLen>
+            </shield-settings>
+            <regex-config>
+                <minLen>1</minLen>
+                <stringPatterns>
+                    <item>
+                        <key>javascriptExpressionNoKey</key>
+                        <value><![CDATA[file=/regexUsingFilesNoKey.xml]]></value>
+                    </item>
+                    <item>
+                        <key>javascriptExpressionKey</key>
+                        <value><![CDATA[file=/regexUsingFilesWithKey.xml|key]]></value>
+                    </item>
+                </stringPatterns>
+                <customPatterns>
+                    <item>
+                        <key>customjavascriptExpressionNoKey</key>
+                        <value><![CDATA[file=/regexUsingFilesNoKey.xml]]></value>
+                    </item>
+                    <item>
+                        <key>customjavascriptExpressionKey</key>
+                        <value><![CDATA[file=/regexUsingFilesWithKey.xml|key]]></value>
+                    </item>
+                </customPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <parameters>true</parameters>
+                </enabled>
+                <caseSensitive>
+                    <parameters>true</parameters>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>regex1</name>
+                            <type>r{customjavascriptExpressionNoKey}</type>
+                        </item>
+                        <item>
+                            <name>regex2</name>
+                            <type>r{customjavascriptExpressionKey}</type>
+                        </item>
+                        <item>
+                            <name>string</name>
+                            <type>s</type>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+    </shields>
 </sanwaf>
 

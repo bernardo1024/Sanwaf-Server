@@ -1,6 +1,7 @@
 package com.sanwaf.core;
 
-class ItemData {
+class ItemData
+{
   String name;
   String display;
   Shield shield;
@@ -10,8 +11,9 @@ class ItemData {
   String msg;
   String uri;
   Modes mode;
-  
-  ItemData(Shield shield, String name, Modes mode, String display, String type, String msg, String uri, int max, int min) {
+
+  ItemData(Shield shield, String name, Modes mode, String display, String type, String msg, String uri, int max, int min)
+  {
     this.name = name;
     this.display = display;
     this.shield = shield;

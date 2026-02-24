@@ -1,29 +1,35 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-public class AaSimpleTest {
+import java.io.IOException;
+
+import static org.junit.Assert.assertTrue;
+
+public class AaSimpleTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-AaSimpleTest.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testEndpointDetectAll() {
+  public void testEndpointDetectAll()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/sanwaf-AaSimpleTest.xml");
     request.addParameter("estring_DETECT_ALL", "sDETECTALL");

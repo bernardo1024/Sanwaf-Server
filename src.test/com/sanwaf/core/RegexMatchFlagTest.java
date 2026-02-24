@@ -1,39 +1,43 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.IOException;
 
-public class RegexMatchFlagTest {
+import static org.junit.Assert.assertTrue;
+
+public class RegexMatchFlagTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-regex-match-flag.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testStringMatchPass() {
+  public void testStringMatchPass()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("stringMatchPass", "javascript:");
     assertTrue(!sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testCustomMatchFail() {
+  public void testCustomMatchFail()
+  {
     // <item><name>customMatchFail</name><type>r{date-MatchFail}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customMatchFail", "416-555-5555");
@@ -41,7 +45,8 @@ public class RegexMatchFlagTest {
   }
 
   @Test
-  public void testCustomMatchPass() {
+  public void testCustomMatchPass()
+  {
     // <item><name>customMatchPass</name><type>r{date-MatchPass}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customMatchPass", "416-555-5555");
@@ -49,7 +54,8 @@ public class RegexMatchFlagTest {
   }
 
   @Test
-  public void testCustomNoMatch() {
+  public void testCustomNoMatch()
+  {
     // <item><name>customNoMatch</name><type>r{date-NoMatch}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customNoMatch", "416-555-5555");

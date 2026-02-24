@@ -1,32 +1,39 @@
 package com.sanwaf.core;
 
+import jakarta.servlet.ServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import jakarta.servlet.ServletRequest;
-
-final class ItemString extends Item {
+final class ItemString extends Item
+{
   static final String FAILED_PATTERN = "Failed Pattern: ";
   static final String MATCHED_PATTERN = "Matched Pattern: ";
 
-  ItemString() {
+  ItemString()
+  {
   }
 
-  ItemString(ItemData id) {
+  ItemString(ItemData id)
+  {
     super(id);
   }
 
   @Override
-  List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(final Shield shield, final String value)
+  {
     List<Point> points = new ArrayList<>();
-    if (shield == null || maskError.length() > 0) {
+    if (shield == null || maskError.length() > 0)
+    {
       return points;
     }
-    for (Map.Entry<String, Rule> r : shield.rulePatterns.entrySet()) {
+    for (Map.Entry<String, Rule> r : shield.rulePatterns.entrySet())
+    {
       Matcher m = r.getValue().pattern.matcher(value);
-      while (m.find()) {
+      while (m.find())
+      {
         int start = m.start();
         int end = m.end();
         points.add(new Point(start, end));
@@ -36,38 +43,50 @@ final class ItemString extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
+  {
     ModeError me = isModeError(req, value);
-    if (me != null) {
+    if (me != null)
+    {
       return true;
     }
     boolean inError = false;
-    if (shield != null) {
+    if (shield != null)
+    {
       //first process the detects & detect all - ignore the return value for detect
       isInErrorForPatterns(req, shield.rulePatternsDetect, value, doAllBlocks);
       //then do the blocks
       inError = isInErrorForPatterns(req, shield.rulePatterns, value, doAllBlocks);
     }
-    if (mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
+    if (mode == Modes.DETECT || mode == Modes.DETECT_ALL)
+    {
       return false;
     }
     return inError;
   }
 
-  private boolean isInErrorForPatterns(final ServletRequest req, Map<String, Rule> patterns, final String value, boolean doAllBlocks) {
+  private boolean isInErrorForPatterns(final ServletRequest req, Map<String, Rule> patterns, final String value, boolean doAllBlocks)
+  {
     boolean inError = false;
-    for (Map.Entry<String, Rule> rule : patterns.entrySet()) {
+    for (Map.Entry<String, Rule> rule : patterns.entrySet())
+    {
       Modes ruleMode = rule.getValue().mode;
-      if (ruleMode != Modes.DISABLED) {
+      if (ruleMode != Modes.DISABLED)
+      {
         boolean match = rule.getValue().pattern.matcher(value).find();
-        if ((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match)) {
-          if (rule.getValue().mode == Modes.BLOCK) {
+        if ((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match))
+        {
+          if (rule.getValue().mode == Modes.BLOCK)
+          {
             inError = true;
             handleMode(true, value, req, ruleMode, true, doAllBlocks);
-          } else {
+          }
+          else
+          {
             handleMode(true, value, req, ruleMode, true);
           }
-          if (doAllBlocks || (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL)) {
+          if (doAllBlocks || (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL))
+          {
             break;
           }
         }
@@ -77,7 +96,8 @@ final class ItemString extends Item {
   }
 
   @Override
-  Types getType() {
+  Types getType()
+  {
     return Types.STRING;
   }
 }

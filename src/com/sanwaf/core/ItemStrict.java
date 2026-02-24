@@ -1,27 +1,32 @@
 package com.sanwaf.core;
 
-import java.util.List;
-
 import jakarta.servlet.ServletRequest;
 
-public class ItemStrict extends Item {
+import java.util.List;
 
-  ItemStrict(String s) {
-	  msg = s;
+public class ItemStrict extends Item
+{
+
+  ItemStrict(String s)
+  {
+    msg = s;
   }
-  
+
   @Override
-  boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks, boolean log) {
+  boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks, boolean log)
+  {
     return false;
   }
 
   @Override
-  List<Point> getErrorPoints(Shield shield, String value) {
+  List<Point> getErrorPoints(Shield shield, String value)
+  {
     return null;
   }
 
   @Override
-  Types getType() {
+  Types getType()
+  {
     return null;
   }
 

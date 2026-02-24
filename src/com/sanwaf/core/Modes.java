@@ -1,10 +1,13 @@
 package com.sanwaf.core;
 
-public enum Modes {
+public enum Modes
+{
   DISABLED, BLOCK, DETECT, DETECT_ALL;
 
-  static Modes getMode(String sMode, Modes def) {
-    switch (sMode.toLowerCase()) {
+  static Modes getMode(String sMode, Modes def)
+  {
+    switch (sMode.toLowerCase())
+    {
     case "disabled":
       return DISABLED;
     case "block":

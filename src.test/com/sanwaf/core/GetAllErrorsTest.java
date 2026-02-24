@@ -1,34 +1,36 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import jakarta.servlet.http.Cookie;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.IOException;
 
-public class GetAllErrorsTest {
+import static org.junit.Assert.assertTrue;
+
+public class GetAllErrorsTest
+{
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeClass
-  public static void setUpClass() {
-    try {
+  public static void setUpClass()
+  {
+    try
+    {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-getAllErrors.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe)
+    {
       assertTrue(false);
     }
   }
 
   @Test
-  public void testParameter() {
+  public void testParameter()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("string_BLOCK", "sBLOCK");
     request.addParameter("string_NO_MODE", "sBLOCK");
@@ -43,7 +45,8 @@ public class GetAllErrorsTest {
   }
 
   @Test
-  public void testHeader() {
+  public void testHeader()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("string_BLOCK", "sBLOCK");
     request.addHeader("string_NO_MODE", "sBLOCK");
@@ -58,9 +61,10 @@ public class GetAllErrorsTest {
   }
 
   @Test
-  public void testCookie() {
+  public void testCookie()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    Cookie[] cookies = new Cookie[] {new Cookie("string_BLOCK", "sBLOCK"),new Cookie("string_NO_MODE", "sBLOCK")};
+    Cookie[] cookies = new Cookie[] { new Cookie("string_BLOCK", "sBLOCK"), new Cookie("string_NO_MODE", "sBLOCK") };
     request.setCookies(cookies);
     request.setCookies(cookies);
     assertTrue(sanwaf.isThreatDetected(request));
@@ -74,7 +78,8 @@ public class GetAllErrorsTest {
   }
 
   @Test
-  public void testEndpoint() {
+  public void testEndpoint()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/block.jsp");
     request.addParameter("estring_BLOCK", "sBLOCK");
@@ -90,7 +95,8 @@ public class GetAllErrorsTest {
   }
 
   @Test
-  public void testParameters() {
+  public void testParameters()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("string_DETECT", "sDETECT");
     request.addParameter("string_DETECT_ALL", "sDETECTALL");
@@ -107,7 +113,8 @@ public class GetAllErrorsTest {
   }
 
   @Test
-  public void tesCustomParameter() {
+  public void tesCustomParameter()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("custom_DETECT", "--------");
     request.addParameter("custom_DETECT_ALL", "--------");
@@ -122,13 +129,16 @@ public class GetAllErrorsTest {
     assertTrue(s != null && s.contains(""));
   }
 
-  static int getItemCount(String s, String match) {
+  static int getItemCount(String s, String match)
+  {
     int count = 0;
     int start = 0;
     int end = 0;
-    while(true) {
+    while (true)
+    {
       start = s.indexOf(match, end);
-      if(start < 0) {
+      if (start < 0)
+      {
         break;
       }
       end = start + match.length();
@@ -137,10 +147,9 @@ public class GetAllErrorsTest {
     return count;
   }
 
-
-
   @Test
-  public void testEndpointNoMode() {
+  public void testEndpointNoMode()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/nomode.jsp");
     request.addParameter("estring_NO_MODE", "sBLOCK");
@@ -151,7 +160,8 @@ public class GetAllErrorsTest {
   }
 
   @Test
-  public void testEndpointBlock() {
+  public void testEndpointBlock()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/block.jsp");
     request.addParameter("estring_BLOCK", "sBLOCK");
@@ -165,7 +175,8 @@ public class GetAllErrorsTest {
   }
 
   @Test
-  public void testEndpointDetect() {
+  public void testEndpointDetect()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/detect.jsp");
     request.addParameter("estring_DETECT", "sDETECT");
@@ -176,7 +187,8 @@ public class GetAllErrorsTest {
   }
 
   @Test
-  public void testEndpointDetectAll() {
+  public void testEndpointDetectAll()
+  {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/detectall.jsp");
     request.addParameter("estring_DETECT_ALL", "sDETECTALL");

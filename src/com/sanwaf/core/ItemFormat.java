@@ -1,26 +1,30 @@
 package com.sanwaf.core;
 
+import jakarta.servlet.ServletRequest;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import jakarta.servlet.ServletRequest;
-
-final class ItemFormat extends Item {
+final class ItemFormat extends Item
+{
   static final String INVALID_FORMAT = "Invalid Format: ";
   String formatString = null;
   List<List<String>> formatsBlocks = new ArrayList<>();
 
-  ItemFormat(ItemData id) {
+  ItemFormat(ItemData id)
+  {
     super(id);
     setFormat(id.type);
   }
 
   @Override
-  List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(final Shield shield, final String value)
+  {
     List<Point> points = new ArrayList<>();
-    if (value.length() == 0 || maskError.length() > 0) {
+    if (value.length() == 0 || maskError.length() > 0)
+    {
       return points;
     }
     points.add(new Point(0, value.length()));
@@ -28,101 +32,135 @@ final class ItemFormat extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
-    if (mode == Modes.DISABLED) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
+  {
+    if (mode == Modes.DISABLED)
+    {
       return false;
     }
-    if (formatsBlocks.isEmpty()) {
+    if (formatsBlocks.isEmpty())
+    {
       return false;
     }
-    if (!required && value.length() == 0) {
+    if (!required && value.length() == 0)
+    {
       return false;
     }
     boolean foundValidFormat = false;
-    for (List<String> formatBlocks : formatsBlocks) {
-      if (!formatInError(value, formatBlocks)) {
+    for (List<String> formatBlocks : formatsBlocks)
+    {
+      if (!formatInError(value, formatBlocks))
+      {
         foundValidFormat = true;
         break;
       }
     }
 
-    if(!foundValidFormat) {
+    if (!foundValidFormat)
+    {
       return true;
     }
     return false;
   }
 
-  private boolean formatInError(final String value, List<String> formatBlocks) {
-    if (formatBlocks.isEmpty()) {
+  private boolean formatInError(final String value, List<String> formatBlocks)
+  {
+    if (formatBlocks.isEmpty())
+    {
       return false;
     }
 
     int formatlen = formatBlocks.size();
-    if (!(formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy") || formatString.contains("yyyy)")) && value.length() != formatlen) {
+    if (!(formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy") || formatString.contains("yyyy)")) && value.length() != formatlen)
+    {
       return true;
     }
 
-    for (int i = 0; i < value.length(); i++) {
+    for (int i = 0; i < value.length(); i++)
+    {
       String c = String.valueOf(value.charAt(i));
       String formatBlock = formatBlocks.get(i);
 
       formatBlock = resolveDateVariables(formatBlock);
 
-      if (formatBlock.startsWith("#[")) {
+      if (formatBlock.startsWith("#["))
+      {
         formatBlock = formatBlock.substring(2, formatBlock.length() - 1);
 
-        if (formatBlock.contains(",")) {
+        if (formatBlock.contains(","))
+        {
           List<String> validNums = Arrays.asList(formatBlock.split(","));
-          if (!validNums.contains(c)) {
+          if (!validNums.contains(c))
+          {
             return true;
           }
-        } else {
+        }
+        else
+        {
           String[] maxMin = formatBlock.split("-");
-          if (maxMin.length != 2) {
+          if (maxMin.length != 2)
+          {
             return false;
           }
 
           int minNum = 0;
           int maxNum = 0;
           int maxLen = 0;
-          try {
+          try
+          {
             minNum = Integer.parseInt(maxMin[0]);
             maxNum = Integer.parseInt(maxMin[1]);
             maxLen = (maxNum + "").length();
-          } catch (NumberFormatException e) {
+          }
+          catch (NumberFormatException e)
+          {
             return false;
           }
 
-          if (c.charAt(0) < '0' || c.charAt(0) > '9') {
+          if (c.charAt(0) < '0' || c.charAt(0) > '9')
+          {
             return true;
           }
 
           StringBuilder cBlock = new StringBuilder(c);
-          if (maxLen > 1) {
-            for (int j = 1; j < maxLen; j++) {
-              if (i + j <= value.length() - 1) {
+          if (maxLen > 1)
+          {
+            for (int j = 1; j < maxLen; j++)
+            {
+              if (i + j <= value.length() - 1)
+              {
                 char n = value.charAt(i + j);
-                if (n >= '0' && n <= '9') {
+                if (n >= '0' && n <= '9')
+                {
                   cBlock.append(n);
-                } else {
+                }
+                else
+                {
                   return true;
                 }
               }
             }
           }
-          if (Integer.parseInt(cBlock.toString()) >= minNum && Integer.parseInt(cBlock.toString()) <= maxNum) {
+          if (Integer.parseInt(cBlock.toString()) >= minNum && Integer.parseInt(cBlock.toString()) <= maxNum)
+          {
             i += maxLen - 1;
-          } else {
+          }
+          else
+          {
             return true;
           }
         }
-      } else {
+      }
+      else
+      {
         char cF = formatBlock.charAt(0);
         char cC = c.charAt(0);
-        if ((cF == 'x') || (cF == '#' && cC >= '0' && cC <= '9') || ((cF == 'A' || cF == 'c') && cC >= 'A' && cC <= 'Z') || ((cF == 'a' || cF == 'c') && cC >= 'a' && cC <= 'z')) {
+        if ((cF == 'x') || (cF == '#' && cC >= '0' && cC <= '9') || ((cF == 'A' || cF == 'c') && cC >= 'A' && cC <= 'Z') || ((cF == 'a' || cF == 'c') && cC >= 'a' && cC <= 'z'))
+        {
           continue;
         }
-        if (cC != unEscapedChar(cF)) {
+        if (cC != unEscapedChar(cF))
+        {
           return true;
         }
       }
@@ -130,55 +168,71 @@ final class ItemFormat extends Item {
     return false;
   }
 
-  private String resolveDateVariables(String format) {
+  private String resolveDateVariables(String format)
+  {
     String newMdy = "";
     String parsedValue = format;
     String[] dateOrder = { "dd", "mm", "yyyy", "yy" };
 
-    for (int i = 0; i < dateOrder.length; i++) {
+    for (int i = 0; i < dateOrder.length; i++)
+    {
       int last = 0;
-      while (true) {
+      while (true)
+      {
         int startMdyReplacePos = 0;
         int endMdyReplacePos = 0;
         last = parsedValue.indexOf(dateOrder[i]);
-        if (last < 0) {
+        if (last < 0)
+        {
           break;
         }
         startMdyReplacePos = last;
         endMdyReplacePos = last + dateOrder[i].length();
 
-        if (dateOrder[i].equals("yy")) {
+        if (dateOrder[i].equals("yy"))
+        {
           int year = Calendar.getInstance().get(Calendar.YEAR);
           newMdy = String.valueOf(year).substring(2);
           last += 2;
           newMdy = adjustDate(parsedValue, last, newMdy);
-        } else if (dateOrder[i].equals("yyyy")) {
+        }
+        else if (dateOrder[i].equals("yyyy"))
+        {
           int year = Calendar.getInstance().get(Calendar.YEAR);
           newMdy = String.valueOf(year);
           last += 4;
           newMdy = adjustDate(parsedValue, last, newMdy);
-        } else if (dateOrder[i].equals("mm")) {
+        }
+        else if (dateOrder[i].equals("mm"))
+        {
           int month = Calendar.getInstance().get(Calendar.MONTH);
           newMdy = String.valueOf(month + 1);
           last += 2;
           newMdy = adjustDate(parsedValue, last, newMdy);
-          if (Integer.parseInt(newMdy) > 12) {
+          if (Integer.parseInt(newMdy) > 12)
+          {
             newMdy = "12";
           }
-        } else if (dateOrder[i].equals("dd")) {
+        }
+        else if (dateOrder[i].equals("dd"))
+        {
           int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
           newMdy = String.valueOf(day);
           last += 2;
           newMdy = adjustDate(parsedValue, last, newMdy);
-          if (Integer.parseInt(newMdy) > 31) {
+          if (Integer.parseInt(newMdy) > 31)
+          {
             newMdy = "31";
           }
         }
 
-        if (parsedValue.substring(last, last + 1).equals("(")) {
+        if (parsedValue.substring(last, last + 1).equals("("))
+        {
           int endOfNum = parsedValue.indexOf(')', last);
           parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endOfNum + 1, parsedValue.length());
-        } else {
+        }
+        else
+        {
           parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endMdyReplacePos, parsedValue.length());
         }
       }
@@ -186,23 +240,29 @@ final class ItemFormat extends Item {
     return parsedValue;
   }
 
-  private String adjustDate(String parsedValue, int last, String newMdy) {
+  private String adjustDate(String parsedValue, int last, String newMdy)
+  {
     int newValue = Integer.parseInt(newMdy);
-    if (parsedValue.substring(last, last + 1).equals("(")) {
+    if (parsedValue.substring(last, last + 1).equals("("))
+    {
       int endOfNum = parsedValue.indexOf(')', last);
       String num = parsedValue.substring(last + 2, endOfNum);
       int parsedNum = Integer.parseInt(num);
       String arith = parsedValue.substring(last + 1, last + 2);
-      if (arith.equals("+")) {
+      if (arith.equals("+"))
+      {
         newValue += parsedNum;
-      } else if (arith.equals("-")) {
+      }
+      else if (arith.equals("-"))
+      {
         newValue -= parsedNum;
       }
     }
     return String.valueOf(newValue);
   }
 
-  private String escapeChars(String s) {
+  private String escapeChars(String s)
+  {
     s = s.replaceAll("\\\\#", "\t");
     s = s.replaceAll("\\\\A", "\n");
     s = s.replaceAll("\\\\a", "\r");
@@ -222,8 +282,10 @@ final class ItemFormat extends Item {
     return s;
   }
 
-  private char unEscapedChar(char c) {
-    switch (c) {
+  private char unEscapedChar(char c)
+  {
+    switch (c)
+    {
     case '\t':
       return '#';
     case '\n':
@@ -260,34 +322,42 @@ final class ItemFormat extends Item {
   }
 
   @Override
-  String modifyErrorMsg(ServletRequest req, String errorMsg) {
+  String modifyErrorMsg(ServletRequest req, String errorMsg)
+  {
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
-    if (i >= 0) {
+    if (i >= 0)
+    {
       return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }
 
-  private void setFormat(String value) {
+  private void setFormat(String value)
+  {
     int start = value.indexOf(ItemFactory.FORMAT);
-    if (start >= 0) {
+    if (start >= 0)
+    {
       formatString = value.substring(start + ItemFactory.FORMAT.length(), value.length() - 1);
       parseFormats(formatString);
     }
   }
 
-  private void parseFormats(String format) {
-    if (format.length() == 0) {
+  private void parseFormats(String format)
+  {
+    if (format.length() == 0)
+    {
       return;
     }
     String[] formats = format.split("\\|\\|");
 
-    for (String thisFormat : formats) {
+    for (String thisFormat : formats)
+    {
       formatsBlocks.add(parseFormat(thisFormat));
     }
   }
 
-  private List<String> parseFormat(String format) {
+  private List<String> parseFormat(String format)
+  {
     List<String> formatBlocks = new ArrayList<>();
     format = escapeChars(format);
     int pos = 0;
@@ -295,33 +365,43 @@ final class ItemFormat extends Item {
     int end = 0;
     int dash = 0;
 
-    while (true) {
+    while (true)
+    {
       String block = "";
       int numDigits = 0;
       pos = format.indexOf('#', last);
-      if (pos < 0) {
+      if (pos < 0)
+      {
         addRemainderCharsAsBlocks(format, last, formatBlocks);
         break;
       }
-      if (format.length() > pos + 1 && format.charAt(pos + 1) == '[') {
+      if (format.length() > pos + 1 && format.charAt(pos + 1) == '[')
+      {
         end = format.indexOf(']', pos);
-        if (format.contains(",")) {
+        if (format.contains(","))
+        {
           numDigits = 0;
-        } else {
+        }
+        else
+        {
           dash = format.indexOf('-', pos);
-          if (dash > 0 && end > 0) {
+          if (dash > 0 && end > 0)
+          {
             numDigits = end - (dash + 1);
           }
         }
         block = format.substring(last, end + 1);
         last = end + 1;
-      } else {
+      }
+      else
+      {
         block = format.substring(last, pos + 1);
         last = pos + 1;
       }
 
       block = addStartingCharsAsBlocks(block, formatBlocks);
-      if (block == null) {
+      if (block == null)
+      {
         formatBlocks = new ArrayList<>();
         break;
       }
@@ -331,16 +411,21 @@ final class ItemFormat extends Item {
     return formatBlocks;
   }
 
-  private void addPlaceholderBlocks(int numDigits, List<String> formatBlocks) {
-    for (int i = 0; i < numDigits - 1; i++) {
+  private void addPlaceholderBlocks(int numDigits, List<String> formatBlocks)
+  {
+    for (int i = 0; i < numDigits - 1; i++)
+    {
       formatBlocks.add("");
     }
   }
 
-  private String addStartingCharsAsBlocks(String block, List<String> formatBlocks) {
-    if (!block.startsWith("#")) {
+  private String addStartingCharsAsBlocks(String block, List<String> formatBlocks)
+  {
+    if (!block.startsWith("#"))
+    {
       int x = block.indexOf('#');
-      if (x < 0) {
+      if (x < 0)
+      {
         return null;
       }
       String s = block.substring(0, x);
@@ -350,19 +435,23 @@ final class ItemFormat extends Item {
     return block;
   }
 
-  private void addRemainderCharsAsBlocks(String format, int last, List<String> formatBlocks) {
-    if (last < format.length()) {
+  private void addRemainderCharsAsBlocks(String format, int last, List<String> formatBlocks)
+  {
+    if (last < format.length())
+    {
       formatBlocks.addAll(Arrays.asList(format.substring(last, format.length()).split("")));
     }
   }
 
   @Override
-  String getProperties() {
+  String getProperties()
+  {
     return "\"format\":\"" + Metadata.jsonEncode(formatString) + "\"";
   }
 
   @Override
-  Types getType() {
+  Types getType()
+  {
     return Types.FORMAT;
   }
 }
