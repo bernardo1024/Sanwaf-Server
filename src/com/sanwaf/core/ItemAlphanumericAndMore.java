@@ -20,6 +20,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   static final String CARRIAGE_RETURN_LONG = "<carriage return>";
 
   char[] moreChars = new char[0];
+  private String moreCharsDisplay;
   private boolean[] asciiLookup = new boolean[128];
   private Set<Character> nonAsciiSet = new HashSet<>();
 
@@ -118,7 +119,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0)
     {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
+      return errorMsg.substring(0, i) + moreCharsDisplay + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
     }
     return errorMsg;
   }
@@ -170,6 +171,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
         nonAsciiSet.add(c);
       }
     }
+    moreCharsDisplay = Metadata.jsonEncode(handleSpecialChars(moreChars));
   }
 
   @Override

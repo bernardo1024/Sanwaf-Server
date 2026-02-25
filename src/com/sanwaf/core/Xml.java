@@ -1,7 +1,9 @@
 package com.sanwaf.core;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,21 +37,17 @@ final class Xml
 
   static String readFile(InputStream is) throws IOException
   {
-    StringBuilder sb = new StringBuilder();
-    int read = 0;
-    byte[] data = new byte[1024];
-    while (true)
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is), 4096))
     {
-      read = is.read(data);
-      if (read < 0)
+      StringBuilder sb = new StringBuilder();
+      char[] buf = new char[4096];
+      int read;
+      while ((read = reader.read(buf)) != -1)
       {
-        break;
+        sb.append(buf, 0, read);
       }
-      sb.append(new String(data));
-      data = new byte[1024];
+      return sb.toString();
     }
-    is.close();
-    return sb.toString();
   }
 
   static String stripXmlComments(String s)

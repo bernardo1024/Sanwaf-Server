@@ -11,6 +11,7 @@ final class ItemFormat extends Item
 {
   static final String INVALID_FORMAT = "Invalid Format: ";
   String formatString = null;
+  private boolean hasDateVariables;
   final List<List<String>> formatsBlocks = new ArrayList<>();
 
   ItemFormat(ItemData id)
@@ -67,7 +68,7 @@ final class ItemFormat extends Item
     }
 
     int formatlen = formatBlocks.size();
-    if (!(formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy") || formatString.contains("yyyy)")) && value.length() != formatlen)
+    if (!hasDateVariables && value.length() != formatlen)
     {
       return true;
     }
@@ -356,6 +357,7 @@ final class ItemFormat extends Item
     {
       formatString = value.substring(start + ItemFactory.FORMAT.length(), value.length() - 1);
       parseFormats(formatString);
+      hasDateVariables = formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy") || formatString.contains("yyyy)");
     }
   }
 
