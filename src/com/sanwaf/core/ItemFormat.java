@@ -266,23 +266,40 @@ final class ItemFormat extends Item
 
   private String escapeChars(String s)
   {
-    s = s.replaceAll("\\\\#", "\t");
-    s = s.replaceAll("\\\\A", "\n");
-    s = s.replaceAll("\\\\a", "\r");
-    s = s.replaceAll("\\\\c", "\f");
-    s = s.replaceAll("\\\\\\[", "\b");
-    s = s.replaceAll("\\\\\\]", "\0");
-    s = s.replaceAll("\\\\\\|", "\1");
-    s = s.replaceAll("\\\\x", "\2");
-    s = s.replaceAll("\\\\:", "\3");
-    s = s.replaceAll("\\\\=", "\4");
-    s = s.replaceAll("\\\\\\(", "\5");
-    s = s.replaceAll("\\\\\\)", "\6");
-    s = s.replaceAll("\\\\\\+", "\7");
-    s = s.replaceAll("\\\\\\-", "\016");
-    s = s.replaceAll("\\\\;", "\017");
-
-    return s;
+    char[] src = s.toCharArray();
+    char[] dst = new char[src.length];
+    int d = 0;
+    for (int i = 0; i < src.length; i++) {
+      if (src[i] == '\\' && i + 1 < src.length) {
+        char next = src[i + 1];
+        char replacement;
+        switch (next) {
+          case '#': replacement = '\t'; break;
+          case 'A': replacement = '\n'; break;
+          case 'a': replacement = '\r'; break;
+          case 'c': replacement = '\f'; break;
+          case '[': replacement = '\b'; break;
+          case ']': replacement = '\0'; break;
+          case '|': replacement = '\1'; break;
+          case 'x': replacement = '\2'; break;
+          case ':': replacement = '\3'; break;
+          case '=': replacement = '\4'; break;
+          case '(': replacement = '\5'; break;
+          case ')': replacement = '\6'; break;
+          case '+': replacement = '\7'; break;
+          case '-': replacement = '\016'; break;
+          case ';': replacement = '\017'; break;
+          default:
+            dst[d++] = src[i];
+            continue;
+        }
+        dst[d++] = replacement;
+        i++;
+      } else {
+        dst[d++] = src[i];
+      }
+    }
+    return new String(dst, 0, d);
   }
 
   private char unEscapedChar(char c)
