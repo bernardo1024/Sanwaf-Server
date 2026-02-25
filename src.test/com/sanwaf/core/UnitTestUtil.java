@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 public class UnitTestUtil
 {
 
@@ -212,7 +211,7 @@ public class UnitTestUtil
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+      System.err.println("Failed to read file: " + s);
     }
     finally
     {
@@ -246,7 +245,7 @@ public class UnitTestUtil
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+      System.err.println("Failed to write file: " + s);
     }
   }
 
@@ -260,7 +259,7 @@ public class UnitTestUtil
       }
       catch (IOException e)
       {
-        e.printStackTrace();
+        System.err.println("Failed to close FileInputStream");
       }
     }
   }

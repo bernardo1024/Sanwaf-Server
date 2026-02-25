@@ -80,6 +80,7 @@
                     <cookies>true</cookies>
                 </caseSensitive>
                 <secured>
+                    <!--suppress Annotator -->
                     <parameters>
                         <item>
                             <name>::::::fooaFoo:::foobFoo:::foocFoo:::foodFoo:::fooeFoo:::foofFoo:::</name>
