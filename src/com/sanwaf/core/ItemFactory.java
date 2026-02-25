@@ -120,12 +120,70 @@ public class ItemFactory
   private static String removeRelatedSpace(String related)
   {
     related = related.trim();
-    related = related.replaceAll("\\)\\s+&&\\s+\\(", ")&&(");
-    related = related.replaceAll("\\s+\\|\\|\\s+", "||");
-    related = related.replaceAll("\\s+:\\s+", ":");
-    related = related.replaceAll("\\(\\s+", "(");
-    related = related.replaceAll("\\s+\\)", ")");
-    return related;
+    int len = related.length();
+    if (len == 0)
+    {
+      return related;
+    }
+    char[] buf = new char[len];
+    int out = 0;
+    int i = 0;
+    while (i < len)
+    {
+      char c = related.charAt(i);
+      if (c == '(' && i + 1 < len && Character.isWhitespace(related.charAt(i + 1)))
+      {
+        buf[out++] = '(';
+        i++;
+        while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+      }
+      else if (Character.isWhitespace(c))
+      {
+        int wsStart = i;
+        while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+        if (i < len && related.charAt(i) == ')')
+        {
+          // collapse " )" to ")"
+        }
+        else if (i + 1 < len && related.charAt(i) == '|' && related.charAt(i + 1) == '|')
+        {
+          buf[out++] = '|';
+          buf[out++] = '|';
+          i += 2;
+          while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+        }
+        else if (i < len && related.charAt(i) == ':')
+        {
+          buf[out++] = ':';
+          i++;
+          while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+        }
+        else if (i < len && related.charAt(i) == '&' && i + 1 < len && related.charAt(i + 1) == '&')
+        {
+          if (out > 0 && buf[out - 1] == ')')
+          {
+            buf[out++] = '&';
+            buf[out++] = '&';
+            i += 2;
+            while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+          }
+          else
+          {
+            for (int j = wsStart; j < i; j++) buf[out++] = related.charAt(j);
+          }
+        }
+        else
+        {
+          for (int j = wsStart; j < i; j++) buf[out++] = related.charAt(j);
+        }
+      }
+      else
+      {
+        buf[out++] = c;
+        i++;
+      }
+    }
+    return new String(buf, 0, out);
   }
 
   static Item getNewItem(String name, Item item)

@@ -2,8 +2,6 @@ package com.sanwaf.core.benchmark;
 
 import java.util.regex.Pattern;
 
-import org.junit.Test;
-
 /**
  * Benchmark comparing approaches for stripping XML comments:
  * 1. Current — two String.replaceAll() calls (compiles regex each call)
@@ -94,6 +92,10 @@ public class StripXmlCommentsBenchmark {
       pos = commentEnd + 3;
     }
     return sb.toString();
+  }
+
+  public static void main(String[] args) {
+    new StripXmlCommentsBenchmark().benchmarkStripXmlComments();
   }
 
   public void benchmarkStripXmlComments() {

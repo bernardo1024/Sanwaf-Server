@@ -2,8 +2,6 @@ package com.sanwaf.core.benchmark;
 
 import java.util.regex.Pattern;
 
-import org.junit.Test;
-
 /**
  * Benchmark comparing 4 approaches for escapeChars() replacements:
  * 1. Current: String.replaceAll() — compiles regex each call
@@ -132,6 +130,10 @@ public class EscapeCharsBenchmark {
       }
     }
     return new String(dst, 0, d);
+  }
+
+  public static void main(String[] args) {
+    new EscapeCharsBenchmark().benchmarkEscapeChars();
   }
 
   public void benchmarkEscapeChars() {
