@@ -7,6 +7,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ErrorMessagesTest
 {
@@ -25,7 +26,7 @@ public class ErrorMessagesTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 

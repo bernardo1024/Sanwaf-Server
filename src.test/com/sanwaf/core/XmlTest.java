@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -69,7 +70,7 @@ public class XmlTest
   {
     Xml xml = new Xml("");
     String s = xml.get(null, "test");
-    assertTrue(s.equals(""));
+    assertEquals("", s);
   }
 
   @Test
@@ -77,15 +78,15 @@ public class XmlTest
   {
     Xml xml = new Xml("<sanwaf><foo>foo<foo></sanwaf>");
     String s = xml.get("<sanwaf><foo>foo<foo></sanwaf>", "foo");
-    assertTrue(s.equals(""));
+    assertEquals("", s);
 
-    assertTrue(xml.toString().equals("<sanwaf><foo>foo<foo></sanwaf>"));
+    assertEquals("<sanwaf><foo>foo<foo></sanwaf>", xml.toString());
 
     s = xml.get("<sanwaf></foo>foo<foo></sanwaf>", "foo");
-    assertTrue(s.equals(""));
+    assertEquals("", s);
 
     String[] sa = xml.getAll("<sanwaf></foo>foo<foo></sanwaf>", "foo");
-    assertTrue(sa.length == 0);
+    assertEquals(0, sa.length);
   }
 }
 

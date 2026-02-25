@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class OtherClassesTest
 {
@@ -26,7 +28,7 @@ public class OtherClassesTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -53,10 +55,10 @@ public class OtherClassesTest
   public void splitTest()
   {
     List<String> list = Shield.split(null);
-    assertEquals(true, list.isEmpty());
+    assertTrue(list.isEmpty());
 
     list = Shield.split("");
-    assertEquals(true, list.isEmpty());
+    assertTrue(list.isEmpty());
 
     list = Shield.split("1:::2::::::3");
     assertEquals(3, list.size());
@@ -66,76 +68,76 @@ public class OtherClassesTest
   public void jsonEncodeTest()
   {
     String s = Metadata.jsonEncode(null);
-    assertEquals(true, s.equals(""));
+    assertTrue(s.equals(""));
   }
 
   @Test
   public void parseIntTest()
   {
     int i = Shield.parseInt("12345", -123);
-    assertEquals(true, i == 12345);
+    assertTrue(i == 12345);
     i = Shield.parseInt("123abc", -123);
-    assertEquals(true, i == -123);
+    assertTrue(i == -123);
   }
 
   @Test
   public void isNotAlphanumericTest()
   {
     char c = 0x29;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x7b;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x3b;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x3c;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x5b;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x5c;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
 
     c = 0x31;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x39;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x41;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x59;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x61;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x79;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
   }
 
   @Test
   public void isCharAlphanumericTest()
   {
     char c = 0x29;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x7b;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x3b;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x3c;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x5b;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x5c;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
 
     c = 0x31;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x39;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x41;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x59;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x61;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x79;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
   }
 
   @Test

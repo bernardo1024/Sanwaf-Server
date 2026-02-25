@@ -6,7 +6,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class RegexMatchFlagTest
 {
@@ -23,7 +25,7 @@ public class RegexMatchFlagTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -32,7 +34,7 @@ public class RegexMatchFlagTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("stringMatchPass", "javascript:");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -50,7 +52,7 @@ public class RegexMatchFlagTest
     // <item><name>customMatchPass</name><type>r{date-MatchPass}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customMatchPass", "416-555-5555");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -59,7 +61,7 @@ public class RegexMatchFlagTest
     // <item><name>customNoMatch</name><type>r{date-NoMatch}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customNoMatch", "416-555-5555");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 }
 

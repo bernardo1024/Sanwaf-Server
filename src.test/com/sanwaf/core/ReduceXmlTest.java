@@ -7,7 +7,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ReduceXmlTest
 {
@@ -24,7 +26,7 @@ public class ReduceXmlTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -39,7 +41,7 @@ public class ReduceXmlTest
     request = new MockHttpServletRequest();
     request.addParameter("Numeric", "12345");
     result = sanwaf.isThreatDetected(request);
-    assertTrue(!result);
+    assertFalse(result);
   }
 }
 

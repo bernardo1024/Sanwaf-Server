@@ -8,7 +8,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ShieldTest
 {
@@ -34,7 +37,7 @@ public class ShieldTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -43,7 +46,7 @@ public class ShieldTest
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, "String", breakMaxSizeString, false, false);
-    assertEquals(false, b);
+    assertFalse(b);
   }
 
   @Test
@@ -51,9 +54,9 @@ public class ShieldTest
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, null, "<script>alert(1)</script>", false, false);
-    assertEquals(false, b);
+    assertFalse(b);
     b = shield.threat(req, shield.parameters, "String", null, false, false);
-    assertEquals(false, b);
+    assertFalse(b);
   }
 
   @Test
@@ -61,27 +64,27 @@ public class ShieldTest
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, "foobarNotInParmStore", "<script>alert(1)</script>", false, false);
-    assertEquals(false, b);
+    assertFalse(b);
   }
 
   @Test
   public void testThreatNoMetadata()
   {
     boolean b = shield.threat("<script>alert(1)</script>", false);
-    assertEquals(true, b);
+    assertTrue(b);
   }
 
   @Test
   public void testMetadataGetFromIndex()
   {
     String s = shield.parameters.getFromIndex("*foo");
-    assertEquals(null, s);
+    assertNull(s);
 
     s = shield.parameters.getFromIndex("foo*");
-    assertEquals(null, s);
+    assertNull(s);
 
     s = shield.parameters.getFromIndex("foo[*]");
-    assertEquals(null, s);
+    assertNull(s);
 
   }
 
@@ -97,8 +100,8 @@ public class ShieldTest
   public void sanwafInvalidHttpRequestTest()
   {
     MockHttpServletRequest request = null;
-    assertEquals(false, sanwaf.isThreatDetected(request));
-    assertEquals(false, sanwaf.isThreatDetected(null));
+    assertFalse(sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(null));
   }
 
   @Test

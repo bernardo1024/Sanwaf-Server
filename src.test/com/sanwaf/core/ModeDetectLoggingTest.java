@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ModeDetectLoggingTest
 {
@@ -42,7 +43,7 @@ public class ModeDetectLoggingTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 

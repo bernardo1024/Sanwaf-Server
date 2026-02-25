@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MultiDimentionalyParmsTest
@@ -27,7 +29,7 @@ public class MultiDimentionalyParmsTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -36,19 +38,19 @@ public class MultiDimentionalyParmsTest
   {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("a['1'].b['2']", "1234567890,0987654321");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("a['1'].b['2']", "12345678901,10987654321");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("a['1'].b['2']", "123456789,987654321");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("a['1'].b['2']", "12345678.a,a.87654321");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -56,19 +58,19 @@ public class MultiDimentionalyParmsTest
   {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("b[1].c[2]", "1234567890");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("b[1].c[2]", "12345678901");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("b[1].c[2]", "12345");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("b[1].c[2]", "12345678.a");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -76,15 +78,15 @@ public class MultiDimentionalyParmsTest
   {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo1", "1234567890");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("foo2", "12345678901");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("foo111", "<script>");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -92,19 +94,19 @@ public class MultiDimentionalyParmsTest
   {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("c('1').d('2')", "12345,abcd");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("c('1').d('2')", "12345abcd,000");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("c('1').d('2')", "12345a");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("c('1').d('2')", "12345,abc&");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -113,19 +115,19 @@ public class MultiDimentionalyParmsTest
     // <item>d(*).e(*)=a(6,10)</item>
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("d(1).e(2)", "12345abcde");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("d(1).e(2)", "12345abcd000");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("d(1).e(2)", "1234a");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("d(1).e(2)", "12345abc&");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -133,11 +135,11 @@ public class MultiDimentionalyParmsTest
   {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("e[1].f[2]g(3)-h(4)", "1");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("e[1].f[2]g(3)-h(4)", "12345abcd000");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -145,11 +147,11 @@ public class MultiDimentionalyParmsTest
   {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("notdefined[1]", "<script>alert(1)</script>");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
 
     r = new MockHttpServletRequest();
     r.addParameter("notDefinedNoBrackets1", "<script>alert(1)</script>");
-    assertEquals(true, sanwaf.isThreatDetected(r));
+    assertTrue(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -160,7 +162,7 @@ public class MultiDimentionalyParmsTest
     r.addParameter("foo[[0]", "1234567890");
     r.addParameter("foo( 0)", "1234567890");
     r.addParameter("foo(0 )", "1234567890");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -178,7 +180,7 @@ public class MultiDimentionalyParmsTest
     r.addParameter("foo8", "1234567890");
     r.addParameter("foo9", "1234567890");
     r.addParameter("foo10", "1234567890");
-    assertEquals(false, sanwaf.isThreatDetected(r));
+    assertFalse(sanwaf.isThreatDetected(r));
   }
 
   @Test
@@ -193,7 +195,7 @@ public class MultiDimentionalyParmsTest
 
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo0", "<script>alert(1)</script>");
-    assertEquals(false, sw.isThreatDetected(r));
+    assertFalse(sw.isThreatDetected(r));
   }
 
 }

@@ -6,7 +6,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class StringRegexMixedBlockDetectTest
 {
@@ -23,7 +25,7 @@ public class StringRegexMixedBlockDetectTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -39,11 +41,11 @@ public class StringRegexMixedBlockDetectTest
 
     request = new MockHttpServletRequest();
     request.addParameter("string", "DETECT");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
 
     request = new MockHttpServletRequest();
     request.addParameter("string", "DETECT_ALL");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -62,7 +64,7 @@ public class StringRegexMixedBlockDetectTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("string", "DETECT_ALL DETECT DETECT_ALL DETECT");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
 
   }
 

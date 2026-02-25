@@ -6,7 +6,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class AttributesTest
 {
@@ -23,7 +25,7 @@ public class AttributesTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -37,7 +39,7 @@ public class AttributesTest
     request.addParameter("numericdelimited", "aaaaaaaaaa");
     request.addParameter("numericdelimited", "bbbbbbbbbb");
     boolean threat = sanwaf.isThreatDetected(request);
-    assertTrue(!threat);
+    assertFalse(threat);
     resetSanwafAtts();
   }
 
@@ -51,7 +53,7 @@ public class AttributesTest
     request.addParameter("numericdelimited", "aaaaaaaaaa");
     request.addParameter("numericdelimited", "bbbbbbbbbb");
     boolean threat = sanwaf.isThreatDetected(request);
-    assertTrue(!threat);
+    assertFalse(threat);
     resetSanwafAtts();
   }
 

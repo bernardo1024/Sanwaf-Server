@@ -6,7 +6,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class RegexUsingFilesTest
 {
@@ -23,7 +25,7 @@ public class RegexUsingFilesTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -36,7 +38,7 @@ public class RegexUsingFilesTest
 
     request = new MockHttpServletRequest();
     request.addParameter("regex1", "123-456-7890");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -48,7 +50,7 @@ public class RegexUsingFilesTest
 
     request = new MockHttpServletRequest();
     request.addParameter("regex2", "123-456-7890");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -60,7 +62,7 @@ public class RegexUsingFilesTest
 
     request = new MockHttpServletRequest();
     request.addParameter("string", "123456");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
 }

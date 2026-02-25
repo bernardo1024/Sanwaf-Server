@@ -6,7 +6,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class AaSimpleTest
 {
@@ -23,7 +26,7 @@ public class AaSimpleTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -33,10 +36,10 @@ public class AaSimpleTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/sanwaf-AaSimpleTest.xml");
     request.addParameter("estring_DETECT_ALL", "sDETECTALL");
-    assertTrue(!sanwaf.isThreatDetected(request, true, true));
+    assertFalse(sanwaf.isThreatDetected(request, true, true));
     String s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_DETECT_ALL\""));
-    assertTrue(GetAllErrorsTest.getItemCount(s, "\"item\":{\"name\":\"") == 1);
+    assertEquals(1, GetAllErrorsTest.getItemCount(s, "\"item\":{\"name\":\""));
   }
 
 }

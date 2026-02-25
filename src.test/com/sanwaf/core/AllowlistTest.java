@@ -8,7 +8,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class AllowlistTest
 {
@@ -24,7 +26,7 @@ public class AllowlistTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -36,11 +38,11 @@ public class AllowlistTest
     req.addHeader("notAllowlistedHeader", "found");
 
     String value = sanwaf.getAllowListedValue("allowlistedHeader", Sanwaf.AllowListType.HEADER, req);
-    assertEquals(false, value == null);
-    assertEquals(true, value.equals("found"));
+    assertFalse(value == null);
+    assertTrue(value.equals("found"));
 
     value = sanwaf.getAllowListedValue("notAllowlistedHeader", Sanwaf.AllowListType.HEADER, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
   }
 
   @Test
@@ -50,11 +52,11 @@ public class AllowlistTest
     req.setCookies(new Cookie("allowlistedCookie", "found"), new Cookie("notAllowlistedCookie", "notFound"));
 
     String value = sanwaf.getAllowListedValue("allowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
-    assertEquals(false, value == null);
-    assertEquals(true, value.equals("found"));
+    assertFalse(value == null);
+    assertTrue(value.equals("found"));
 
     value = sanwaf.getAllowListedValue("notAllowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
   }
 
   @Test
@@ -62,12 +64,12 @@ public class AllowlistTest
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
     String value = sanwaf.getAllowListedValue("allowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
 
     req = new MockHttpServletRequest();
     req.setCookies(new Cookie("notAllowlistedCookie", "notFound"));
     value = sanwaf.getAllowListedValue("allowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
   }
 
   @Test
@@ -78,11 +80,11 @@ public class AllowlistTest
     req.addParameter("notAllowlistedParameter", "notFound");
 
     String value = sanwaf.getAllowListedValue("allowlistedParameter", Sanwaf.AllowListType.PARAMETER, req);
-    assertEquals(false, value == null);
-    assertEquals(true, value.equals("found"));
+    assertFalse(value == null);
+    assertTrue(value.equals("found"));
 
     value = sanwaf.getAllowListedValue("notAllowlistedParameter", Sanwaf.AllowListType.PARAMETER, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
   }
 
   @Test
@@ -94,18 +96,18 @@ public class AllowlistTest
     req.addParameter("allowlistedParameter", "found");
 
     String value = sanwaf.getAllowListedValue("allowlistedParameter", null, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
     value = sanwaf.getAllowListedValue("allowlistedCookie", null, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
     value = sanwaf.getAllowListedValue("allowlistedHeader", null, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
   }
 
   @Test
   public void testNullRequest()
   {
     String value = sanwaf.getAllowListedValue("allowlistedParameter", Sanwaf.AllowListType.PARAMETER, null);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
   }
 
   @Test
@@ -114,7 +116,7 @@ public class AllowlistTest
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addParameter("allowlistedParameter", "found");
     String value = sanwaf.getAllowListedValue(null, Sanwaf.AllowListType.PARAMETER, req);
-    assertEquals(true, value == null);
+    assertTrue(value == null);
   }
 
 }

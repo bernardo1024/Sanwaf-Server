@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SanwafIsThreatRegexMatchFailTest
@@ -24,7 +25,7 @@ public class SanwafIsThreatRegexMatchFailTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 

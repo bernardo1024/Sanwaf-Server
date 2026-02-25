@@ -9,7 +9,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SanwafChildShieldTest
@@ -25,7 +29,7 @@ public class SanwafChildShieldTest
     }
     catch (IOException ioe)
     {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -33,7 +37,7 @@ public class SanwafChildShieldTest
   public void testHasChildShield()
   {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss");
-    assertTrue(shield.childShield.name.equals("XSS-CHILD"));
+    assertEquals("XSS-CHILD", shield.childShield.name);
   }
 
   @Test
@@ -42,7 +46,7 @@ public class SanwafChildShieldTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "javascript: should pass short string has no javascript: test");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertTrue(!result);
+    assertFalse(result);
   }
 
   @Test
@@ -59,7 +63,7 @@ public class SanwafChildShieldTest
   {
     String value = "javascript: should pass short string has no javascript: test";
     Boolean result = sanwaf.isThreat(value);
-    assertTrue(!result);
+    assertFalse(result);
   }
 
   @Test
@@ -74,7 +78,7 @@ public class SanwafChildShieldTest
   public void testHasInvalidChildShield()
   {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss-invalid-child-shield");
-    assertTrue(shield.childShield == null);
+    assertNull(shield.childShield);
   }
 
 }
