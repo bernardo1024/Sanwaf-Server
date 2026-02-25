@@ -22,7 +22,7 @@ public class GetAllErrorsTest
   {
     try
     {
-      sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-getAllErrors.xml");
+      sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-getAllErrors.xml.broken");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
     }
     catch (IOException ioe)

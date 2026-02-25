@@ -63,10 +63,8 @@ public class DatatypeTest
   public void testInteger()
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    // assertEquals(false, shield.threat(req, shield.parameters, "Integer",
-    // "12345", false, false));
-    // assertEquals(false, shield.threat(req, shield.parameters, "Integer",
-    // "0123456789", false, false));
+    // assertEquals(false, shield.threat(req, shield.parameters, "Integer", "12345", false, false));
+    // assertEquals(false, shield.threat(req, shield.parameters, "Integer", "0123456789", false, false));
     assertFalse(shield.threat(req, shield.parameters, "Integer", "-12345", false, false));
     assertTrue(shield.threat(req, shield.parameters, "Integer", "-12345.67", false, false));
     assertTrue(shield.threat(req, shield.parameters, "Integer", "foo.12", false, false));

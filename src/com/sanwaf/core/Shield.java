@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -609,7 +609,7 @@ final class Shield
   private void logStartup()
   {
     StringBuilder sb = new StringBuilder();
-    sb.append("Loading Shield: ").append(name).append(mode).append(" - Mode: ").append(mode);
+    sb.append("Loading Shield: ").append(name).append(" - Mode: ").append(mode);
     if (sanwaf.verbose)
     {
       sb.append("\nSettings:\n");
@@ -620,39 +620,23 @@ final class Shield
         sb.append("\t").append(XML_CHILD_SHIELD).append("=").append(childShield.name).append("\n");
       }
       sb.append("\t").append("regex ").append(XML_MIN_LEN).append("=").append(regexMinLen).append("\n");
-      sb.append("\t").append(MetadataEndpoints.XML_ENDPOINTS).append(".").append(XML_ENABLED).append("=").append(endpoints.enabled).append("\n");
-      sb.append("\t").append(MetadataEndpoints.XML_ENDPOINTS).append(".").append(XML_CASE_SENSITIVE).append("=").append(endpoints.caseSensitive).append("\n");
-      sb.append("\t").append(Metadata.XML_PARAMETERS).append(".").append(XML_ENABLED).append("=").append(parameters.enabled).append("\n");
-      sb.append("\t").append(Metadata.XML_PARAMETERS).append(".").append(XML_CASE_SENSITIVE).append("=").append(parameters.caseSensitive).append("\n");
-      sb.append("\t").append(Metadata.XML_COOKIES).append(".").append(XML_ENABLED).append("=").append(cookies.enabled).append("\n");
-      sb.append("\t").append(Metadata.XML_COOKIES).append(".").append(XML_CASE_SENSITIVE).append("=").append(cookies.caseSensitive).append("\n");
-      sb.append("\t").append(Metadata.XML_HEADERS).append(".").append(XML_ENABLED).append("=").append(headers.enabled).append("\n");
-      sb.append("\t").append(Metadata.XML_HEADERS).append(".").append(XML_CASE_SENSITIVE).append("=").append(headers.caseSensitive).append("\n");
+      appendMetadataSettings(sb, MetadataEndpoints.XML_ENDPOINTS, endpoints.enabled, endpoints.caseSensitive);
+      appendMetadataSettings(sb, Metadata.XML_PARAMETERS, parameters.enabled, parameters.caseSensitive);
+      appendMetadataSettings(sb, Metadata.XML_COOKIES, cookies.enabled, cookies.caseSensitive);
+      appendMetadataSettings(sb, Metadata.XML_HEADERS, headers.enabled, headers.caseSensitive);
 
       sb.append("\nStringRegexs:\n");
-      for (Map.Entry<String, Rule> e : rulePatterns.entrySet())
-      {
-        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
-      }
-      for (Map.Entry<String, Rule> e : rulePatternsDetect.entrySet())
-      {
-        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
-      }
+      appendRules(sb, rulePatterns);
+      appendRules(sb, rulePatternsDetect);
 
-      sb.append("\n" + XML_REGEX_PATTERNS_CUSTOM + ":\n");
-      for (Map.Entry<String, Rule> e : customRulePatterns.entrySet())
-      {
-        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
-      }
-      for (Map.Entry<String, Rule> e : customRulePatternsDetect.entrySet())
-      {
-        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
-      }
+      sb.append("\n").append(XML_REGEX_PATTERNS_CUSTOM).append(":\n");
+      appendRules(sb, customRulePatterns);
+      appendRules(sb, customRulePatternsDetect);
 
       if (regexAlways)
       {
         sb.append("\n\tShield Secured List: *Ignored*");
-        sb.append("\n\t" + XML_REGEX_ALWAYS_REGEX + "=true (process all parameters)");
+        sb.append("\n\t").append(XML_REGEX_ALWAYS_REGEX).append("=true (process all parameters)");
         sb.append("\n\tExcept for (exclusion list):\n");
         for (String s : regexAlwaysExclusions)
         {
@@ -673,6 +657,14 @@ final class Shield
     logger.info(sb.toString());
   }
 
+  private static void appendRules(StringBuilder sb, Map<String, Rule> rules)
+  {
+    for (Map.Entry<String, Rule> e : rules.entrySet())
+    {
+      sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
+    }
+  }
+
   static int parseInt(String s, int d)
   {
     try
@@ -687,18 +679,14 @@ final class Shield
 
   static void appendEndpoints(MetadataEndpoints endpoints, MetadataEndpoints endpointsDetect, StringBuilder sb, String label)
   {
-    Iterator<Map.Entry<String, Metadata>> it = endpoints.endpointParametersBlock.entrySet().iterator();
-    appendItemToSb(sb, label, it);
-
-    it = endpointsDetect.endpointParametersDetect.entrySet().iterator();
-    appendItemToSb(sb, label, it);
+    appendItemToSb(sb, label, endpoints.endpointParametersBlock);
+    appendItemToSb(sb, label, endpointsDetect.endpointParametersDetect);
   }
 
-  private static void appendItemToSb(StringBuilder sb, String label, Iterator<Map.Entry<String, Metadata>> it)
+  private static void appendItemToSb(StringBuilder sb, String label, Map<String, Metadata> map)
   {
-    while (it.hasNext())
+    for (Map.Entry<String, Metadata> pair : map.entrySet())
     {
-      Map.Entry<String, Metadata> pair = it.next();
       appendPItemMapToSB(pair.getValue().items, sb, label + pair.getKey());
     }
   }
@@ -708,15 +696,18 @@ final class Shield
     sb.append(label);
     if (map != null && !map.isEmpty())
     {
-      Iterator<?> it = map.entrySet().iterator();
-      while (it.hasNext())
+      for (Map.Entry<String, Item> e : map.entrySet())
       {
-        @SuppressWarnings("unchecked")
-        Map.Entry<String, Item> e = (Map.Entry<String, Item>) it.next();
-        sb.append("\n\t\t" + e.getKey() + "=" + e.getValue());
+        sb.append("\n\t\t").append(e.getKey()).append("=").append(e.getValue());
       }
     }
     sb.append("\n");
+  }
+
+  private static void appendMetadataSettings(StringBuilder sb, String type, boolean enabled, boolean caseSensitive)
+  {
+    sb.append("\t").append(type).append(".").append(XML_ENABLED).append("=").append(enabled).append("\n");
+    sb.append("\t").append(type).append(".").append(XML_CASE_SENSITIVE).append("=").append(caseSensitive).append("\n");
   }
 
   static List<String> split(String s)

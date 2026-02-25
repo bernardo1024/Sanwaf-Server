@@ -28,23 +28,11 @@ public class MetadataEndpoints
 
   void load(Shield shield, Xml xml, boolean isDetect)
   {
-    String metadataBlock = xml.get(Metadata.XML_METADATA);
-    Xml metadataBlockXml = new Xml(metadataBlock);
-    String securedBlock = metadataBlockXml.get(Metadata.XML_SECURED);
-    Xml securedBlockXml = new Xml(securedBlock);
+    Metadata.ParsedMetadataXml parsed = Metadata.parseMetadataXml(xml, XML_ENDPOINTS);
+    enabled = parsed.enabled;
+    caseSensitive = parsed.caseSensitive;
 
-    String enabledViewBlock = metadataBlockXml.get(Shield.XML_ENABLED);
-    Xml enabledViewdBlockXml = new Xml(enabledViewBlock);
-    enabled = Boolean.parseBoolean(enabledViewdBlockXml.get(XML_ENDPOINTS));
-
-    String caseBlock = metadataBlockXml.get(Shield.XML_CASE_SENSITIVE);
-    Xml caseBlockXml = new Xml(caseBlock);
-    caseSensitive = Boolean.parseBoolean(caseBlockXml.get(XML_ENDPOINTS));
-
-    String endpointsBlock = securedBlockXml.get(XML_ENDPOINTS);
-    Xml endpointsXml = new Xml(endpointsBlock);
-
-    String[] xmlEndpoints = endpointsXml.getAll(XML_ENDPOINT);
+    String[] xmlEndpoints = parsed.subBlockXml.getAll(XML_ENDPOINT);
     for (String endpointString : xmlEndpoints)
     {
       Xml endpointXml = new Xml(endpointString);

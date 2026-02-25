@@ -49,26 +49,29 @@ class Metadata
     }
   }
 
-  void load(Shield shield, Xml xml, String type, boolean isDetect)
+  static ParsedMetadataXml parseMetadataXml(Xml xml, String type)
   {
-    initA2Zindex(index);
-
     String metadataBlock = xml.get(XML_METADATA);
     Xml metadataBlockXml = new Xml(metadataBlock);
     String securedBlock = metadataBlockXml.get(XML_SECURED);
     Xml securedBlockXml = new Xml(securedBlock);
 
-    String enabledViewBlock = metadataBlockXml.get(Shield.XML_ENABLED);
-    Xml enabledViewdBlockXml = new Xml(enabledViewBlock);
-    enabled = Boolean.parseBoolean(enabledViewdBlockXml.get(type));
+    boolean enabled = Boolean.parseBoolean(new Xml(metadataBlockXml.get(Shield.XML_ENABLED)).get(type));
+    boolean caseSensitive = Boolean.parseBoolean(new Xml(metadataBlockXml.get(Shield.XML_CASE_SENSITIVE)).get(type));
+    Xml subBlockXml = new Xml(securedBlockXml.get(type));
 
-    String caseBlock = metadataBlockXml.get(Shield.XML_CASE_SENSITIVE);
-    Xml caseBlockXml = new Xml(caseBlock);
-    caseSensitive = Boolean.parseBoolean(caseBlockXml.get(type));
+    return new ParsedMetadataXml(enabled, caseSensitive, subBlockXml);
+  }
 
-    String subBlock = securedBlockXml.get(type);
-    Xml subBlockXml = new Xml(subBlock);
-    String[] xmlItems = subBlockXml.getAll(ItemFactory.XML_ITEM);
+  void load(Shield shield, Xml xml, String type, boolean isDetect)
+  {
+    initA2Zindex(index);
+
+    ParsedMetadataXml parsed = parseMetadataXml(xml, type);
+    enabled = parsed.enabled;
+    caseSensitive = parsed.caseSensitive;
+
+    String[] xmlItems = parsed.subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
       loadItem(shield, itemString, false, isDetect);
@@ -223,6 +226,20 @@ class Metadata
       s = s.replace("\\", "\\\\");
       s = s.replace("\"", "\\\"");
       return s.replace("/", "\\/");
+    }
+  }
+
+  static class ParsedMetadataXml
+  {
+    final boolean enabled;
+    final boolean caseSensitive;
+    final Xml subBlockXml;
+
+    ParsedMetadataXml(boolean enabled, boolean caseSensitive, Xml subBlockXml)
+    {
+      this.enabled = enabled;
+      this.caseSensitive = caseSensitive;
+      this.subBlockXml = subBlockXml;
     }
   }
 
