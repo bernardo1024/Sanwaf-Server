@@ -144,7 +144,7 @@ public class UnitTestUtil
   private static void runTest(Shield shield, UnitTestResult result, String parameterName, String payload, boolean expected, boolean logError)
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean retval = shield.threat(req, shield.parameters, parameterName, payload, false, false);
+    boolean retval = shield.threat(req, shield.parameters, parameterName, payload);
     if (retval != expected)
     {
       if (logError)

@@ -45,7 +45,7 @@ public class ShieldTest
   public void testXssTooBig()
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, "String", breakMaxSizeString, false, false);
+    boolean b = shield.threat(req, shield.parameters, "String", breakMaxSizeString);
     assertFalse(b);
   }
 
@@ -53,9 +53,9 @@ public class ShieldTest
   public void testNullKeyValue()
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, null, "<script>alert(1)</script>", false, false);
+    boolean b = shield.threat(req, shield.parameters, null, "<script>alert(1)</script>");
     assertFalse(b);
-    shield.threat(req, shield.parameters, "String", null, false, false);
+    shield.threat(req, shield.parameters, "String", null);
     b = false;
     assertFalse(false);
   }
@@ -64,7 +64,7 @@ public class ShieldTest
   public void testUnprotectedParameter()
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, "foobarNotInParmStore", "<script>alert(1)</script>", false, false);
+    boolean b = shield.threat(req, shield.parameters, "foobarNotInParmStore", "<script>alert(1)</script>");
     assertFalse(b);
   }
 

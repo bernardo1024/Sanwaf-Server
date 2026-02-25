@@ -223,6 +223,12 @@ final class Shield
     return threat(null, null, "", v, false, false, false, log);
   }
 
+  // Convenience overload: assumes isEndpoint=false and log=false
+  boolean threat(ServletRequest req, Metadata meta, String key, String value)
+  {
+    return threat(req, meta, key, value, false, false, false, false);
+  }
+
   boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean log)
   {
     return threat(req, meta, key, value, isEndpoint, false, false, log);

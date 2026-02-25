@@ -11,7 +11,7 @@ final class Xml
   static final String CDATA_START = "<![CDATA[";
   static final String CDATA_END = "]]>";
 
-  private String rawXml;
+  private final String rawXml;
 
   Xml(String rawXml)
   {
