@@ -10,9 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +32,7 @@ final class Shield
   int regexMinLen = 0;
   boolean regexAlways = false;
   final Map<String, String> errorMessages = new HashMap<>();
-  List<String> regexAlwaysExclusions = new ArrayList<>();
+  Set<String> regexAlwaysExclusions = new LinkedHashSet<>();
   final Map<String, Rule> rulePatterns = new HashMap<>();
   final Map<String, Rule> customRulePatterns = new HashMap<>();
   final Map<String, Rule> rulePatternsDetect = new HashMap<>();
@@ -483,7 +484,7 @@ final class Shield
     String alwaysBlock = shieldXml.get(XML_REGEX_ALWAYS_REGEX);
     Xml alwaysBlockXml = new Xml(alwaysBlock);
     regexAlways = Boolean.parseBoolean(alwaysBlockXml.get(XML_ENABLED));
-    regexAlwaysExclusions = new ArrayList<>();
+    regexAlwaysExclusions = new LinkedHashSet<>();
     if (regexAlways)
     {
       String exclusionsBlock = alwaysBlockXml.get(XML_REGEX_ALWAYS_REGEX_EXCLUSIONS);

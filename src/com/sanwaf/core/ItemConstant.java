@@ -3,13 +3,14 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 final class ItemConstant extends Item
 {
   static final String INVALID_CONSTANT = "Invalid Constant: ";
-  List<String> constants = null;
+  Set<String> constants = null;
 
   ItemConstant(ItemData id)
   {
@@ -57,7 +58,12 @@ final class ItemConstant extends Item
     if (start >= 0)
     {
       String s = value.substring(start + ItemFactory.CONSTANT.length(), value.length() - 1);
-      constants = new ArrayList<>(Arrays.asList(s.split(",")));
+      String[] parts = s.split(",");
+      constants = new LinkedHashSet<>(parts.length * 2);
+      for (String part : parts)
+      {
+        constants.add(part);
+      }
     }
   }
 
