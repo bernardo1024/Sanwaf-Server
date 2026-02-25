@@ -11,7 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SanwafIsThreatTest2
+public class SanwafIsThreatRegexMatchFailTest
 {
   static Sanwaf sanwaf;
 
@@ -20,7 +20,7 @@ public class SanwafIsThreatTest2
   {
     try
     {
-      sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-isThreat2.xml");
+      sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-isThreatRegexMatchFail.xml");
     }
     catch (IOException ioe)
     {
