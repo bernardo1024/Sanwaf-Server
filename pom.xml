@@ -14,7 +14,7 @@
     </prerequisites>
 
     <properties>
-        <!-- only 1 dependency used directy by sanwaf -->
+        <!-- only 1 dependency used directly by sanwaf -->
         <jakarta.version>6.0.0</jakarta.version>
 
         <maven.version>3.5</maven.version>
@@ -35,8 +35,7 @@
         <surefire.reuseforks>true</surefire.reuseforks>
         <mockito.version>1.10.19</mockito.version>
         <powermock.version>1.7.4</powermock.version>
-        <spring.version>6.0.0</spring.version>
-        <!--<jacoco.version>0.7.1.201405082137</jacoco.version>-->
+        <spring.version>6.0.23</spring.version>
         <jacoco.version>0.8.8</jacoco.version>
 
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -107,8 +106,6 @@
                     <configuration>
                         <source>${compiler.source}</source>
                         <target>${compiler.target}</target>
-                        <showDeprecation>${compiler.deprecation}</showDeprecation>
-                        <showWarnings>${compiler.warnings}</showWarnings>
                     </configuration>
                 </plugin>
                 <plugin>
