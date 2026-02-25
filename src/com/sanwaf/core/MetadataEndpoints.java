@@ -16,24 +16,21 @@ public class MetadataEndpoints
   final com.sanwaf.log.Logger logger;
   final boolean enabled;
   final boolean caseSensitive;
-  final Map<String, Metadata> endpointParametersBlock;
-  final Map<String, Metadata> endpointParametersDetect;
+  final Map<String, Metadata> endpointParameters;
 
-  MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger, boolean isDetect)
+  MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger)
   {
     this.logger = logger;
     Metadata.ParsedMetadataXml parsed = Metadata.parseMetadataXml(xml, XML_ENDPOINTS);
     this.enabled = parsed.enabled;
     this.caseSensitive = parsed.caseSensitive;
-    Map<String, Metadata> mutableBlock = new HashMap<>();
-    Map<String, Metadata> mutableDetect = new HashMap<>();
-    loadEndpoints(shield, parsed, isDetect, mutableBlock, mutableDetect);
-    this.endpointParametersBlock = Collections.unmodifiableMap(mutableBlock);
-    this.endpointParametersDetect = Collections.unmodifiableMap(mutableDetect);
+    Map<String, Metadata> mutable = new HashMap<>();
+    loadEndpoints(shield, parsed, mutable);
+    this.endpointParameters = Collections.unmodifiableMap(mutable);
   }
 
-  private void loadEndpoints(Shield shield, Metadata.ParsedMetadataXml parsed, boolean isDetect,
-      Map<String, Metadata> endpointParametersBlock, Map<String, Metadata> endpointParametersDetect)
+  private void loadEndpoints(Shield shield, Metadata.ParsedMetadataXml parsed,
+      Map<String, Metadata> endpointParameters)
   {
     String[] xmlEndpoints = parsed.subBlockXml.getAll(XML_ENDPOINT);
     for (String endpointString : xmlEndpoints)
@@ -48,18 +45,8 @@ public class MetadataEndpoints
       Xml mx = new Xml(endpointString.substring(0, start) + endpointString.substring(end + "</items>".length()));
       Modes mode = Modes.getMode(mx.get(ItemFactory.XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
 
-      boolean needed = (!isDetect && mode == Modes.BLOCK) ||
-          (isDetect && (mode == Modes.DETECT || mode == Modes.DETECT_ALL));
-      if (!needed)
-      {
-        continue;
-      }
-
-      Metadata parametersBlock = new Metadata(shield, items, caseSensitive, true, strict, logger, false, mode);
-      setEndpointParametersForUris(endpointParametersBlock, uris, parametersBlock);
-
-      Metadata parametersDetect = new Metadata(shield, items, caseSensitive, true, strict, logger, true, mode);
-      setEndpointParametersForUris(endpointParametersDetect, uris, parametersDetect);
+      Metadata metadata = new Metadata(shield, items, caseSensitive, true, strict, logger, mode);
+      setEndpointParametersForUris(endpointParameters, uris, metadata);
     }
   }
 

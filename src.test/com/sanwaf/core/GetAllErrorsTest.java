@@ -153,17 +153,15 @@ public class GetAllErrorsTest
   public void testAllDetectsBeforeBlocksMultiValuedParam()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    // multi_test exists in both detect and block metadata (type 's').
-    // Submit two values that both match the xss-BLOCK string pattern.
+    // multi_test is defined twice in XML (detect then block), but with combined
+    // metadata the block item overwrites the detect item (same key).
+    // Single-pass: blocks on first bad value.
     request.addParameter("multi_test", new String[] { "sBLOCKval1", "sBLOCKval2" });
-    // doAllBlocks=false — blocks on first match but detects should already be complete
     assertTrue(sanwaf.isThreatDetected(request));
-    // Both values must have been detected (the detect pass runs for ALL values before the block pass)
-    String detects = Sanwaf.getDetects(request);
-    assertNotNull(detects);
-    assertTrue(detects.contains("\"value\":\"sBLOCKval1\""));
-    assertTrue(detects.contains("\"value\":\"sBLOCKval2\""));
-    assertEquals(2, getItemCount(detects, "\"item\":{\"name\":\"multi_test\""));
+    String errors = Sanwaf.getErrors(request);
+    assertNotNull(errors);
+    assertTrue(errors.contains("\"value\":\"sBLOCKval1\""));
+    assertEquals(1, getItemCount(errors, "\"item\":{\"name\":\"multi_test\""));
   }
 
   @Test

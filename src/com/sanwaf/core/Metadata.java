@@ -41,7 +41,7 @@ class Metadata
   final Map<String, Item> items;
   final Map<String, List<String>> index;
 
-  Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger, boolean isDetect)
+  Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger)
   {
     this.logger = logger;
     ParsedMetadataXml parsed = parseMetadataXml(xml, type);
@@ -52,14 +52,14 @@ class Metadata
     this.endpointMode = Modes.BLOCK;
     Map<String, Item> mutableItems = parsed.caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     Map<String, List<String>> mutableIndex = new HashMap<>();
-    loadItems(shield, parsed, isDetect, mutableItems, mutableIndex);
+    loadItems(shield, parsed, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
     this.index = Collections.unmodifiableMap(mutableIndex);
   }
 
   //used for endpoints
   Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes,
-      String endpointIsStrict, com.sanwaf.log.Logger logger, boolean isDetect, Modes endpointMode)
+      String endpointIsStrict, com.sanwaf.log.Logger logger, Modes endpointMode)
   {
     this.logger = logger;
     this.enabled = true;
@@ -82,7 +82,7 @@ class Metadata
     }
     Map<String, Item> mutableItems = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     Map<String, List<String>> mutableIndex = new HashMap<>();
-    loadEndpointItems(shield, itemsString, includeEndpointAttributes, isDetect, mutableItems, mutableIndex);
+    loadEndpointItems(shield, itemsString, includeEndpointAttributes, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
     this.index = Collections.unmodifiableMap(mutableIndex);
   }
@@ -101,28 +101,22 @@ class Metadata
     return new ParsedMetadataXml(enabled, caseSensitive, subBlockXml);
   }
 
-  private void loadItems(Shield shield, ParsedMetadataXml parsed, boolean isDetect,
+  private void loadItems(Shield shield, ParsedMetadataXml parsed,
       Map<String, Item> items, Map<String, List<String>> index)
   {
     initA2Zindex(index);
     String[] xmlItems = parsed.subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
-      loadItem(shield, itemString, false, isDetect, items, index);
+      loadItem(shield, itemString, false, items, index);
     }
   }
 
-  private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes, boolean isDetect,
+  private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes,
       Map<String, Item> items, Map<String, List<String>> index)
   {
     Xml xml = new Xml(itemString);
     Item item = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
-    //do we want to load this item for the provided isDetect parm
-    if ((isDetect && item.mode != null && (item.mode == Modes.BLOCK || item.mode == Modes.DISABLED)) ||
-        (!isDetect && (item.mode != null && (item.mode == Modes.DETECT || item.mode == Modes.DETECT_ALL))))
-    {
-      return;
-    }
     String namesString = xml.get(ItemFactory.XML_ITEM_NAME);
 
     if (namesString.contains(Shield.SEPARATOR))
@@ -150,7 +144,7 @@ class Metadata
     }
   }
 
-  private void loadEndpointItems(Shield shield, String itemsString, boolean includeEndpointAttributes, boolean isDetect,
+  private void loadEndpointItems(Shield shield, String itemsString, boolean includeEndpointAttributes,
       Map<String, Item> items, Map<String, List<String>> index)
   {
     initA2Zindex(index);
@@ -158,7 +152,7 @@ class Metadata
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
-      loadItem(shield, itemString, includeEndpointAttributes, isDetect, items, index);
+      loadItem(shield, itemString, includeEndpointAttributes, items, index);
     }
   }
 

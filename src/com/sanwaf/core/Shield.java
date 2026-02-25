@@ -42,11 +42,7 @@ final class Shield
   final Metadata parameters;
   final Metadata cookies;
   final Metadata headers;
-  final Metadata parametersDetect;
-  final Metadata cookiesDetect;
-  final Metadata headersDetect;
   final MetadataEndpoints endpoints;
-  final MetadataEndpoints endpointsDetect;
 
   Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger, boolean verbose)
   {
@@ -91,14 +87,10 @@ final class Shield
         ? Collections.unmodifiableSet(loadRegexExclusions(alwaysBlockXml))
         : Collections.emptySet();
 
-    this.endpoints = new MetadataEndpoints(this, shieldXml, logger, false);
-    this.endpointsDetect = new MetadataEndpoints(this, shieldXml, logger, true);
-    this.parameters = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, false);
-    this.parametersDetect = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, true);
-    this.cookies = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, false);
-    this.cookiesDetect = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, true);
-    this.headers = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, false);
-    this.headersDetect = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, true);
+    this.endpoints = new MetadataEndpoints(this, shieldXml, logger);
+    this.parameters = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger);
+    this.cookies = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger);
+    this.headers = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger);
 
     logStartup(verbose);
   }
@@ -116,65 +108,32 @@ final class Shield
     HttpServletRequest hreq = (HttpServletRequest) req;
     String uri = hreq.getRequestURI();
 
-    Metadata metadataBlockDetect = endpoints.endpointParametersDetect.get(uri);
-    Metadata metadataBlockBlock = endpoints.endpointParametersBlock.get(uri);
-    Metadata metadataDetectDetect = doAllBlocks ? endpointsDetect.endpointParametersDetect.get(uri) : null;
-    Metadata metadataDetectBlock = doAllBlocks ? endpointsDetect.endpointParametersBlock.get(uri) : null;
-
-    if (metadataBlockDetect == null && metadataBlockBlock == null && metadataDetectDetect == null && metadataDetectBlock == null)
+    Metadata meta = endpoints.endpointParameters.get(uri);
+    if (meta == null || meta.endpointMode == Modes.DISABLED)
     {
       return false;
     }
 
-    Enumeration<?> names = null;
-    String k = null;
-    String[] values = null;
-    boolean threat = false;
-
-    if (doAllBlocks && metadataDetectDetect != null)
+    if (!doAllBlocks && meta.endpointMode != Modes.BLOCK)
     {
-      names = req.getParameterNames();
-      while (names.hasMoreElements())
-      {
-        k = (String) names.nextElement();
-        values = req.getParameterValues(k);
-        for (String v : values)
-        {
-          if (metadataDetectDetect.endpointMode == Modes.DISABLED)
-          {
-            continue;
-          }
-          threat(req, metadataDetectDetect, k, v, true, true, log);
-          threat(req, metadataDetectBlock, k, v, true, true, log);
-        }
-      }
+      return false;
     }
 
-    if (metadataBlockDetect != null)
+    boolean threat = false;
+    Enumeration<?> names = req.getParameterNames();
+    while (names.hasMoreElements())
     {
-      names = req.getParameterNames();
-      while (names.hasMoreElements())
+      String k = (String) names.nextElement();
+      String[] values = req.getParameterValues(k);
+      for (String v : values)
       {
-        k = (String) names.nextElement();
-        values = req.getParameterValues(k);
-        if (!doAllBlocks && metadataBlockDetect.endpointMode != Modes.DISABLED)
+        if (threat(req, meta, k, v, true, doAllBlocks, log))
         {
-          for (String v : values)
+          if (!doAllBlocks)
           {
-            threat(req, metadataBlockDetect, k, v, true, false, log);
+            return true;
           }
-        }
-        for (String v : values)
-        {
-          if (metadataBlockBlock != null && metadataBlockBlock.endpointMode != Modes.DISABLED &&
-              threat(req, metadataBlockBlock, k, v, true, doAllBlocks, log))
-          {
-            if (!doAllBlocks)
-            {
-              return true;
-            }
-            threat = true;
-          }
+          threat = true;
         }
       }
     }
@@ -184,19 +143,11 @@ final class Shield
   private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
   {
     boolean retstring = false;
-    String k = null;
-    String[] values = null;
     Enumeration<?> names = req.getParameterNames();
     while (names.hasMoreElements())
     {
-      k = (String) names.nextElement();
-      values = req.getParameterValues(k);
-      //log all detects first
-      for (String v : values)
-      {
-        threat(req, parametersDetect, k, v, false, doAllBlocks, log);
-      }
-      //do blocks
+      String k = (String) names.nextElement();
+      String[] values = req.getParameterValues(k);
       for (String v : values)
       {
         if (threat(req, parameters, k, v, false, doAllBlocks, log))
@@ -220,15 +171,10 @@ final class Shield
     while (names.hasMoreElements())
     {
       String s = (String) names.nextElement();
-      Enumeration<?> detectEnum = hreq.getHeaders(s);
-      while (detectEnum.hasMoreElements())
+      Enumeration<?> headerValues = hreq.getHeaders(s);
+      while (headerValues.hasMoreElements())
       {
-        threat(req, headersDetect, s, (String) detectEnum.nextElement(), false, doAllBlocks, log);
-      }
-      Enumeration<?> blockEnum = hreq.getHeaders(s);
-      while (blockEnum.hasMoreElements())
-      {
-        if (threat(req, headers, s, (String) blockEnum.nextElement(), false, doAllBlocks, log))
+        if (threat(req, headers, s, (String) headerValues.nextElement(), false, doAllBlocks, log))
         {
           if (!doAllBlocks)
           {
@@ -249,11 +195,6 @@ final class Shield
     {
       return false;
     }
-    for (Cookie c : cookieArray)
-    {
-      threat(req, cookiesDetect, c.getName(), c.getValue(), false, doAllBlocks, log);
-    }
-
     for (Cookie c : cookieArray)
     {
       if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks, log))
@@ -328,25 +269,20 @@ final class Shield
 
     if (item.required && value.isEmpty())
     {
-      item.handleMode(true, value, req, item.mode, log, doAllBlocks);
-      //return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
-      return true;
+      return item.handleMode(true, value, req, item.mode, log, doAllBlocks);
     }
 
     String relmsg = item.isRelateValid(value, req, meta);
     if (relmsg != null)
     {
       item.relatedErrMsg = relmsg;
-      item.handleMode(true, value, req, item.mode, log, doAllBlocks);
-      //return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
-      return true;
+      return item.handleMode(true, value, req, item.mode, log, doAllBlocks);
     }
 
     if ((isEndpoint && isEndpointStrictValid(item, value, req, meta, doAllBlocks, log)) ||
         item.inError(req, this, value, doAllBlocks, log))
     {
-      item.handleMode(true, value, req, item.mode, log, doAllBlocks);
-      return true;
+      return item.handleMode(true, value, req, item.mode, log, doAllBlocks);
     }
     return false;
   }
@@ -650,7 +586,7 @@ final class Shield
         appendPItemMapToSB(cookies.items, sb, "\tCookies");
         appendPItemMapToSB(parameters.items, sb, "\tParameters");
         sb.append("\tEndpoints\n");
-        appendEndpoints(endpoints, endpointsDetect, sb, "\t");
+        appendEndpoints(endpoints, sb, "\t");
       }
     }
     logger.info(sb.toString());
@@ -676,10 +612,9 @@ final class Shield
     }
   }
 
-  static void appendEndpoints(MetadataEndpoints endpoints, MetadataEndpoints endpointsDetect, StringBuilder sb, String label)
+  static void appendEndpoints(MetadataEndpoints endpoints, StringBuilder sb, String label)
   {
-    appendItemToSb(sb, label, endpoints.endpointParametersBlock);
-    appendItemToSb(sb, label, endpointsDetect.endpointParametersDetect);
+    appendItemToSb(sb, label, endpoints.endpointParameters);
   }
 
   private static void appendItemToSb(StringBuilder sb, String label, Map<String, Metadata> map)

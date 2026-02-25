@@ -193,7 +193,7 @@ public class MultiDimentionalyParmsTest
     Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
     Shield sh = UnitTestUtil.getShield(sw, "MultiDimTest");
     Assert.assertNotNull(sh);
-    Metadata meta = new Metadata(shield, new Xml(""), "", sw.logger, false);
+    Metadata meta = new Metadata(shield, new Xml(""), "", sw.logger);
     UnitTestUtil.setField(meta, "enabled", true);
     Map<String, List<String>> mutableIndex = new HashMap<>();
     Metadata.initA2Zindex(mutableIndex);
