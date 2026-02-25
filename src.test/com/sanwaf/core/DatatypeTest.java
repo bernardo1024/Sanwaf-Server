@@ -445,7 +445,7 @@ public class DatatypeTest
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "f{(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemFormat p = new ItemFormat(id);
     assertNotNull(p.formatString);
-    assertTrue(!p.formatString.isEmpty());
+    assertFalse(p.formatString.isEmpty());
   }
 
   @Test

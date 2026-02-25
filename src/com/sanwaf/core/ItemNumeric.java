@@ -107,8 +107,7 @@ class ItemNumeric extends Item
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
   {
-    ModeError me = isModeError(req, value);
-    if (me != null)
+    if (isModeError(req, value) != null)
     {
       return true;
     }
@@ -123,17 +122,16 @@ class ItemNumeric extends Item
       int d = c - '0';
       if (d < 0 || d > 9)
       {
-        if (i == 0 && c == '-' && value.length() > 1)
+        if (!(i == 0 && c == '-' && value.length() > 1))
         {
-          continue;
-        }
-        else if (!isInt && c == '.' && !foundDot)
-        {
-          foundDot = true;
-        }
-        else
-        {
-          return true;
+          if (!isInt && c == '.' && !foundDot)
+          {
+            foundDot = true;
+          }
+          else
+          {
+            return true;
+          }
         }
       }
     }
