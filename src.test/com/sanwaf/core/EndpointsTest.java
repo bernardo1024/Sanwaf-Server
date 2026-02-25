@@ -619,7 +619,6 @@ public class EndpointsTest
     // || fff ) || ( related-and-or-parentY4 : ggg || hhh ) && (
     // related-and-or-parentY5:iii || jjj ) </related>
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-and-or-childY", "");
     request.addParameter("related-and-or-parentY1", "bbb");
@@ -637,7 +636,6 @@ public class EndpointsTest
   {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLess.jsp");
     request.addParameter("foobar", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
