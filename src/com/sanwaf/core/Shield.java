@@ -67,40 +67,44 @@ final class Shield
   {
     HttpServletRequest hreq = (HttpServletRequest) req;
     String uri = hreq.getRequestURI();
+
+    Metadata metadataBlockDetect = endpoints.endpointParametersDetect.get(uri);
+    Metadata metadataBlockBlock = endpoints.endpointParametersBlock.get(uri);
+    Metadata metadataDetectDetect = doAllBlocks ? endpointsDetect.endpointParametersDetect.get(uri) : null;
+    Metadata metadataDetectBlock = doAllBlocks ? endpointsDetect.endpointParametersBlock.get(uri) : null;
+
+    if (metadataBlockDetect == null && metadataBlockBlock == null && metadataDetectDetect == null && metadataDetectBlock == null)
+    {
+      return false;
+    }
+
     Enumeration<?> names = null;
     String k = null;
     String[] values = null;
     boolean threat = false;
 
-    if (doAllBlocks)
+    if (doAllBlocks && metadataDetectDetect != null)
     {
-      Metadata metadataDetectDetect = endpointsDetect.endpointParametersDetect.get(uri);
-      Metadata metadataDetectBlock = endpointsDetect.endpointParametersBlock.get(uri);
       names = req.getParameterNames();
-      if (metadataDetectDetect != null)
+      while (names.hasMoreElements())
       {
-        while (names.hasMoreElements())
+        k = (String) names.nextElement();
+        values = req.getParameterValues(k);
+        for (String v : values)
         {
-          k = (String) names.nextElement();
-          values = req.getParameterValues(k);
-          for (String v : values)
+          if (metadataDetectDetect.endpointMode == Modes.DISABLED)
           {
-            if (metadataDetectDetect.endpointMode == Modes.DISABLED)
-            {
-              continue;
-            }
-            threat(req, metadataDetectDetect, k, v, true, true, log);
-            threat(req, metadataDetectBlock, k, v, true, true, log);
+            continue;
           }
+          threat(req, metadataDetectDetect, k, v, true, true, log);
+          threat(req, metadataDetectBlock, k, v, true, true, log);
         }
       }
     }
 
-    names = req.getParameterNames();
-    Metadata metadataBlockDetect = endpoints.endpointParametersDetect.get(uri);
-    Metadata metadataBlockBlock = endpoints.endpointParametersBlock.get(uri);
     if (metadataBlockDetect != null)
     {
+      names = req.getParameterNames();
       while (names.hasMoreElements())
       {
         k = (String) names.nextElement();

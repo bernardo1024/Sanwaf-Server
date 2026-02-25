@@ -22,4 +22,22 @@ public final class SimpleLogger implements Logger
   {
     LOGGER.log(java.util.logging.Level.INFO, "Sanwaf-info:\t{0}", s);
   }
+
+  @Override
+  public boolean isErrorEnabled()
+  {
+    return LOGGER.isLoggable(java.util.logging.Level.SEVERE);
+  }
+
+  @Override
+  public boolean isWarnEnabled()
+  {
+    return LOGGER.isLoggable(java.util.logging.Level.WARNING);
+  }
+
+  @Override
+  public boolean isInfoEnabled()
+  {
+    return LOGGER.isLoggable(java.util.logging.Level.INFO);
+  }
 }

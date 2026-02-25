@@ -64,7 +64,7 @@ abstract class Item
   static void handleStrictError(String value, ServletRequest req, Logger logger, boolean log)
   {
     ItemStrict item = new ItemStrict(value);
-    if (log)
+    if (log && logger.isErrorEnabled())
     {
       logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
     }
@@ -170,7 +170,7 @@ abstract class Item
     }
     if (Modes.BLOCK == mode)
     {
-      boolean doLog = logger != null && log && !doAllBlocks && (shield == null || shield.sanwaf.onErrorLogParmErrors);
+      boolean doLog = logger != null && log && !doAllBlocks && (shield == null || shield.sanwaf.onErrorLogParmErrors) && logger.isErrorEnabled();
       boolean doAttr = (shield == null || shield.sanwaf.onErrorAddParmErrors);
       if (doLog || doAttr)
       {
@@ -183,7 +183,7 @@ abstract class Item
     else
     {
       // DO DETECTS
-      boolean doLog = logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections);
+      boolean doLog = logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections) && logger.isWarnEnabled();
       boolean doAttr = (shield == null || shield.sanwaf.onErrorAddParmDetections);
       if (doLog || doAttr)
       {

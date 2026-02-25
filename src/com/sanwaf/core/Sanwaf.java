@@ -213,16 +213,15 @@ public final class Sanwaf
    */
   public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks, boolean log)
   {
-    boolean threat = false;
-    if (req != null && onErrorAddTrackId)
-    {
-      req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
-    }
-
     if (!enabled || !(req instanceof HttpServletRequest))
     {
       return false;
     }
+    if (onErrorAddTrackId)
+    {
+      req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
+    }
+    boolean threat = false;
     Set<String> shieldSet = shieldList != null ? new HashSet<>(shieldList) : null;
     for (Shield sh : shields)
     {
