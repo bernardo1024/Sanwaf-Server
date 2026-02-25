@@ -729,7 +729,7 @@ class Rule
   final Pattern pattern;
   final boolean failOnMatch;
   final String msg;
-  private ThreadLocal<Matcher> cachedMatcher;
+  private volatile ThreadLocal<Matcher> cachedMatcher;
 
   Rule()
   {

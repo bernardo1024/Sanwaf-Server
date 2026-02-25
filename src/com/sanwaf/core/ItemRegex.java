@@ -13,7 +13,7 @@ final class ItemRegex extends Item
   final String patternName;
   final String patternString;
   final boolean isInline;
-  Rule rule = null;
+  volatile Rule rule = null;
 
   ItemRegex(ItemData id)
   {
