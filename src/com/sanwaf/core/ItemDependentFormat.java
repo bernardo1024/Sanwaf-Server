@@ -4,7 +4,6 @@ import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,16 +55,7 @@ final class ItemDependentFormat extends Item
 
   private ItemFormat getFormatForValue(String value)
   {
-    Iterator<Map.Entry<String, ItemFormat>> it = formats.entrySet().iterator();
-    while (it.hasNext())
-    {
-      Map.Entry<String, ItemFormat> pair = it.next();
-      if (value.equals(pair.getKey()))
-      {
-        return pair.getValue();
-      }
-    }
-    return null;
+    return formats.get(value);
   }
 
   @Override
@@ -129,11 +119,8 @@ final class ItemDependentFormat extends Item
 
   void setAdditionalFields()
   {
-    Iterator<Map.Entry<String, ItemFormat>> it = formats.entrySet().iterator();
-    while (it.hasNext())
+    for (ItemFormat item : formats.values())
     {
-      Map.Entry<String, ItemFormat> pair = it.next();
-      ItemFormat item = pair.getValue();
       item.required = required;
       item.maxValue = maxValue;
       item.minValue = minValue;
