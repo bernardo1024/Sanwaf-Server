@@ -34,7 +34,7 @@ public class ReduceXmlTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("Numeric", "abc123");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
 
     request = new MockHttpServletRequest();

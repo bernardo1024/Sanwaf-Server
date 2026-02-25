@@ -161,8 +161,8 @@ public class OtherClassesTest
   @Test
   public void stripXmlCommentsTest()
   {
-    assert (Xml.stripXmlComments("").equals(""));
-    assert (Xml.stripXmlComments(null).equals(""));
+    assert (Xml.stripXmlComments("").isEmpty());
+    assert (Xml.stripXmlComments(null).isEmpty());
   }
 }
 

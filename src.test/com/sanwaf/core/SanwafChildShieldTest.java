@@ -44,7 +44,7 @@ public class SanwafChildShieldTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "javascript: should pass short string has no javascript: test");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertFalse(result);
   }
 
@@ -53,7 +53,7 @@ public class SanwafChildShieldTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
   }
 
@@ -61,7 +61,7 @@ public class SanwafChildShieldTest
   public void testIsThreatNoMaxViolation()
   {
     String value = "javascript: should pass short string has no javascript: test";
-    Boolean result = sanwaf.isThreat(value);
+    boolean result = sanwaf.isThreat(value);
     assertFalse(result);
   }
 
@@ -69,7 +69,7 @@ public class SanwafChildShieldTest
   public void testIsThreatMaxViolation()
   {
     String value = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail";
-    Boolean result = sanwaf.isThreat(value);
+    boolean result = sanwaf.isThreat(value);
     assertTrue(result);
   }
 

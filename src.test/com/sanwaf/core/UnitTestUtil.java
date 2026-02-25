@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 public class UnitTestUtil
@@ -149,7 +151,7 @@ public class UnitTestUtil
     {
       if (logError)
       {
-        result.errors.append(parameterName + "\t" + payload + "\n");
+        result.errors.append(parameterName).append("\t").append(payload).append("\n");
       }
       result.fail++;
     }
@@ -239,7 +241,7 @@ public class UnitTestUtil
           f = null;
         }
       }
-      OutputStream os = new FileOutputStream(s);
+      OutputStream os = Files.newOutputStream(Paths.get(s));
       os.write(data.getBytes());
       os.close();
     }

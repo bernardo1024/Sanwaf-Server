@@ -38,7 +38,7 @@ public class EndpointsTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("char", "a");
-    Boolean isThreat = sanwaf.isThreatDetected(request);
+    boolean isThreat = sanwaf.isThreatDetected(request);
     assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
@@ -54,7 +54,7 @@ public class EndpointsTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("endpointRegex", "a");
-    Boolean isThreat = sanwaf.isThreatDetected(request);
+    boolean isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
 
     request = new MockHttpServletRequest();

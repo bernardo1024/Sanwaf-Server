@@ -39,7 +39,7 @@ public class SanwafTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "abcdefghij");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertFalse(result);
   }
 
@@ -48,7 +48,7 @@ public class SanwafTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1);</script>");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
   }
 
@@ -58,7 +58,7 @@ public class SanwafTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
 
     String trackId = Sanwaf.getTrackingId(request);
@@ -77,7 +77,7 @@ public class SanwafTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("AlphanumericAndMore", "Some Bad! data;----?? ");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
 
     String trackId = Sanwaf.getTrackingId(request);
@@ -95,7 +95,7 @@ public class SanwafTest
     request.addParameter("NumericDelimited", "+foobar");
     boolean trackID = sanwaf.onErrorAddTrackId;
     boolean trackErrors = sanwaf.onErrorAddParmErrors;
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
     assertNotNull(Sanwaf.getTrackingId(request));
     String s = Sanwaf.getErrors(request);
@@ -198,7 +198,7 @@ public class SanwafTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("foobarTHISisNOTmappedXssError", "<script>alert(1)</script>");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
 
     shield.regexAlways = xssAlways;

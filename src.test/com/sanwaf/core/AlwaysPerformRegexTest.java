@@ -34,7 +34,7 @@ public class AlwaysPerformRegexTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("StringExcluded", "<script>alert(1)</script>");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertFalse(result);
 
     request = new MockHttpServletRequest();

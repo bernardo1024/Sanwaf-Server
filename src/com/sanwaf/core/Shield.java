@@ -492,10 +492,7 @@ final class Shield
       for (String item : items)
       {
         List<String> list = split(item);
-        for (String l : list)
-        {
-          regexAlwaysExclusions.add(l);
-        }
+        regexAlwaysExclusions.addAll(list);
       }
     }
     endpoints = new MetadataEndpoints(this, shieldXml, logger, false);

@@ -384,7 +384,7 @@ public class DatatypeTest
     request.addParameter("JavaMultiParm", "foobarfoobar");
     request.addParameter("JavaMultiParm2", "foobarfoobar");
     request.addParameter("JavaMultiParm3", "foobarfoobar");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertFalse(result);
 
     request = new MockHttpServletRequest();
@@ -641,7 +641,7 @@ public class DatatypeTest
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformat", "12345");
-    Boolean result = sanwaf.isThreatDetected(req);
+    boolean result = sanwaf.isThreatDetected(req);
     assertFalse(result);
 
     req = new MockHttpServletRequest();

@@ -1,5 +1,6 @@
 package com.sanwaf.core;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -187,10 +189,11 @@ public class MultiDimentionalyParmsTest
   {
     Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
     Shield sh = UnitTestUtil.getShield(sw, "MultiDimTest");
+    Assert.assertNotNull(sh);
     sh.parameters = new Metadata(shield, new Xml(""), "", sw.logger, false);
     sh.parameters.enabled = true;
     Metadata.initA2Zindex(sh.parameters.index);
-    sh.parameters.index.put("f", Arrays.asList(Metadata.INDEX_PARM_MARKER + "foo"));
+    sh.parameters.index.put("f", Collections.singletonList(Metadata.INDEX_PARM_MARKER + "foo"));
 
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo0", "<script>alert(1)</script>");
