@@ -3,7 +3,9 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 final class ItemAlphanumericAndMore extends ItemAlphanumeric
 {
@@ -18,6 +20,8 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   static final String CARRIAGE_RETURN_LONG = "<carriage return>";
 
   char[] moreChars = new char[0];
+  private boolean[] asciiLookup = new boolean[128];
+  private Set<Character> nonAsciiSet = new HashSet<>();
 
   ItemAlphanumericAndMore(ItemData id)
   {
@@ -101,14 +105,11 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
 
   private boolean notInMoreChars(char c)
   {
-    for (char more : moreChars)
+    if (c < 128)
     {
-      if (c == more)
-      {
-        return false;
-      }
+      return !asciiLookup[c];
     }
-    return true;
+    return !nonAsciiSet.contains(c);
   }
 
   @Override
@@ -156,6 +157,19 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     int start = value.indexOf(ItemFactory.SEP_START);
     int end = value.lastIndexOf(ItemFactory.SEP_END);
     moreChars = getMoreCharArray(value.substring(start + ItemFactory.SEP_START.length(), end));
+    asciiLookup = new boolean[128];
+    nonAsciiSet = new HashSet<>();
+    for (char c : moreChars)
+    {
+      if (c < 128)
+      {
+        asciiLookup[c] = true;
+      }
+      else
+      {
+        nonAsciiSet.add(c);
+      }
+    }
   }
 
   @Override
