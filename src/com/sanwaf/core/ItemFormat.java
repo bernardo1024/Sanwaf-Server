@@ -248,12 +248,12 @@ final class ItemFormat extends Item
       int endOfNum = parsedValue.indexOf(')', last);
       String num = parsedValue.substring(last + 2, endOfNum);
       int parsedNum = Integer.parseInt(num);
-      String arith = parsedValue.substring(last + 1, last + 2);
-      if (arith.equals("+"))
+      char arith = parsedValue.charAt(last + 1);
+      if (arith == '+')
       {
         newValue += parsedNum;
       }
-      else if (arith.equals("-"))
+      else if (arith == '-')
       {
         newValue -= parsedNum;
       }

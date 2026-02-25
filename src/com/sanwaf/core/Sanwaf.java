@@ -492,12 +492,7 @@ public final class Sanwaf
    */
   public static String getErrors(HttpServletRequest req)
   {
-    Object o = req.getAttribute(ATT_LOG_ERROR);
-    if (o != null)
-    {
-      return String.valueOf(o);
-    }
-    return null;
+    return formatAttributeList(req.getAttribute(ATT_LOG_ERROR));
   }
 
   /**
@@ -523,16 +518,11 @@ public final class Sanwaf
     if (onErrorAddParmErrors)
     {
       //clear out the one from the block
-      req.setAttribute(ATT_LOG_ERROR, "");
+      req.setAttribute(ATT_LOG_ERROR, null);
     }
     //call all blocks, dont worry about the detects as they will have already been processed.
     isThreatDetected(req, null, true);
-    Object o = req.getAttribute(ATT_LOG_ERROR);
-    if (o != null)
-    {
-      return String.valueOf(o);
-    }
-    return null;
+    return formatAttributeList(req.getAttribute(ATT_LOG_ERROR));
   }
 
   /**
@@ -549,10 +539,20 @@ public final class Sanwaf
    */
   public static String getDetects(HttpServletRequest req)
   {
-    Object o = req.getAttribute(ATT_LOG_DETECT);
-    if (o != null)
+    return formatAttributeList(req.getAttribute(ATT_LOG_DETECT));
+  }
+
+  @SuppressWarnings("unchecked")
+  private static String formatAttributeList(Object o)
+  {
+    if (o instanceof List)
     {
-      return String.valueOf(o);
+      List<String> list = (List<String>) o;
+      if (list.isEmpty())
+      {
+        return null;
+      }
+      return "[" + String.join(",", list) + "]";
     }
     return null;
   }

@@ -71,26 +71,23 @@ abstract class Item
     appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true), req);
   }
 
+  @SuppressWarnings("unchecked")
   static void appendAttribute(String att, String value, ServletRequest req)
   {
     if (req == null)
     {
       return;
     }
-    String old = (String) req.getAttribute(att);
-    if (old == null || old.length() < 2)
+    List<String> list = (List<String>) req.getAttribute(att);
+    if (list == null)
     {
-      old = "";
+      list = new ArrayList<>();
+      req.setAttribute(att, list);
     }
-    else
+    if (!list.contains(value))
     {
-      if (old.contains(value))
-      {
-        return;
-      }
-      old = old.substring(1, old.length() - 1) + ",";
+      list.add(value);
     }
-    req.setAttribute(att, "[" + old + value + "]");
   }
 
   // implemented by Types

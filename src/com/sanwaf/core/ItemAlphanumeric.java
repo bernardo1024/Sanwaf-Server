@@ -23,10 +23,11 @@ class ItemAlphanumeric extends Item
       return points;
     }
     int start = -1;
-    int len = value.length();
+    char[] chars = value.toCharArray();
+    int len = chars.length;
     for (int i = 0; i < len; i++)
     {
-      if (isNotAlphanumeric(value.charAt(i)))
+      if (isNotAlphanumeric(chars[i]))
       {
         if (start < 0)
         {
@@ -53,10 +54,10 @@ class ItemAlphanumeric extends Item
     {
       return true;
     }
-    for (int i = 0; i < value.length(); i++)
+    char[] chars = value.toCharArray();
+    for (char aChar : chars)
     {
-      char c = value.charAt(i);
-      if (isNotAlphanumeric(c))
+      if (isNotAlphanumeric(aChar))
       {
         return true;
       }

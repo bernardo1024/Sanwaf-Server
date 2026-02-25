@@ -25,18 +25,19 @@ class ItemNumeric extends Item
     {
       return points;
     }
-    final int len = value.length();
+    char[] chars = value.toCharArray();
+    final int len = chars.length;
     int errStart = -1;
     boolean foundDot = false;
     int start = 0;
-    if (len > 0 && value.charAt(0) == '-')
+    if (len > 0 && chars[0] == '-')
     {
       start = 1;
     }
 
     for (int i = start; i < len; i++)
     {
-      char c = value.charAt(i);
+      char c = chars[i];
       int d = c - '0';
       if (d < 0 || d > 9)
       {
@@ -113,13 +114,14 @@ class ItemNumeric extends Item
       return true;
     }
     boolean foundDot = false;
-    for (int i = 0; i < value.length(); i++)
+    char[] chars = value.toCharArray();
+    for (int i = 0; i < chars.length; i++)
     {
-      char c = value.charAt(i);
+      char c = chars[i];
       int d = c - '0';
       if (d < 0 || d > 9)
       {
-        if (!(i == 0 && c == '-' && value.length() > 1))
+        if (!(i == 0 && c == '-' && chars.length > 1))
         {
           if (!isInt && c == '.' && !foundDot)
           {

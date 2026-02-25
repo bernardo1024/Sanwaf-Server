@@ -12,10 +12,12 @@ final class Xml
   static final String CDATA_END = "]]>";
 
   private final String rawXml;
+  private final String rawXmlLower;
 
   Xml(String rawXml)
   {
     this.rawXml = stripXmlComments(rawXml);
+    this.rawXmlLower = this.rawXml.toLowerCase();
   }
 
   Xml(URL url) throws IOException
@@ -28,6 +30,7 @@ final class Xml
     {
       throw new IOException("url provided is null");
     }
+    rawXmlLower = rawXml.toLowerCase();
   }
 
   static String readFile(InputStream is) throws IOException
@@ -84,7 +87,7 @@ final class Xml
 
   String get(String key)
   {
-    return get(rawXml, key);
+    return get(rawXml, rawXmlLower, key);
   }
 
   String get(String xml, String key)
@@ -93,20 +96,28 @@ final class Xml
     {
       return "";
     }
-    String xmlUc = xml.toLowerCase();
-    String keyUc = "<" + key.toLowerCase() + ">";
-    int start = xmlUc.indexOf(keyUc);
+    return get(xml, xml.toLowerCase(), key);
+  }
+
+  private String get(String xml, String xmlLc, String key)
+  {
+    if (xml == null || xml.isEmpty())
+    {
+      return "";
+    }
+    String keyLc = "<" + key.toLowerCase() + ">";
+    int start = xmlLc.indexOf(keyLc);
     if (start < 0)
     {
       return "";
     }
-    String endKeyUc = "</" + key.toLowerCase() + ">";
-    int end = xmlUc.indexOf(endKeyUc, start);
+    String endKeyLc = "</" + key.toLowerCase() + ">";
+    int end = xmlLc.indexOf(endKeyLc, start);
     if (end < 0)
     {
       return "";
     }
-    String value = xml.substring(start + keyUc.length(), end);
+    String value = xml.substring(start + keyLc.length(), end);
     int cdataStart = value.indexOf(CDATA_START);
     if (cdataStart == 0)
     {
@@ -118,19 +129,22 @@ final class Xml
 
   String[] getAll(String key)
   {
-    return getAll(rawXml, key);
+    return getAll(rawXml, rawXmlLower, "<" + key + ">", "</" + key + ">");
   }
 
   String[] getAll(String xml, String key)
   {
-    return getAll(xml, "<" + key + ">", "</" + key + ">");
+    if (xml == null || xml.isEmpty())
+    {
+      return new String[0];
+    }
+    return getAll(xml, xml.toLowerCase(), "<" + key + ">", "</" + key + ">");
   }
 
-  private String[] getAll(String xml, String key, String endKey)
+  private String[] getAll(String xml, String xmlLc, String key, String endKey)
   {
     List<String> hits = new ArrayList<>();
     int old = 0;
-    String xmlLc = xml.toLowerCase();
     String keyLc = key.toLowerCase();
     String endKeyLc = endKey.toLowerCase();
     int start = 0;

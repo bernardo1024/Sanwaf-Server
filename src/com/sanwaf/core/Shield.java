@@ -682,13 +682,18 @@ final class Shield
   {
     for (Map.Entry<String, Metadata> pair : map.entrySet())
     {
-      appendPItemMapToSB(pair.getValue().items, sb, label + pair.getKey());
+      appendPItemMapToSB(pair.getValue().items, sb, label, pair.getKey());
     }
   }
 
   static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label)
   {
-    sb.append(label);
+    appendPItemMapToSB(map, sb, label, "");
+  }
+
+  static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label, String labelSuffix)
+  {
+    sb.append(label).append(labelSuffix);
     if (map != null && !map.isEmpty())
     {
       for (Map.Entry<String, Item> e : map.entrySet())

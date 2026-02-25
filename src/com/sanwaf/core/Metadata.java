@@ -227,12 +227,34 @@ class Metadata
     {
       return "";
     }
-    else
+    final int len = s.length();
+    StringBuilder sb = null;
+    for (int i = 0; i < len; i++)
     {
-      s = s.replace("\\", "\\\\");
-      s = s.replace("\"", "\\\"");
-      return s.replace("/", "\\/");
+      char c = s.charAt(i);
+      String esc;
+      switch (c)
+      {
+      case '\\': esc = "\\\\"; break;
+      case '"':  esc = "\\\""; break;
+      case '/':  esc = "\\/";  break;
+      default:   esc = null;   break;
+      }
+      if (esc != null)
+      {
+        if (sb == null)
+        {
+          sb = new StringBuilder(len + 16);
+          sb.append(s, 0, i);
+        }
+        sb.append(esc);
+      }
+      else if (sb != null)
+      {
+        sb.append(c);
+      }
     }
+    return sb != null ? sb.toString() : s;
   }
 
   static class ParsedMetadataXml
@@ -261,6 +283,7 @@ class Metadata
       return null;
     }
 
+    StringBuilder sb = new StringBuilder(key.length());
     for (String s : list)
     {
       int last = 0;
@@ -277,7 +300,10 @@ class Metadata
         }
         int end = key.indexOf(s.charAt(1), start + 1);
         last = end + 1;
-        key = key.substring(0, start + 1) + key.substring(end);
+        sb.setLength(0);
+        sb.append(key, 0, start + 1);
+        sb.append(key, end, key.length());
+        key = sb.toString();
       }
     }
     return key;
