@@ -173,26 +173,26 @@ abstract class Item
     }
     if (Modes.BLOCK == mode)
     {
-      if (logger != null && log && !doAllBlocks && (shield == null || shield.sanwaf.onErrorLogParmErrors))
+      boolean doLog = logger != null && log && !doAllBlocks && (shield == null || shield.sanwaf.onErrorLogParmErrors);
+      boolean doAttr = (shield == null || shield.sanwaf.onErrorAddParmErrors);
+      if (doLog || doAttr)
       {
-        logger.error(toJson(value, mode, req, true));
-      }
-      if ((shield == null || shield.sanwaf.onErrorAddParmErrors))
-      {
-        appendAttribute(Sanwaf.ATT_LOG_ERROR, toJson(value, mode, req, true), req);
+        String json = toJson(value, mode, req, true);
+        if (doLog) { logger.error(json); }
+        if (doAttr) { appendAttribute(Sanwaf.ATT_LOG_ERROR, json, req); }
       }
       return true;
     }
     else
     {
       // DO DETECTS
-      if (logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections))
+      boolean doLog = logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections);
+      boolean doAttr = (shield == null || shield.sanwaf.onErrorAddParmDetections);
+      if (doLog || doAttr)
       {
-        logger.warn(toJson(value, mode, req, true));
-      }
-      if ((shield == null || shield.sanwaf.onErrorAddParmDetections))
-      {
-        appendAttribute(Sanwaf.ATT_LOG_DETECT, toJson(value, mode, req, true), req);
+        String json = toJson(value, mode, req, true);
+        if (doLog) { logger.warn(json); }
+        if (doAttr) { appendAttribute(Sanwaf.ATT_LOG_DETECT, json, req); }
       }
     }
     return false;
