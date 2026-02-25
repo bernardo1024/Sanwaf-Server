@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 final class Shield
@@ -740,6 +741,7 @@ class Rule
   Pattern pattern;
   boolean failOnMatch = true;
   String msg;
+  private ThreadLocal<Matcher> cachedMatcher;
 
   Rule()
   {
@@ -755,5 +757,14 @@ class Rule
       failOnMatch = false;
     }
     this.msg = msg;
+  }
+
+  Matcher matcher(String value)
+  {
+    if (cachedMatcher == null)
+    {
+      cachedMatcher = ThreadLocal.withInitial(() -> pattern.matcher(""));
+    }
+    return cachedMatcher.get().reset(value);
   }
 }

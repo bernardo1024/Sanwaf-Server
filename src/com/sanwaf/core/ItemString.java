@@ -31,7 +31,7 @@ final class ItemString extends Item
     }
     for (Map.Entry<String, Rule> r : shield.rulePatterns.entrySet())
     {
-      Matcher m = r.getValue().pattern.matcher(value);
+      Matcher m = r.getValue().matcher(value);
       while (m.find())
       {
         int start = m.start();
@@ -73,7 +73,7 @@ final class ItemString extends Item
       Modes ruleMode = rule.getValue().mode;
       if (ruleMode != Modes.DISABLED)
       {
-        boolean match = rule.getValue().pattern.matcher(value).find();
+        boolean match = rule.getValue().matcher(value).find();
         if ((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match))
         {
           if (rule.getValue().mode == Modes.BLOCK)

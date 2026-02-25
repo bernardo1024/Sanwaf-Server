@@ -33,7 +33,7 @@ final class ItemRegex extends Item
     {
       rule = shield.customRulePatterns.get(patternName);
     }
-    Matcher m = rule.pattern.matcher(value);
+    Matcher m = rule.matcher(value);
     if ((m.find() && rule.failOnMatch) || (!m.find() && !rule.failOnMatch))
     {
       points.add(new Point(0, value.length()));
@@ -69,7 +69,7 @@ final class ItemRegex extends Item
     {
       return false;
     }
-    boolean match = rule.pattern.matcher(value).find();
+    boolean match = rule.matcher(value).find();
     if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match))
     {
       handleMode(true, value, req, rule.mode, log);
