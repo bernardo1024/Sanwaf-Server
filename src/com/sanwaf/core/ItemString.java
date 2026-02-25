@@ -54,7 +54,10 @@ final class ItemString extends Item
     if (shield != null)
     {
       //first process the detects & detect all - ignore the return value for detect
-      isInErrorForPatterns(req, shield.rulePatternsDetect, value, doAllBlocks);
+      if (!shield.rulePatternsDetect.isEmpty())
+      {
+        isInErrorForPatterns(req, shield.rulePatternsDetect, value, doAllBlocks);
+      }
       //then do the blocks
       inError = isInErrorForPatterns(req, shield.rulePatterns, value, doAllBlocks);
     }

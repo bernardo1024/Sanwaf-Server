@@ -34,7 +34,8 @@ final class ItemRegex extends Item
       rule = shield.customRulePatterns.get(patternName);
     }
     Matcher m = rule.matcher(value);
-    if ((m.find() && rule.failOnMatch) || (!m.find() && !rule.failOnMatch))
+    boolean found = m.find();
+    if ((found && rule.failOnMatch) || (!found && !rule.failOnMatch))
     {
       points.add(new Point(0, value.length()));
     }

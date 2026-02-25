@@ -304,7 +304,7 @@ public class DatatypeTest
     list = p.getErrorPoints(shield, null);
     assertEquals(0, list.size());
     list = p.getErrorPoints(shield, "416-555-5555");
-    assertEquals(1, list.size());
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, "abc123def456");
     assertEquals(1, list.size());
   }

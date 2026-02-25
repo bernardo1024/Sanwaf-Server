@@ -53,8 +53,7 @@ class ItemAlphanumeric extends Item
     {
       return true;
     }
-    int i = 0;
-    for (i = 0; i < value.length(); i++)
+    for (int i = 0; i < value.length(); i++)
     {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c))

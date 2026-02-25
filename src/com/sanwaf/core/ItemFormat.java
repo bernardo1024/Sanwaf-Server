@@ -167,6 +167,7 @@ final class ItemFormat extends Item
   private String resolveDateVariables(String format)
   {
     String newMdy = "";
+    Calendar cal = Calendar.getInstance();
     String parsedValue = format;
     String[] dateOrder = { "dd", "mm", "yyyy", "yy" };
 
@@ -189,7 +190,7 @@ final class ItemFormat extends Item
         {
         case "yy":
         {
-          int year = Calendar.getInstance().get(Calendar.YEAR);
+          int year = cal.get(Calendar.YEAR);
           newMdy = String.valueOf(year).substring(2);
           last += 2;
           newMdy = adjustDate(parsedValue, last, newMdy);
@@ -197,14 +198,14 @@ final class ItemFormat extends Item
         }
         case "yyyy":
         {
-          int year = Calendar.getInstance().get(Calendar.YEAR);
+          int year = cal.get(Calendar.YEAR);
           newMdy = String.valueOf(year);
           last += 4;
           newMdy = adjustDate(parsedValue, last, newMdy);
           break;
         }
         case "mm":
-          int month = Calendar.getInstance().get(Calendar.MONTH);
+          int month = cal.get(Calendar.MONTH);
           newMdy = String.valueOf(month + 1);
           last += 2;
           newMdy = adjustDate(parsedValue, last, newMdy);
@@ -214,7 +215,7 @@ final class ItemFormat extends Item
           }
           break;
         case "dd":
-          int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+          int day = cal.get(Calendar.DAY_OF_MONTH);
           newMdy = String.valueOf(day);
           last += 2;
           newMdy = adjustDate(parsedValue, last, newMdy);

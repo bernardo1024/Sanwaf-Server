@@ -88,11 +88,8 @@ class ItemNumeric extends Item
     }
     try
     {
-      if (Double.parseDouble(value) > maxValue)
-      {
-        return true;
-      }
-      if (Double.parseDouble(value) < minValue)
+      double d = Double.parseDouble(value);
+      if (d > maxValue || d < minValue)
       {
         return true;
       }
