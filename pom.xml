@@ -115,6 +115,9 @@
                     <configuration>
                         <forkCount>${surefire.forkcount}</forkCount>
                         <reuseForks>${surefire.reuseforks}</reuseForks>
+                        <excludes>
+                            <exclude>**/benchmark/*.java</exclude>
+                        </excludes>
                         <additionalClasspathElements>
                             <additionalClasspathElement>${basedir}/classes</additionalClasspathElement>
                             <additionalClasspathElement>${basedir}</additionalClasspathElement>
