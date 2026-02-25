@@ -73,12 +73,21 @@ final class ItemFormat extends Item
       return true;
     }
 
+    Calendar cal = null;
+    if (hasDateVariables)
+    {
+      cal = Calendar.getInstance();
+    }
+
     for (int i = 0; i < value.length(); i++)
     {
       String c = String.valueOf(value.charAt(i));
       String formatBlock = formatBlocks.get(i);
 
-      formatBlock = resolveDateVariables(formatBlock);
+      if (hasDateVariables)
+      {
+        formatBlock = resolveDateVariables(formatBlock, cal);
+      }
 
       if (formatBlock.startsWith("#["))
       {
@@ -165,10 +174,9 @@ final class ItemFormat extends Item
     return false;
   }
 
-  private String resolveDateVariables(String format)
+  private String resolveDateVariables(String format, Calendar cal)
   {
     String newMdy = "";
-    Calendar cal = Calendar.getInstance();
     String parsedValue = format;
     String[] dateOrder = { "dd", "mm", "yyyy", "yy" };
 
