@@ -22,7 +22,7 @@ public final class Sanwaf
   static final String ATT_TRANS_ID = "~sanwaf-id";
 
   private String xmlFilename = null;
-  protected Logger logger;
+  Logger logger;
 
   boolean enabled = false;
   boolean verbose = false;
@@ -34,8 +34,8 @@ public final class Sanwaf
   boolean onErrorLogParmErrorsVerbose = true;
   boolean onErrorLogParmDetectionsVerbose = true;
 
-  protected static String securedAppVersion = "unknown";
-  protected List<Shield> shields = new ArrayList<>();
+  static String securedAppVersion = "unknown";
+  List<Shield> shields = new ArrayList<>();
   Map<String, String> globalErrorMessages = new HashMap<>();
 
   public enum AllowListType

@@ -4,6 +4,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 abstract class Item
@@ -501,7 +502,7 @@ abstract class Item
       sb.append("\"maxlength\":\"").append(max).append("\"");
       sb.append(",\"minlength\":\"").append(min).append("\"");
       sb.append(",\"msg\":\"").append(Metadata.jsonEncode(msg)).append("\"");
-      sb.append(",\"uri\":\"").append(Metadata.jsonEncode(String.valueOf(uri))).append("\"");
+      sb.append(",\"uri\":\"").append(Metadata.jsonEncode(Arrays.toString(uri))).append("\"");
       sb.append(",\"req\":\"").append(required).append("\"");
       sb.append(",\"maxvalue\":\"").append(maxValue).append("\"");
       sb.append(",\"minvalue\":\"").append(minValue).append("\"");
