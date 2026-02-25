@@ -109,19 +109,15 @@ class ItemNumeric extends Item
     {
       return true;
     }
-    if (isMaxMinValueError(value))
-    {
-      return true;
-    }
     boolean foundDot = false;
-    char[] chars = value.toCharArray();
-    for (int i = 0; i < chars.length; i++)
+    final int len = value.length();
+    for (int i = 0; i < len; i++)
     {
-      char c = chars[i];
+      char c = value.charAt(i);
       int d = c - '0';
       if (d < 0 || d > 9)
       {
-        if (!(i == 0 && c == '-' && chars.length > 1))
+        if (!(i == 0 && c == '-' && len > 1))
         {
           if (!isInt && c == '.' && !foundDot)
           {
@@ -134,7 +130,7 @@ class ItemNumeric extends Item
         }
       }
     }
-    return false;
+    return isMaxMinValueError(value);
   }
 
   @Override
