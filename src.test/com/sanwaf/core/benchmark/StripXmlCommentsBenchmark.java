@@ -96,7 +96,6 @@ public class StripXmlCommentsBenchmark {
     return sb.toString();
   }
 
-  @Test
   public void benchmarkStripXmlComments() {
     String[] inputs = { TEST_INPUT_SINGLE_LINE, TEST_INPUT_MULTI_LINE, TEST_INPUT_MIXED, TEST_INPUT_NO_COMMENTS };
     String[] labels = { "Single-line", "Multi-line", "Mixed", "No comments" };

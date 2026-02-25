@@ -134,7 +134,6 @@ public class EscapeCharsBenchmark {
     return new String(dst, 0, d);
   }
 
-  @Test
   public void benchmarkEscapeChars() {
     // Verify all 4 approaches produce the same result
     String expected = escapeCharsCurrent(TEST_INPUT);
