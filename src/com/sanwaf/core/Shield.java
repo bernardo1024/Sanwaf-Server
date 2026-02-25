@@ -215,25 +215,20 @@ final class Shield
   private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
   {
     boolean threat = false;
-    Enumeration<?> names = ((HttpServletRequest) req).getHeaderNames();
+    HttpServletRequest hreq = (HttpServletRequest) req;
+    Enumeration<?> names = hreq.getHeaderNames();
     while (names.hasMoreElements())
     {
       String s = (String) names.nextElement();
-      Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
-      while (headerEnumeration.hasMoreElements())
+      Enumeration<?> detectEnum = hreq.getHeaders(s);
+      while (detectEnum.hasMoreElements())
       {
-        threat(req, headersDetect, s, (String) headerEnumeration.nextElement(), false, doAllBlocks, log);
+        threat(req, headersDetect, s, (String) detectEnum.nextElement(), false, doAllBlocks, log);
       }
-    }
-
-    names = ((HttpServletRequest) req).getHeaderNames();
-    while (names.hasMoreElements())
-    {
-      String s = (String) names.nextElement();
-      Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
-      while (headerEnumeration.hasMoreElements())
+      Enumeration<?> blockEnum = hreq.getHeaders(s);
+      while (blockEnum.hasMoreElements())
       {
-        if (threat(req, headers, s, (String) headerEnumeration.nextElement(), false, doAllBlocks, log))
+        if (threat(req, headers, s, (String) blockEnum.nextElement(), false, doAllBlocks, log))
         {
           if (!doAllBlocks)
           {

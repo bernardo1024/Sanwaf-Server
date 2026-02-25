@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -146,6 +147,23 @@ public class GetAllErrorsTest
       count++;
     }
     return count;
+  }
+
+  @Test
+  public void testAllDetectsBeforeBlocksMultiValuedParam()
+  {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    // multi_test exists in both detect and block metadata (type 's').
+    // Submit two values that both match the xss-BLOCK string pattern.
+    request.addParameter("multi_test", new String[] { "sBLOCKval1", "sBLOCKval2" });
+    // doAllBlocks=false — blocks on first match but detects should already be complete
+    assertTrue(sanwaf.isThreatDetected(request));
+    // Both values must have been detected (the detect pass runs for ALL values before the block pass)
+    String detects = Sanwaf.getDetects(request);
+    assertNotNull(detects);
+    assertTrue(detects.contains("\"value\":\"sBLOCKval1\""));
+    assertTrue(detects.contains("\"value\":\"sBLOCKval2\""));
+    assertEquals(2, getItemCount(detects, "\"item\":{\"name\":\"multi_test\""));
   }
 
   @Test

@@ -386,6 +386,16 @@
                             <name>custom_NO_MODE</name>
                             <type>r{custom-NO-MODE}</type>
                         </item>
+                        <item>
+                            <mode>detect</mode>
+                            <name>multi_test</name>
+                            <type>s</type>
+                        </item>
+                        <item>
+                            <mode>block</mode>
+                            <name>multi_test</name>
+                            <type>s</type>
+                        </item>
                     </items>
                 </parameters>
                 <headers>
