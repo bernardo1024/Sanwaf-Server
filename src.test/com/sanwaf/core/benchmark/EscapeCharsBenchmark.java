@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
  * 3. Precompiled Pattern — static final Pattern + matcher().replaceAll()
  * 4. Single-pass char[] scan — one traversal, no intermediate strings
  */
+@SuppressWarnings("ALL")
 public class EscapeCharsBenchmark {
 
   // --- Precompiled patterns for approach 3 ---

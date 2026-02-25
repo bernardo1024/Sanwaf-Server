@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
  * 2. Precompiled Pattern — static final Patterns for all five regexes
  * 3. Single-pass char[] scan — one traversal, no regex
  */
+@SuppressWarnings("ALL")
 public class RemoveRelatedSpaceBenchmark {
 
   // --- Precompiled patterns for approach 2 ---

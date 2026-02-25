@@ -8,6 +8,7 @@ package com.sanwaf.core.benchmark;
  * Tests both the hot-path scenario (getFromIndex: first char of a key used for
  * HashMap lookup) and a simulated map-get to measure end-to-end impact.
  */
+@SuppressWarnings("ALL")
 public class CharStringBenchmark {
 
   // --- Cached array (the new approach) ---

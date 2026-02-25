@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
  * 2. Precompiled Pattern — static final Pattern for both regexes
  * 3. indexOf loop — single-pass scan for <!-- and --> markers
  */
+@SuppressWarnings("ALL")
 public class StripXmlCommentsBenchmark {
 
   // --- Precompiled patterns for approach 2 ---

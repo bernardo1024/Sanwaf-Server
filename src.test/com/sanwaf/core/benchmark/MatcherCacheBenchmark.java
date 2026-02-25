@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
  * Simulates request validation where N parameter values are checked against
  * M regex rules (the hot path in ItemString / ItemRegex).
  */
+@SuppressWarnings("ALL")
 public class MatcherCacheBenchmark {
 
   // Representative XSS/injection patterns from sanwaf's default ruleset
@@ -56,7 +57,6 @@ public class MatcherCacheBenchmark {
   }
 
   // --- Approach 2: ThreadLocal cached Matcher (new code) ---
-  @SuppressWarnings("unchecked")
   private static final ThreadLocal<Matcher>[] CACHED_MATCHERS = new ThreadLocal[RULES.length];
   static {
     for (int i = 0; i < RULES.length; i++) {
