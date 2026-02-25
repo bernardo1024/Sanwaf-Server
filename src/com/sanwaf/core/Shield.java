@@ -441,6 +441,8 @@ final class Shield
   static final String XML_CASE_SENSITIVE = "caseSensitive";
   static final String XML_ENABLED = "enabled";
   static final String SEPARATOR = ":::";
+  private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
+  private static final Pattern PIPE_PATTERN = Pattern.compile("\\|");
 
   private void load(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger)
   {
@@ -568,7 +570,7 @@ final class Shield
   {
     String filename = xml.substring(REGEX_FILE_MARKER.length());
     String filekey = null;
-    String[] a = xml.split("\\|");
+    String[] a = PIPE_PATTERN.split(xml);
     if (a.length == 2)
     {
       filename = a[0].substring(REGEX_FILE_MARKER.length());
@@ -708,7 +710,7 @@ final class Shield
     List<String> out = new ArrayList<>();
     if (s != null && !s.isEmpty())
     {
-      String[] vs = s.split(SEPARATOR);
+      String[] vs = SEPARATOR_PATTERN.split(s);
       for (String v : vs)
       {
         if (!v.isEmpty())
