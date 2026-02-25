@@ -39,7 +39,7 @@
                 <stringPatterns>
                     <item>
                         <key>javascriptExpressionNoKey</key>
-                        <value><![CDATA[file=/regexUsingFilesNoKey.xml]]></value>
+                        <value><![CDATA[file=/regexUsingFilesNoKey.txt]]></value>
                     </item>
                     <item>
                         <key>javascriptExpressionKey</key>
@@ -49,7 +49,7 @@
                 <customPatterns>
                     <item>
                         <key>customjavascriptExpressionNoKey</key>
-                        <value><![CDATA[file=/regexUsingFilesNoKey.xml]]></value>
+                        <value><![CDATA[file=/regexUsingFilesNoKey.txt]]></value>
                     </item>
                     <item>
                         <key>customjavascriptExpressionKey</key>
