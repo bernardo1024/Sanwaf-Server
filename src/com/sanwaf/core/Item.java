@@ -9,11 +9,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 abstract class Item
 {
   static final String INVALID_SIZE = "Invalid Size";
   static final String INVALID_URI = "Invalid URI";
+  private static final Pattern COLON_PATTERN = Pattern.compile(":");
+  private static final Pattern DOUBLE_PIPE_PATTERN = Pattern.compile("\\|\\|");
   com.sanwaf.log.Logger logger;
   String name;
   String display;
@@ -305,7 +308,7 @@ abstract class Item
 
   private boolean isRelatedBlockMakingChildRequired(String block, String value, ServletRequest req)
   {
-    String[] tagKeyValuePair = block.split(":");
+    String[] tagKeyValuePair = COLON_PATTERN.split(block);
     String parentValue = req.getParameter(tagKeyValuePair[0]);
 
     int parentLen = 0;
@@ -316,7 +319,7 @@ abstract class Item
 
     if (tagKeyValuePair.length > 1)
     {
-      String[] ors = tagKeyValuePair[1].split("\\|\\|");
+      String[] ors = DOUBLE_PIPE_PATTERN.split(tagKeyValuePair[1]);
       for (String or : ors)
       {
         if (or.equals(parentValue))
@@ -332,7 +335,7 @@ abstract class Item
 
   private String isRelatedEqual(String value, ServletRequest req, Metadata meta)
   {
-    String[] tagKeyValuePair = related.split(":");
+    String[] tagKeyValuePair = COLON_PATTERN.split(related);
     String parentValue = req.getParameter(tagKeyValuePair[0]);
     if (value.equals(parentValue))
     {
