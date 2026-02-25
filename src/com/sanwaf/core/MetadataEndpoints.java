@@ -13,23 +13,22 @@ public class MetadataEndpoints
   static final String XML_STRICT = "strict";
 
   final com.sanwaf.log.Logger logger;
-  boolean enabled = false;
-  boolean caseSensitive = true;
+  final boolean enabled;
+  final boolean caseSensitive;
   final Map<String, Metadata> endpointParametersBlock = new HashMap<>();
   final Map<String, Metadata> endpointParametersDetect = new HashMap<>();
 
   MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger, boolean isDetect)
   {
     this.logger = logger;
-    load(shield, xml, isDetect);
+    Metadata.ParsedMetadataXml parsed = Metadata.parseMetadataXml(xml, XML_ENDPOINTS);
+    this.enabled = parsed.enabled;
+    this.caseSensitive = parsed.caseSensitive;
+    loadEndpoints(shield, parsed, isDetect);
   }
 
-  void load(Shield shield, Xml xml, boolean isDetect)
+  private void loadEndpoints(Shield shield, Metadata.ParsedMetadataXml parsed, boolean isDetect)
   {
-    Metadata.ParsedMetadataXml parsed = Metadata.parseMetadataXml(xml, XML_ENDPOINTS);
-    enabled = parsed.enabled;
-    caseSensitive = parsed.caseSensitive;
-
     String[] xmlEndpoints = parsed.subBlockXml.getAll(XML_ENDPOINT);
     for (String endpointString : xmlEndpoints)
     {
@@ -50,12 +49,10 @@ public class MetadataEndpoints
         continue;
       }
 
-      Metadata parametersBlock = new Metadata(shield, items, caseSensitive, true, strict, logger, false);
-      parametersBlock.endpointMode = mode;
+      Metadata parametersBlock = new Metadata(shield, items, caseSensitive, true, strict, logger, false, mode);
       setEndpointParametersForUris(endpointParametersBlock, uris, parametersBlock);
 
-      Metadata parametersDetect = new Metadata(shield, items, caseSensitive, true, strict, logger, true);
-      parametersDetect.endpointMode = mode;
+      Metadata parametersDetect = new Metadata(shield, items, caseSensitive, true, strict, logger, true, mode);
       setEndpointParametersForUris(endpointParametersDetect, uris, parametersDetect);
     }
   }

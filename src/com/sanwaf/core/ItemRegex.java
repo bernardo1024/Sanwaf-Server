@@ -94,10 +94,8 @@ final class ItemRegex extends Item
     if (value.startsWith(ItemFactory.INLINE_REGEX))
     {
       isInline = true;
-      rule = new Rule();
-      rule.pattern = Pattern.compile(value.substring(ItemFactory.INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
-      rule.mode = id.mode;
-      rule.failOnMatch = false;
+      Pattern inlinePattern = Pattern.compile(value.substring(ItemFactory.INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
+      rule = new Rule(id.mode, inlinePattern, "pass", null);
       patternName = "inline-regex: " + rule.pattern;
     }
     else

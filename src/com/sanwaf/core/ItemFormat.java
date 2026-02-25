@@ -250,13 +250,10 @@ final class ItemFormat extends Item
       String num = parsedValue.substring(last + 2, endOfNum);
       int parsedNum = Integer.parseInt(num);
       char arith = parsedValue.charAt(last + 1);
-      if (arith == '+')
+      switch (arith)
       {
-        newValue += parsedNum;
-      }
-      else if (arith == '-')
-      {
-        newValue -= parsedNum;
+        case '+': newValue += parsedNum; break;
+        case '-': newValue -= parsedNum; break;
       }
     }
     return String.valueOf(newValue);

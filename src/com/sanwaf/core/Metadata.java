@@ -30,36 +30,53 @@ class Metadata
     return c < 128 ? CHAR_STRINGS[c] : String.valueOf(c);
   }
 
-  com.sanwaf.log.Logger logger;
-  boolean enabled = false;
-  boolean caseSensitive = true;
-  boolean endpointIsStrict = false;
-  boolean endpointIsStrictAllowLess = false;
-  Modes endpointMode = Modes.BLOCK;
-  Map<String, Item> items;
+  final com.sanwaf.log.Logger logger;
+  boolean enabled;
+  final boolean caseSensitive;
+  final boolean endpointIsStrict;
+  final boolean endpointIsStrictAllowLess;
+  final Modes endpointMode;
+  final Map<String, Item> items;
   final Map<String, List<String>> index = new HashMap<>();
 
   Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger, boolean isDetect)
   {
     this.logger = logger;
-    load(shield, xml, type, isDetect);
+    ParsedMetadataXml parsed = parseMetadataXml(xml, type);
+    this.enabled = parsed.enabled;
+    this.caseSensitive = parsed.caseSensitive;
+    this.items = parsed.caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    this.endpointIsStrict = false;
+    this.endpointIsStrictAllowLess = false;
+    this.endpointMode = Modes.BLOCK;
+    loadItems(shield, parsed, isDetect);
   }
 
   //used for endpoints
-  Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict, com.sanwaf.log.Logger logger, boolean isDetect)
+  Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes,
+           String endpointIsStrict, com.sanwaf.log.Logger logger, boolean isDetect, Modes endpointMode)
   {
     this.logger = logger;
-    loadEndpoints(shield, itemsString, caseSensitive, includeEndpointAttributes, isDetect);
-
+    this.enabled = true;
+    this.caseSensitive = caseSensitive;
+    this.items = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    this.endpointMode = endpointMode;
     if ("true".equalsIgnoreCase(endpointIsStrict))
     {
       this.endpointIsStrict = true;
+      this.endpointIsStrictAllowLess = false;
     }
     else if ("<".equals(endpointIsStrict) || "less".equalsIgnoreCase(endpointIsStrict))
     {
       this.endpointIsStrict = true;
       this.endpointIsStrictAllowLess = true;
     }
+    else
+    {
+      this.endpointIsStrict = false;
+      this.endpointIsStrictAllowLess = false;
+    }
+    loadEndpointItems(shield, itemsString, includeEndpointAttributes, isDetect);
   }
 
   static ParsedMetadataXml parseMetadataXml(Xml xml, String type)
@@ -76,15 +93,9 @@ class Metadata
     return new ParsedMetadataXml(enabled, caseSensitive, subBlockXml);
   }
 
-  void load(Shield shield, Xml xml, String type, boolean isDetect)
+  private void loadItems(Shield shield, ParsedMetadataXml parsed, boolean isDetect)
   {
     initA2Zindex(index);
-
-    ParsedMetadataXml parsed = parseMetadataXml(xml, type);
-    enabled = parsed.enabled;
-    caseSensitive = parsed.caseSensitive;
-    items = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
     String[] xmlItems = parsed.subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
@@ -129,13 +140,9 @@ class Metadata
     }
   }
 
-  void loadEndpoints(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, boolean isDetect)
+  private void loadEndpointItems(Shield shield, String itemsString, boolean includeEndpointAttributes, boolean isDetect)
   {
     initA2Zindex(index);
-    enabled = true;
-    this.caseSensitive = caseSensitive;
-    items = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
     Xml itemsXml = new Xml(itemsString);
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)

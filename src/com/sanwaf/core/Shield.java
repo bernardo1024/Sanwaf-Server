@@ -23,35 +23,70 @@ final class Shield
   private static final String STRICT_PARAMETER_DETECTED = "URI Strict Parameter Error - Unknown Parameter Detected";
   private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
   private static final String REGEX_FILE_MARKER = "file=";
-  Sanwaf sanwaf = null;
-  Logger logger = null;
-  String name = null;
-  Modes mode = Modes.BLOCK;
-  Shield childShield = null;
-  int minLen = 0;
-  int maxLen = Integer.MAX_VALUE;
-  int regexMinLen = 0;
-  boolean regexAlways = false;
+  final Sanwaf sanwaf;
+  final Logger logger;
+  final String name;
+  final Modes mode;
+  final Shield childShield;
+  final int minLen;
+  final int maxLen;
+  final int regexMinLen;
+  boolean regexAlways;
   final Map<String, String> errorMessages = new HashMap<>();
-  Set<String> regexAlwaysExclusions = new LinkedHashSet<>();
+  final Set<String> regexAlwaysExclusions;
   final Map<String, Rule> rulePatterns = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   final Map<String, Rule> customRulePatterns = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   final Map<String, Rule> rulePatternsDetect = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   final Map<String, Rule> customRulePatternsDetect = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-  Metadata parameters = null;
-  Metadata cookies = null;
-  Metadata headers = null;
-  Metadata parametersDetect = null;
-  Metadata cookiesDetect = null;
-  Metadata headersDetect = null;
-  MetadataEndpoints endpoints = null;
-  MetadataEndpoints endpointsDetect = null;
+  Metadata parameters;
+  final Metadata cookies;
+  final Metadata headers;
+  final Metadata parametersDetect;
+  final Metadata cookiesDetect;
+  final Metadata headersDetect;
+  final MetadataEndpoints endpoints;
+  final MetadataEndpoints endpointsDetect;
 
   Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger)
   {
     this.sanwaf = sanwaf;
     this.logger = logger;
-    load(sanwaf, xml, shieldXml, logger);
+
+    Xml settingsBlockXml = new Xml(shieldXml.get(XML_SHIELD_SETTINGS));
+    this.name = settingsBlockXml.get(XML_NAME);
+    this.mode = Modes.getMode(settingsBlockXml.get(XML_MODE), Modes.BLOCK);
+
+    int parsedMaxLen = parseInt(settingsBlockXml.get(XML_MAX_LEN), Integer.MAX_VALUE);
+    this.maxLen = (parsedMaxLen == -1) ? Integer.MAX_VALUE : parsedMaxLen;
+
+    int parsedMinLen = parseInt(settingsBlockXml.get(XML_MIN_LEN), 0);
+    this.minLen = (parsedMinLen == -1) ? 0 : parsedMinLen;
+
+    String childShieldName = settingsBlockXml.get(XML_CHILD);
+    this.childShield = childShieldName.isEmpty() ? null : findChildShield(sanwaf, xml, childShieldName, logger);
+
+    ItemFactory.setErrorMessages(errorMessages, settingsBlockXml);
+
+    Xml regexBlockXml = new Xml(shieldXml.get(XML_REGEX_CONFIG));
+    loadPatterns(regexBlockXml);
+
+    int parsedRegexMinLen = parseInt(regexBlockXml.get(XML_MIN_LEN), 0);
+    this.regexMinLen = (parsedRegexMinLen == -1) ? Integer.MAX_VALUE : parsedRegexMinLen;
+
+    String alwaysBlock = shieldXml.get(XML_REGEX_ALWAYS_REGEX);
+    Xml alwaysBlockXml = new Xml(alwaysBlock);
+    this.regexAlways = Boolean.parseBoolean(alwaysBlockXml.get(XML_ENABLED));
+    this.regexAlwaysExclusions = regexAlways ? loadRegexExclusions(alwaysBlockXml) : new LinkedHashSet<>();
+
+    this.endpoints = new MetadataEndpoints(this, shieldXml, logger, false);
+    this.endpointsDetect = new MetadataEndpoints(this, shieldXml, logger, true);
+    this.parameters = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, false);
+    this.parametersDetect = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, true);
+    this.cookies = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, false);
+    this.cookiesDetect = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, true);
+    this.headers = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, false);
+    this.headersDetect = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, true);
+
     logStartup();
   }
 
@@ -448,63 +483,7 @@ final class Shield
   private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
   private static final Pattern PIPE_PATTERN = Pattern.compile("\\|");
 
-  private void load(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger)
-  {
-    Xml settingsBlockXml = new Xml(shieldXml.get(XML_SHIELD_SETTINGS));
-    name = settingsBlockXml.get(XML_NAME);
-    mode = Modes.getMode(settingsBlockXml.get(XML_MODE), Modes.BLOCK);
-    maxLen = parseInt(settingsBlockXml.get(XML_MAX_LEN), maxLen);
-    if (maxLen == -1)
-    {
-      maxLen = Integer.MAX_VALUE;
-    }
-    minLen = parseInt(settingsBlockXml.get(XML_MIN_LEN), minLen);
-    if (minLen == -1)
-    {
-      minLen = 0;
-    }
-    String childShieldName = settingsBlockXml.get(XML_CHILD);
-    if (!childShieldName.isEmpty())
-    {
-      loadChildShield(sanwaf, xml, childShieldName, logger);
-    }
-
-    ItemFactory.setErrorMessages(errorMessages, settingsBlockXml);
-
-    Xml regexBlockXml = new Xml(shieldXml.get(XML_REGEX_CONFIG));
-    loadPatterns(regexBlockXml);
-    regexMinLen = parseInt(regexBlockXml.get(XML_MIN_LEN), regexMinLen);
-    if (regexMinLen == -1)
-    {
-      regexMinLen = Integer.MAX_VALUE;
-    }
-
-    String alwaysBlock = shieldXml.get(XML_REGEX_ALWAYS_REGEX);
-    Xml alwaysBlockXml = new Xml(alwaysBlock);
-    regexAlways = Boolean.parseBoolean(alwaysBlockXml.get(XML_ENABLED));
-    regexAlwaysExclusions = new LinkedHashSet<>();
-    if (regexAlways)
-    {
-      String exclusionsBlock = alwaysBlockXml.get(XML_REGEX_ALWAYS_REGEX_EXCLUSIONS);
-      Xml exclusionsBlockXml = new Xml(exclusionsBlock);
-      String[] items = exclusionsBlockXml.getAll(ItemFactory.XML_ITEM);
-      for (String item : items)
-      {
-        List<String> list = split(item);
-        regexAlwaysExclusions.addAll(list);
-      }
-    }
-    endpoints = new MetadataEndpoints(this, shieldXml, logger, false);
-    endpointsDetect = new MetadataEndpoints(this, shieldXml, logger, true);
-    parameters = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, false);
-    parametersDetect = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, true);
-    cookies = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, false);
-    cookiesDetect = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, true);
-    headers = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, false);
-    headersDetect = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, true);
-  }
-
-  private void loadChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger)
+  private static Shield findChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger)
   {
     String[] children = xml.getAll(XML_CHILD_SHIELD);
     for (String child : children)
@@ -513,10 +492,24 @@ final class Shield
       Xml settings = new Xml(childXml.get(XML_SHIELD_SETTINGS));
       if (settings.get(XML_NAME).equals(childShieldName))
       {
-        childShield = new Shield(sanwaf, xml, new Xml(child), logger);
-        break;
+        return new Shield(sanwaf, xml, new Xml(child), logger);
       }
     }
+    return null;
+  }
+
+  private static Set<String> loadRegexExclusions(Xml alwaysBlockXml)
+  {
+    Set<String> exclusions = new LinkedHashSet<>();
+    String exclusionsBlock = alwaysBlockXml.get(XML_REGEX_ALWAYS_REGEX_EXCLUSIONS);
+    Xml exclusionsBlockXml = new Xml(exclusionsBlock);
+    String[] items = exclusionsBlockXml.getAll(ItemFactory.XML_ITEM);
+    for (String item : items)
+    {
+      List<String> list = split(item);
+      exclusions.addAll(list);
+    }
+    return exclusions;
   }
 
   private void loadPatterns(Xml xml)
@@ -734,25 +727,25 @@ final class Shield
 
 class Rule
 {
-  Modes mode;
-  Pattern pattern;
-  boolean failOnMatch = true;
-  String msg;
+  final Modes mode;
+  final Pattern pattern;
+  final boolean failOnMatch;
+  final String msg;
   private ThreadLocal<Matcher> cachedMatcher;
 
   Rule()
   {
-    mode = Modes.BLOCK;
+    this.mode = Modes.BLOCK;
+    this.pattern = null;
+    this.failOnMatch = true;
+    this.msg = null;
   }
 
   Rule(Modes mode, Pattern pattern, String match, String msg)
   {
     this.mode = mode;
     this.pattern = pattern;
-    if ("pass".equalsIgnoreCase(match))
-    {
-      failOnMatch = false;
-    }
+    this.failOnMatch = !"pass".equalsIgnoreCase(match);
     this.msg = msg;
   }
 
