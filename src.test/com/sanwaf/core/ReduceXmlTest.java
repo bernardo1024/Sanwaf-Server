@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

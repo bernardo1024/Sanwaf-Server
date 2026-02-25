@@ -13,10 +13,9 @@ final class Point
 
   public String toString()
   {
-    StringBuilder sb = new StringBuilder();
-    sb.append("start: ").append(start);
-    sb.append(", end: ").append(end);
-    return sb.toString();
+    String sb = "start: " + start +
+        ", end: " + end;
+    return sb;
   }
 }
 

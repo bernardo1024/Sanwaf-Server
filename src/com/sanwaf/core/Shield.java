@@ -185,7 +185,6 @@ final class Shield
             return true;
           }
           threat = true;
-          ;
         }
       }
     }
@@ -450,7 +449,7 @@ final class Shield
   private void load(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger)
   {
     Xml settingsBlockXml = new Xml(shieldXml.get(XML_SHIELD_SETTINGS));
-    name = String.valueOf(settingsBlockXml.get(XML_NAME));
+    name = settingsBlockXml.get(XML_NAME);
     mode = Modes.getMode(settingsBlockXml.get(XML_MODE), Modes.BLOCK);
     maxLen = parseInt(settingsBlockXml.get(XML_MAX_LEN), maxLen);
     if (maxLen == -1)

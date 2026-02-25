@@ -6,23 +6,15 @@ public enum Modes
 
   static Modes getMode(String sMode, Modes def)
   {
-    switch (sMode.toLowerCase())
+    String mode = sMode.toLowerCase().replace("-", "_").replace(" ", "");
+    for (Modes m : values())
     {
-    case "disabled":
-      return DISABLED;
-    case "block":
-      return BLOCK;
-    case "detect":
-      return DETECT;
-    case "detect_all":
-      return DETECT_ALL;
-    case "detect-all":
-      return DETECT_ALL;
-    case "detectall":
-      return DETECT_ALL;
-    default:
-      return def;
+      if (m.name().equalsIgnoreCase(mode))
+      {
+        return m;
+      }
     }
+    return def;
   }
 }
 

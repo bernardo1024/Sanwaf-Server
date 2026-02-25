@@ -7,7 +7,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

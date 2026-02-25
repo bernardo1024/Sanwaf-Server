@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -36,7 +36,7 @@ public class AlwaysPerformRegexTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("StringExcluded", "<script>alert(1)</script>");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     request = new MockHttpServletRequest();
     request.addParameter("foobar", "<script>alert(1)</script>");

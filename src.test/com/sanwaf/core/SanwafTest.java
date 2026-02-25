@@ -7,7 +7,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -42,7 +41,7 @@ public class SanwafTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "abcdefghij");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
   }
 
   @Test
@@ -51,7 +50,7 @@ public class SanwafTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1);</script>");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
   }
 
   @Test
@@ -61,7 +60,7 @@ public class SanwafTest
     request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     String trackId = Sanwaf.getTrackingId(request);
     assertNotNull(trackId);
@@ -80,7 +79,7 @@ public class SanwafTest
     request = new MockHttpServletRequest();
     request.addParameter("AlphanumericAndMore", "Some Bad! data;----?? ");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     String trackId = Sanwaf.getTrackingId(request);
     assertNotNull(trackId);
@@ -98,7 +97,7 @@ public class SanwafTest
     boolean trackID = sanwaf.onErrorAddTrackId;
     boolean trackErrors = sanwaf.onErrorAddParmErrors;
     Boolean result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
     assertNotNull(Sanwaf.getTrackingId(request));
     String s = Sanwaf.getErrors(request);
     assertNotNull(s);
@@ -108,7 +107,7 @@ public class SanwafTest
     request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
     result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
     assertNull(Sanwaf.getTrackingId(request));
     s = Sanwaf.getErrors(request);
     System.out.println("**********" + s);
@@ -201,7 +200,7 @@ public class SanwafTest
     request = new MockHttpServletRequest();
     request.addParameter("foobarTHISisNOTmappedXssError", "<script>alert(1)</script>");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     shield.regexAlways = xssAlways;
   }

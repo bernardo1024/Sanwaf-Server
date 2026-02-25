@@ -8,7 +8,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -85,11 +85,11 @@ public class DatatypeTest
     assertTrue(p.inError(req, shield, "12,34,56", false, false));
 
     List<Point> list = p.getErrorPoints(shield, "");
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, null);
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, null);
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
   }
 
   @Test
@@ -101,11 +101,11 @@ public class DatatypeTest
     assertTrue(p.inError(req, shield, "12,34,56", false, false));
 
     List<Point> list = p.getErrorPoints(shield, "");
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, null);
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, null);
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
   }
 
   @Test
@@ -171,13 +171,13 @@ public class DatatypeTest
     assertTrue(p.inError(req, shield, "abcde?fg", false, false));
 
     List<Point> list = p.getErrorPoints(shield, "abcde?fg");
-    assertTrue(list.size() == 1);
+    assertEquals(1, list.size());
     list = p.getErrorPoints(shield, "");
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, null);
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, "1239.xyz");
-    assertTrue(list.size() == 1);
+    assertEquals(1, list.size());
   }
 
   @Test
@@ -302,13 +302,13 @@ public class DatatypeTest
     assertTrue(p.inError(req, shield, "abc-def-ghij-klmn", false, false));
 
     List<Point> list = p.getErrorPoints(shield, "");
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, null);
-    assertTrue(list.size() == 0);
+    assertEquals(0, list.size());
     list = p.getErrorPoints(shield, "416-555-5555");
-    assertTrue(list.size() == 1);
+    assertEquals(1, list.size());
     list = p.getErrorPoints(shield, "abc123def456");
-    assertTrue(list.size() == 1);
+    assertEquals(1, list.size());
   }
 
   @Test
@@ -387,28 +387,28 @@ public class DatatypeTest
     request.addParameter("JavaMultiParm2", "foobarfoobar");
     request.addParameter("JavaMultiParm3", "foobarfoobar");
     Boolean result = sanwaf.isThreatDetected(request);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     request = new MockHttpServletRequest();
     request.addParameter("JavaMultiParm", "foobarfoobar");
     request.addParameter("JavaMultiParm2", "foobarfoobar");
     request.addParameter("JavaMultiParm3", "foobar");
     result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     request = new MockHttpServletRequest();
     request.addParameter("JavaMultiParm", "foobarfoobar");
     request.addParameter("JavaMultiParm2", "foobar");
     request.addParameter("JavaMultiParm3", "foobarfoobar");
     result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     request = new MockHttpServletRequest();
     request.addParameter("JavaMultiParm", "foobar");
     request.addParameter("JavaMultiParm2", "foobarfoobar");
     request.addParameter("JavaMultiParm3", "foobarfoobar");
     result = sanwaf.isThreatDetected(request);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
   }
 
   @Test
@@ -644,133 +644,133 @@ public class DatatypeTest
     req.addParameter("depformatParent", "US");
     req.addParameter("depformat", "12345");
     Boolean result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformat", "A1A-1A1");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "Canada");
     req.addParameter("depformat", "A1A-1A1");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "Canada");
     req.addParameter("depformat", "12345");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatMultiple", "12345-1234");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatMultiple", "A1A-1A1");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "xxxxx");
     req.addParameter("depformatMultiple", "A1A-1A1");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatMultiple", "1234");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatMultiple", "12345-123");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatRequired", "12345");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatRequired", "");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(true, (boolean) result);
+    assertTrue(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormatBadParent", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat1", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat2", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat3", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat4", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat5", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat6", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat7", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat8", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
 
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat9", "aaaaa");
     result = sanwaf.isThreatDetected(req);
-    assertEquals(false, (boolean) result);
+    assertFalse(result);
   }
 
   @Test

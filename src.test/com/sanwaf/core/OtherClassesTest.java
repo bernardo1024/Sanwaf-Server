@@ -68,16 +68,16 @@ public class OtherClassesTest
   public void jsonEncodeTest()
   {
     String s = Metadata.jsonEncode(null);
-    assertTrue(s.equals(""));
+    assertEquals("", s);
   }
 
   @Test
   public void parseIntTest()
   {
     int i = Shield.parseInt("12345", -123);
-    assertTrue(i == 12345);
+    assertEquals(12345, i);
     i = Shield.parseInt("123abc", -123);
-    assertTrue(i == -123);
+    assertEquals(-123, i);
   }
 
   @Test

@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DatatypeXssPayloadsTest
