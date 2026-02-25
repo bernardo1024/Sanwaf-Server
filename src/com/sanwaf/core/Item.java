@@ -4,6 +4,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +55,39 @@ abstract class Item
     min = id.min;
     msg = id.msg;
     setUri(id.uri);
+  }
+
+  static boolean handleStrictError(String value, ServletRequest req, com.sanwaf.log.Logger logger, boolean log)
+  {
+    ItemStrict item = new ItemStrict(value);
+    if (log)
+    {
+      logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
+    }
+    appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true), req);
+    return true;
+  }
+
+  static void appendAttribute(String att, String value, ServletRequest req)
+  {
+    if (req == null)
+    {
+      return;
+    }
+    String old = (String) req.getAttribute(att);
+    if (old == null || old.length() < 2)
+    {
+      old = "";
+    }
+    else
+    {
+      if (old.contains(value))
+      {
+        return;
+      }
+      old = old.substring(1, old.length() - 1) + ",";
+    }
+    req.setAttribute(att, "[" + old + value + "]");
   }
 
   // implemented by Types
@@ -119,10 +153,7 @@ abstract class Item
     {
       String[] parts = uriString.split(Shield.SEPARATOR);
       uriSet = new HashSet<>(parts.length * 2);
-      for (String part : parts)
-      {
-        uriSet.add(part);
-      }
+      Collections.addAll(uriSet, parts);
     }
   }
 
@@ -162,39 +193,6 @@ abstract class Item
       }
     }
     return false;
-  }
-
-  static boolean handleStrictError(String value, ServletRequest req, com.sanwaf.log.Logger logger, boolean log)
-  {
-    ItemStrict item = new ItemStrict(value);
-    if (log)
-    {
-      logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
-    }
-    appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true), req);
-    return true;
-  }
-
-  static void appendAttribute(String att, String value, ServletRequest req)
-  {
-    if (req == null)
-    {
-      return;
-    }
-    String old = (String) req.getAttribute(att);
-    if (old == null || old.length() < 2)
-    {
-      old = "";
-    }
-    else
-    {
-      if (old.contains(value))
-      {
-        return;
-      }
-      old = old.substring(1, old.length() - 1) + ",";
-    }
-    req.setAttribute(att, "[" + old + value + "]");
   }
 
   boolean returnBasedOnDoAllBlocks(boolean b, boolean doAllBlocks)
@@ -263,14 +261,7 @@ abstract class Item
         skipIteration = false;
         continue;
       }
-      if (isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req))
-      {
-        setAndOrCondition(orRequired, andRequired, nextIsAnd, true);
-      }
-      else
-      {
-        setAndOrCondition(orRequired, andRequired, nextIsAnd, false);
-      }
+      setAndOrCondition(orRequired, andRequired, nextIsAnd, isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req));
       nextIsAnd = false;
       if (andOrBlocks.size() > i + 1)
       {
@@ -300,9 +291,9 @@ abstract class Item
   {
     List<String> andOrBlocks = new ArrayList<>();
     List<String> blocks;
-    for (int i = 0; i < andBlocks.size(); i++)
+    for (String andBlock : andBlocks)
     {
-      blocks = parseBlocks(andBlocks.get(i), 0, "OR", ")||(", "(", ")");
+      blocks = parseBlocks(andBlock, 0, "OR", ")||(", "(", ")");
       for (int j = 0; j < blocks.size(); j++)
       {
         if (blocks.get(j).equals("||"))
@@ -455,28 +446,27 @@ abstract class Item
 
     if (shield != null)
     {
-      String errMsg = getErrorMessage(req, shield);
+      StringBuilder errMsg = new StringBuilder();
+      errMsg.append(getErrorMessage(req, shield));
       if (required && value != null && value.isEmpty())
       {
-        errMsg += getErrorMessage(req, shield, ItemFactory.XML_REQUIRED_MSG);
+        errMsg.append(getErrorMessage(req, shield, ItemFactory.XML_REQUIRED_MSG));
       }
       if (value != null && (value.length() < min || value.length() > max))
       {
-        errMsg += modifyInvalidLengthErrorMsg(getErrorMessage(req, shield, ItemFactory.XML_INVALID_LENGTH_MSG), min,
-            max);
+        errMsg.append(modifyInvalidLengthErrorMsg(getErrorMessage(req, shield, ItemFactory.XML_INVALID_LENGTH_MSG), min, max));
       }
 
       if (relatedErrMsg != null && !relatedErrMsg.isEmpty())
       {
-        errMsg += relatedErrMsg;
+        errMsg.append(relatedErrMsg);
       }
-      sb.append(",\"error\":\"").append(Metadata.jsonEncode(errMsg)).append("\"");
+      sb.append(",\"error\":\"").append(Metadata.jsonEncode(errMsg.toString())).append("\"");
     }
 
     if (value != null && shield != null && verbose)
     {
-      List<Point> errorPoints = new ArrayList<>();
-      errorPoints.addAll(getErrorPoints(shield, value));
+      List<Point> errorPoints = new ArrayList<>(getErrorPoints(shield, value));
       sb.append(",\"samplePoints\":[");
       boolean doneFirst = false;
       for (Point p : errorPoints)

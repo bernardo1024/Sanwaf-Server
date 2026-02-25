@@ -13,9 +13,7 @@ final class Point
 
   public String toString()
   {
-    String sb = "start: " + start +
-        ", end: " + end;
-    return sb;
+    return "start: " + start + ", end: " + end;
   }
 }
 

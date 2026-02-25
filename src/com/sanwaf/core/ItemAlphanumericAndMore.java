@@ -60,7 +60,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
 
   private int processNotAlphanumeric(List<Point> points, int start, int i, char c)
   {
-    if (!isInMoreChars(c))
+    if (notInMoreChars(c))
     {
       if (start < 0)
       {
@@ -91,7 +91,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     for (int i = 0; i < value.length(); i++)
     {
       char c = value.charAt(i);
-      if (isNotAlphanumeric(c) && !isInMoreChars(c))
+      if (isNotAlphanumeric(c) && notInMoreChars(c))
       {
         return true;
       }
@@ -99,16 +99,16 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     return false;
   }
 
-  private boolean isInMoreChars(char c)
+  private boolean notInMoreChars(char c)
   {
     for (char more : moreChars)
     {
       if (c == more)
       {
-        return true;
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   @Override
@@ -155,8 +155,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   {
     int start = value.indexOf(ItemFactory.SEP_START);
     int end = value.lastIndexOf(ItemFactory.SEP_END);
-    char[] array = getMoreCharArray(value.substring(start + ItemFactory.SEP_START.length(), end));
-    moreChars = array;
+    moreChars = getMoreCharArray(value.substring(start + ItemFactory.SEP_START.length(), end));
   }
 
   @Override

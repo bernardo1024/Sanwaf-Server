@@ -174,22 +174,22 @@ final class ItemFormat extends Item
     String parsedValue = format;
     String[] dateOrder = { "dd", "mm", "yyyy", "yy" };
 
-    for (int i = 0; i < dateOrder.length; i++)
+    for (String s : dateOrder)
     {
       int last = 0;
       while (true)
       {
         int startMdyReplacePos = 0;
         int endMdyReplacePos = 0;
-        last = parsedValue.indexOf(dateOrder[i]);
+        last = parsedValue.indexOf(s);
         if (last < 0)
         {
           break;
         }
         startMdyReplacePos = last;
-        endMdyReplacePos = last + dateOrder[i].length();
+        endMdyReplacePos = last + s.length();
 
-        switch (dateOrder[i])
+        switch (s)
         {
         case "yy":
         {

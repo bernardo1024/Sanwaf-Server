@@ -107,7 +107,6 @@ class Metadata
     if (namesString.contains(Shield.SEPARATOR))
     {
       String[] names = namesString.split(Shield.SEPARATOR);
-      Item thisItem = item;
       for (String name : names)
       {
         name = refineName(name, index);
@@ -119,9 +118,9 @@ class Metadata
         {
           name = name.toLowerCase();
         }
-        thisItem.name = name;
-        thisItem.display = name;
-        items.put(name, thisItem);
+        item.name = name;
+        item.display = name;
+        items.put(name, item);
       }
     }
     else
