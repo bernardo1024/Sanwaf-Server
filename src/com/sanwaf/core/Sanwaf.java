@@ -36,6 +36,7 @@ public final class Sanwaf
 
   static String securedAppVersion = "unknown";
   final List<Shield> shields = new ArrayList<>();
+  final Map<String, Shield> shieldMap = new HashMap<>();
   final Map<String, String> globalErrorMessages = new HashMap<>();
 
   public enum AllowListType
@@ -554,14 +555,11 @@ public final class Sanwaf
 
   Shield getShield(String name)
   {
-    for (Shield shield : shields)
+    if (name == null)
     {
-      if (shield.name.equalsIgnoreCase(name))
-      {
-        return shield;
-      }
+      return null;
     }
-    return null;
+    return shieldMap.get(name.toLowerCase());
   }
 
   // XML LOAD CODE
@@ -617,7 +615,9 @@ public final class Sanwaf
     String[] xmls = xml.getAll(XML_SHIELD);
     for (String item : xmls)
     {
-      shields.add(new Shield(this, xml, new Xml(item), logger));
+      Shield sh = new Shield(this, xml, new Xml(item), logger);
+      shields.add(sh);
+      shieldMap.put(sh.name.toLowerCase(), sh);
     }
     logger.info("Started in: " + (System.currentTimeMillis() - start) + " ms.");
   }

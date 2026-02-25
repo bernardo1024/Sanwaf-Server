@@ -33,14 +33,7 @@ public class UnitTestUtil
 
   static Shield getShield(Sanwaf sanwaf, String name)
   {
-    for (Shield shield : sanwaf.shields)
-    {
-      if (shield.name.equalsIgnoreCase(name))
-      {
-        return shield;
-      }
-    }
-    return null;
+    return sanwaf.getShield(name);
   }
 
   static UnitTestResult runTestsUsingFile(Shield shield, String filename, int iterations, boolean doHex, boolean logErrors)
