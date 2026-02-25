@@ -188,12 +188,6 @@ public class ItemFactory
     return new String(buf, 0, out);
   }
 
-  static Item getNewItem(String name, Item item)
-  {
-    item.name = name;
-    return item;
-  }
-
   static Item getNewItem(ItemData id)
   {
     String t = id.type.toLowerCase();

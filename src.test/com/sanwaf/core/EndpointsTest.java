@@ -16,7 +16,6 @@ import static org.junit.Assert.fail;
 public class EndpointsTest
 {
   static Sanwaf sanwaf;
-  static Shield shield;
 
   @BeforeClass
   public static void setUpClass()
@@ -24,7 +23,6 @@ public class EndpointsTest
     try
     {
       sanwaf = new Sanwaf();
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     }
     catch (IOException ioe)
     {

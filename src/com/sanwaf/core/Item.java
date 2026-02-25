@@ -195,15 +195,6 @@ abstract class Item
     return false;
   }
 
-  boolean returnBasedOnDoAllBlocks(boolean b, boolean doAllBlocks)
-  {
-    if (doAllBlocks)
-    {
-      return false;
-    }
-    return b;
-  }
-
   // Item Relations code
   String isRelateValid(String value, ServletRequest req, Metadata meta)
   {

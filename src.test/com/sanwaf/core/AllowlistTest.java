@@ -15,7 +15,6 @@ import static org.junit.Assert.fail;
 public class AllowlistTest
 {
   static Sanwaf sanwaf;
-  static Shield shield;
 
   @BeforeClass
   public static void setUpClass()

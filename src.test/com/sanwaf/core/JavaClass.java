@@ -9,6 +9,7 @@ import jakarta.servlet.ServletRequest;
  *   3. method must have 2 input parameters: String & ServletRequest
  *   4. method returns true for an issue detected; false of no issue
  */
+@SuppressWarnings("unused")
 public class JavaClass
 {
   public static boolean over10TrueElseFalse(String s, ServletRequest req)

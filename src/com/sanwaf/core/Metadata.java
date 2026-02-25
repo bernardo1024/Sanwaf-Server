@@ -37,12 +37,10 @@ class Metadata
   Modes endpointMode = Modes.BLOCK;
   final Map<String, Item> items = new HashMap<>();
   final Map<String, List<String>> index = new HashMap<>();
-  Shield shield;
 
   Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger, boolean isDetect)
   {
     this.logger = logger;
-    this.shield = shield;
     load(shield, xml, type, isDetect);
   }
 

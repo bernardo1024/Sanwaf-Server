@@ -19,7 +19,6 @@ public class ModeDetectLoggingTest
   private final PrintStream originalOut = System.out;
 
   static Sanwaf sanwaf;
-  static Shield shield;
 
   @Before
   public void setUpStreams()
@@ -39,7 +38,6 @@ public class ModeDetectLoggingTest
     try
     {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-modes.xml");
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     }
     catch (IOException ioe)
     {

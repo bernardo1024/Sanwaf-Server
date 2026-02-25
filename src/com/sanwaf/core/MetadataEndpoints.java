@@ -17,11 +17,9 @@ public class MetadataEndpoints
   boolean caseSensitive = true;
   final Map<String, Metadata> endpointParametersBlock = new HashMap<>();
   final Map<String, Metadata> endpointParametersDetect = new HashMap<>();
-  final Shield shield;
 
   MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger, boolean isDetect)
   {
-    this.shield = shield;
     this.logger = logger;
     load(shield, xml, isDetect);
   }

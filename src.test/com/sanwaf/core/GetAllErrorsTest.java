@@ -15,7 +15,6 @@ import static org.junit.Assert.fail;
 public class GetAllErrorsTest
 {
   static Sanwaf sanwaf;
-  static Shield shield;
 
   @BeforeClass
   public static void setUpClass()
@@ -23,7 +22,6 @@ public class GetAllErrorsTest
     try
     {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-getAllErrors.xml.broken");
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     }
     catch (IOException ioe)
     {

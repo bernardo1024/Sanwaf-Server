@@ -8,7 +8,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.assertFalse;
@@ -27,6 +26,7 @@ public class MultiDimentionalyParmsTest
     try
     {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
+      shield = UnitTestUtil.getShield(sanwaf, "MultiDimTest");
     }
     catch (IOException ioe)
     {

@@ -13,7 +13,6 @@ public class ErrorMessagesTest
 {
   static Sanwaf sanwaf;
   static Shield shield;
-  static Shield shieldBadPlaceholders;
 
   @BeforeClass
   public static void setUpClass()
@@ -22,7 +21,6 @@ public class ErrorMessagesTest
     {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-customErrors.xml");
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
-      shieldBadPlaceholders = UnitTestUtil.getShield(sanwaf, "BadPlaceholders");
     }
     catch (IOException ioe)
     {
