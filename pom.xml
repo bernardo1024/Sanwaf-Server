@@ -115,9 +115,6 @@
                     <configuration>
                         <forkCount>${surefire.forkcount}</forkCount>
                         <reuseForks>${surefire.reuseforks}</reuseForks>
-                        <systemPropertyVariables> <!-- Disable Logging for Tests -->
-                            <java.util.logging.config.file>${project.basedir}/src.test/resources/logging.properties</java.util.logging.config.file>
-                        </systemPropertyVariables>
                         <additionalClasspathElements>
                             <additionalClasspathElement>${basedir}/classes</additionalClasspathElement>
                             <additionalClasspathElement>${basedir}</additionalClasspathElement>
