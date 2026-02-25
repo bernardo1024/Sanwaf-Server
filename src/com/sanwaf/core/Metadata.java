@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 class Metadata
 {
@@ -35,7 +36,7 @@ class Metadata
   boolean endpointIsStrict = false;
   boolean endpointIsStrictAllowLess = false;
   Modes endpointMode = Modes.BLOCK;
-  final Map<String, Item> items = new HashMap<>();
+  Map<String, Item> items;
   final Map<String, List<String>> index = new HashMap<>();
 
   Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger, boolean isDetect)
@@ -82,6 +83,7 @@ class Metadata
     ParsedMetadataXml parsed = parseMetadataXml(xml, type);
     enabled = parsed.enabled;
     caseSensitive = parsed.caseSensitive;
+    items = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     String[] xmlItems = parsed.subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
@@ -112,10 +114,6 @@ class Metadata
         {
           continue;
         }
-        if (!caseSensitive)
-        {
-          name = name.toLowerCase();
-        }
         item.name = name;
         item.display = name;
         items.put(name, item);
@@ -126,10 +124,6 @@ class Metadata
       item.name = refineName(item.name, index);
       if (item.name != null)
       {
-        if (!caseSensitive)
-        {
-          item.name = item.name.toLowerCase();
-        }
         items.put(item.name, item);
       }
     }
@@ -140,6 +134,7 @@ class Metadata
     initA2Zindex(index);
     enabled = true;
     this.caseSensitive = caseSensitive;
+    items = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     Xml itemsXml = new Xml(itemsString);
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);

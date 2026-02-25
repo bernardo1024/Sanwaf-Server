@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 
 public final class Sanwaf
@@ -38,7 +39,7 @@ public final class Sanwaf
 
   static String securedAppVersion = "unknown";
   final List<Shield> shields = new ArrayList<>();
-  final Map<String, Shield> shieldMap = new HashMap<>();
+  final Map<String, Shield> shieldMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   final Map<String, String> globalErrorMessages = new HashMap<>();
 
   public enum AllowListType
@@ -562,7 +563,7 @@ public final class Sanwaf
     {
       return null;
     }
-    return shieldMap.get(name.toLowerCase());
+    return shieldMap.get(name);
   }
 
   // XML LOAD CODE
@@ -620,7 +621,7 @@ public final class Sanwaf
     {
       Shield sh = new Shield(this, xml, new Xml(item), logger);
       shields.add(sh);
-      shieldMap.put(sh.name.toLowerCase(), sh);
+      shieldMap.put(sh.name, sh);
     }
     logger.info("Started in: " + (System.currentTimeMillis() - start) + " ms.");
   }

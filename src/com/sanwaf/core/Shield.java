@@ -14,6 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,10 +34,10 @@ final class Shield
   boolean regexAlways = false;
   final Map<String, String> errorMessages = new HashMap<>();
   Set<String> regexAlwaysExclusions = new LinkedHashSet<>();
-  final Map<String, Rule> rulePatterns = new HashMap<>();
-  final Map<String, Rule> customRulePatterns = new HashMap<>();
-  final Map<String, Rule> rulePatternsDetect = new HashMap<>();
-  final Map<String, Rule> customRulePatternsDetect = new HashMap<>();
+  final Map<String, Rule> rulePatterns = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+  final Map<String, Rule> customRulePatterns = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+  final Map<String, Rule> rulePatternsDetect = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+  final Map<String, Rule> customRulePatternsDetect = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   Metadata parameters = null;
   Metadata cookies = null;
   Metadata headers = null;
@@ -419,16 +420,7 @@ final class Shield
 
   Item getItem(Metadata meta, String key)
   {
-    Item item;
-    if (meta.caseSensitive)
-    {
-      item = meta.items.get(key);
-    }
-    else
-    {
-      item = meta.items.get(key.toLowerCase());
-    }
-    return item;
+    return meta.items.get(key);
   }
 
   // XML LOAD CODE
@@ -562,11 +554,11 @@ final class Shield
         Rule r = new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE), match, msg);
         if (r.mode == Modes.BLOCK)
         {
-          patterns.put(key.toLowerCase(), r);
+          patterns.put(key, r);
         }
         else
         {
-          patternsDetect.put(key.toLowerCase(), r);
+          patternsDetect.put(key, r);
         }
       }
     }

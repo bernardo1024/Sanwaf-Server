@@ -104,7 +104,7 @@ final class ItemRegex extends Item
       int start = value.indexOf(ItemFactory.REGEX);
       if (start >= 0)
       {
-        patternName = value.substring(start + ItemFactory.REGEX.length(), value.length() - 1).toLowerCase();
+        patternName = value.substring(start + ItemFactory.REGEX.length(), value.length() - 1);
       }
     }
   }
