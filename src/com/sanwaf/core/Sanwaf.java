@@ -8,8 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public final class Sanwaf
@@ -220,9 +222,10 @@ public final class Sanwaf
     {
       return false;
     }
+    Set<String> shieldSet = shieldList != null ? new HashSet<>(shieldList) : null;
     for (Shield sh : shields)
     {
-      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log))
+      if ((shieldSet == null || shieldSet.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log))
       {
         if (!doAllBlocks)
         {
