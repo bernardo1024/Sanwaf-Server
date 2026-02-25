@@ -15,6 +15,20 @@ class Metadata
   static final String INDEX_PARM_MARKER = "  ";
   static final String STAR = "*";
 
+  private static final String[] CHAR_STRINGS = new String[128];
+  static
+  {
+    for (int i = 0; i < 128; i++)
+    {
+      CHAR_STRINGS[i] = String.valueOf((char) i);
+    }
+  }
+
+  static String charString(char c)
+  {
+    return c < 128 ? CHAR_STRINGS[c] : String.valueOf(c);
+  }
+
   com.sanwaf.log.Logger logger;
   boolean enabled = false;
   boolean caseSensitive = true;
@@ -142,7 +156,7 @@ class Metadata
   {
     for (char ch = 'a'; ch <= 'z'; ++ch)
     {
-      map.put(String.valueOf(ch), null);
+      map.put(charString(ch), null);
     }
   }
 
@@ -160,7 +174,7 @@ class Metadata
       {
         return null;
       }
-      String f = name.substring(starPos - 1, starPos);
+      String f = charString(name.charAt(starPos - 1));
       String markerChars;
 
       if (starPos == name.length() - 1)
@@ -175,7 +189,7 @@ class Metadata
           return null;
         }
       }
-      String firstCharOfKey = name.substring(0, 1);
+      String firstCharOfKey = charString(name.charAt(0));
       List<String> chars = map.computeIfAbsent(firstCharOfKey, k -> new ArrayList<>());
       if (!chars.contains(markerChars))
       {
@@ -249,7 +263,7 @@ class Metadata
     {
       return "";
     }
-    List<String> list = index.get(key.substring(0, 1));
+    List<String> list = index.get(charString(key.charAt(0)));
     if (list == null)
     {
       return null;
