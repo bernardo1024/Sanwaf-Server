@@ -3,16 +3,22 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 final class ItemFormat extends Item
 {
   static final String INVALID_FORMAT = "Invalid Format: ";
+  private static final int ACCEPT_VALUE = Integer.MAX_VALUE;
+  private static final PlaceholderBlock PLACEHOLDER = new PlaceholderBlock();
+  private static final CharClassBlock ANY_CHAR = new CharClassBlock('x');
+  private static final CharClassBlock DIGIT = new CharClassBlock('#');
+  private static final CharClassBlock UPPER = new CharClassBlock('A');
+  private static final CharClassBlock LOWER = new CharClassBlock('a');
+  private static final CharClassBlock LETTER = new CharClassBlock('c');
   String formatString = null;
   private boolean hasDateVariables;
-  final List<List<String>> formatsBlocks = new ArrayList<>();
+  final List<List<FmtBlock>> formatsBlocks = new ArrayList<>();
 
   ItemFormat(ItemData id)
   {
@@ -48,7 +54,7 @@ final class ItemFormat extends Item
       return false;
     }
     boolean foundValidFormat = false;
-    for (List<String> formatBlocks : formatsBlocks)
+    for (List<FmtBlock> formatBlocks : formatsBlocks)
     {
       if (!formatInError(value, formatBlocks))
       {
@@ -60,7 +66,7 @@ final class ItemFormat extends Item
     return !foundValidFormat;
   }
 
-  private boolean formatInError(final String value, List<String> formatBlocks)
+  private boolean formatInError(final String value, List<FmtBlock> formatBlocks)
   {
     if (formatBlocks.isEmpty())
     {
@@ -81,100 +87,26 @@ final class ItemFormat extends Item
 
     for (int i = 0; i < value.length(); i++)
     {
-      String c = String.valueOf(value.charAt(i));
-      String formatBlock = formatBlocks.get(i);
-
-      if (hasDateVariables)
+      if (i >= formatBlocks.size())
       {
-        formatBlock = resolveDateVariables(formatBlock, cal);
+        return true;
       }
-
-      if (formatBlock.startsWith("#["))
+      FmtBlock block = formatBlocks.get(i);
+      int advance = block.match(value, i, cal);
+      if (advance == ACCEPT_VALUE)
       {
-        formatBlock = formatBlock.substring(2, formatBlock.length() - 1);
-
-        if (formatBlock.contains(","))
-        {
-          List<String> validNums = Arrays.asList(formatBlock.split(","));
-          if (!validNums.contains(c))
-          {
-            return true;
-          }
-        }
-        else
-        {
-          String[] maxMin = formatBlock.split("-");
-          if (maxMin.length != 2)
-          {
-            return false;
-          }
-
-          int minNum = 0;
-          int maxNum = 0;
-          int maxLen = 0;
-          try
-          {
-            minNum = Integer.parseInt(maxMin[0]);
-            maxNum = Integer.parseInt(maxMin[1]);
-            maxLen = (maxNum + "").length();
-          }
-          catch (NumberFormatException e)
-          {
-            return false;
-          }
-
-          if (c.charAt(0) < '0' || c.charAt(0) > '9')
-          {
-            return true;
-          }
-
-          StringBuilder cBlock = new StringBuilder(c);
-          if (maxLen > 1)
-          {
-            for (int j = 1; j < maxLen; j++)
-            {
-              if (i + j <= value.length() - 1)
-              {
-                char n = value.charAt(i + j);
-                if (n >= '0' && n <= '9')
-                {
-                  cBlock.append(n);
-                }
-                else
-                {
-                  return true;
-                }
-              }
-            }
-          }
-          if (Integer.parseInt(cBlock.toString()) >= minNum && Integer.parseInt(cBlock.toString()) <= maxNum)
-          {
-            i += maxLen - 1;
-          }
-          else
-          {
-            return true;
-          }
-        }
+        return false;
       }
-      else
+      if (advance < 0)
       {
-        char cF = formatBlock.charAt(0);
-        char cC = c.charAt(0);
-        if ((cF == 'x') || (cF == '#' && cC >= '0' && cC <= '9') || ((cF == 'A' || cF == 'c') && cC >= 'A' && cC <= 'Z') || ((cF == 'a' || cF == 'c') && cC >= 'a' && cC <= 'z'))
-        {
-          continue;
-        }
-        if (cC != unEscapedChar(cF))
-        {
-          return true;
-        }
+        return true;
       }
+      i += advance;
     }
     return false;
   }
 
-  private String resolveDateVariables(String format, Calendar cal)
+  private static String resolveDateVariables(String format, Calendar cal)
   {
     String newMdy = "";
     String parsedValue = format;
@@ -182,11 +114,11 @@ final class ItemFormat extends Item
 
     for (String s : dateOrder)
     {
-      int last = 0;
+      int last;
       while (true)
       {
-        int startMdyReplacePos = 0;
-        int endMdyReplacePos = 0;
+        int startMdyReplacePos;
+        int endMdyReplacePos;
         last = parsedValue.indexOf(s);
         if (last < 0)
         {
@@ -249,7 +181,7 @@ final class ItemFormat extends Item
     return parsedValue;
   }
 
-  private String adjustDate(String parsedValue, int last, String newMdy)
+  private static String adjustDate(String parsedValue, int last, String newMdy)
   {
     int newValue = Integer.parseInt(newMdy);
     if (parsedValue.charAt(last) == '(')
@@ -271,7 +203,7 @@ final class ItemFormat extends Item
     return String.valueOf(newValue);
   }
 
-  private String escapeChars(String s)
+  private static String escapeChars(String s)
   {
     char[] src = s.toCharArray();
     char[] dst = new char[src.length];
@@ -344,7 +276,7 @@ final class ItemFormat extends Item
     return new String(dst, 0, d);
   }
 
-  private char unEscapedChar(char c)
+  private static char unEscapedChar(char c)
   {
     switch (c)
     {
@@ -419,91 +351,127 @@ final class ItemFormat extends Item
     }
   }
 
-  private List<String> parseFormat(String format)
+  private List<FmtBlock> parseFormat(String format)
   {
-    List<String> formatBlocks = new ArrayList<>();
+    List<FmtBlock> formatBlocks = new ArrayList<>();
     format = escapeChars(format);
-    int pos = 0;
     int last = 0;
-    int end = 0;
-    int dash = 0;
 
     while (true)
     {
-      String block = "";
-      int numDigits = 0;
-      pos = format.indexOf('#', last);
+      int pos = format.indexOf('#', last);
       if (pos < 0)
       {
         addRemainderCharsAsBlocks(format, last, formatBlocks);
         break;
       }
-      if (format.length() > pos + 1 && format.charAt(pos + 1) == '[')
+
+      for (int k = last; k < pos; k++)
       {
-        end = format.indexOf(']', pos);
-        if (format.contains(","))
+        formatBlocks.add(charToBlock(format.charAt(k)));
+      }
+
+      if (pos + 1 < format.length() && format.charAt(pos + 1) == '[')
+      {
+        int end = format.indexOf(']', pos);
+        if (end < 0)
         {
-          numDigits = 0;
+          formatBlocks.clear();
+          break;
+        }
+        String inner = format.substring(pos + 2, end);
+        last = end + 1;
+
+        if (containsDateVariable(inner))
+        {
+          String rawBlock = format.substring(pos, end + 1);
+          formatBlocks.add(new DateRangeBlock(rawBlock));
+          int dash = inner.indexOf('-');
+          if (dash >= 0)
+          {
+            int numDigits = inner.length() - (dash + 1);
+            addPlaceholderBlocks(numDigits - 1, formatBlocks);
+          }
+        }
+        else if (inner.contains(","))
+        {
+          formatBlocks.add(new CommaListBlock(inner));
         }
         else
         {
-          dash = format.indexOf('-', pos);
-          if (dash > 0 && end > 0)
+          int dash = inner.indexOf('-');
+          if (dash >= 0)
           {
-            numDigits = end - (dash + 1);
+            String minStr = inner.substring(0, dash);
+            String maxStr = inner.substring(dash + 1);
+            try
+            {
+              int min = Integer.parseInt(minStr);
+              int max = Integer.parseInt(maxStr);
+              int maxLen = String.valueOf(max).length();
+              formatBlocks.add(new RangeBlock(min, max, maxLen));
+              addPlaceholderBlocks(maxLen - 1, formatBlocks);
+            }
+            catch (NumberFormatException e)
+            {
+              formatBlocks.clear();
+              break;
+            }
+          }
+          else
+          {
+            formatBlocks.clear();
+            break;
           }
         }
-        block = format.substring(last, end + 1);
-        last = end + 1;
       }
       else
       {
-        block = format.substring(last, pos + 1);
+        formatBlocks.add(DIGIT);
         last = pos + 1;
       }
-
-      block = addStartingCharsAsBlocks(block, formatBlocks);
-      if (block == null)
-      {
-        formatBlocks = new ArrayList<>();
-        break;
-      }
-      formatBlocks.add(block);
-      addPlaceholderBlocks(numDigits, formatBlocks);
     }
     return formatBlocks;
   }
 
-  private void addPlaceholderBlocks(int numDigits, List<String> formatBlocks)
+  private static void addPlaceholderBlocks(int count, List<FmtBlock> formatBlocks)
   {
-    for (int i = 0; i < numDigits - 1; i++)
+    for (int i = 0; i < count; i++)
     {
-      formatBlocks.add("");
+      formatBlocks.add(PLACEHOLDER);
     }
   }
 
-  private String addStartingCharsAsBlocks(String block, List<String> formatBlocks)
+  private static FmtBlock charToBlock(char c)
   {
-    if (!block.startsWith("#"))
+    switch (c)
     {
-      int x = block.indexOf('#');
-      if (x < 0)
-      {
-        return null;
-      }
-      String s = block.substring(0, x);
-      formatBlocks.addAll(Arrays.asList(s.split("")));
-      block = block.substring(x);
+    case 'x':
+      return ANY_CHAR;
+    case '#':
+      return DIGIT;
+    case 'A':
+      return UPPER;
+    case 'a':
+      return LOWER;
+    case 'c':
+      return LETTER;
+    default:
+      return new LiteralBlock(unEscapedChar(c));
     }
-    return block;
   }
 
-  private void addRemainderCharsAsBlocks(String format, int last, List<String> formatBlocks)
+  private static void addRemainderCharsAsBlocks(String format, int last, List<FmtBlock> formatBlocks)
   {
-    if (last < format.length())
+    for (int k = last; k < format.length(); k++)
     {
-      formatBlocks.addAll(Arrays.asList(format.substring(last).split("")));
+      formatBlocks.add(charToBlock(format.charAt(k)));
     }
+  }
+
+  private static boolean containsDateVariable(String s)
+  {
+    return s.contains("dd") || s.contains("mm") || s.contains("yy");
   }
 
   @Override
@@ -517,5 +485,173 @@ final class ItemFormat extends Item
   {
     return Types.FORMAT;
   }
-}
 
+  private static abstract class FmtBlock
+  {
+    abstract int match(String value, int pos, Calendar cal);
+
+    static int matchRange(String value, int pos, int min, int max, int maxLen)
+    {
+      int num = 0;
+      for (int j = 0; j < maxLen; j++)
+      {
+        if (pos + j >= value.length())
+        {
+          break;
+        }
+        char ch = value.charAt(pos + j);
+        if (ch < '0' || ch > '9')
+        {
+          return -1;
+        }
+        num = num * 10 + (ch - '0');
+      }
+      return (num >= min && num <= max) ? maxLen - 1 : -1;
+    }
+  }
+
+  private static final class LiteralBlock extends FmtBlock
+  {
+    final char expected;
+
+    LiteralBlock(char expected)
+    {
+      this.expected = expected;
+    }
+
+    int match(String value, int pos, Calendar cal)
+    {
+      return value.charAt(pos) == expected ? 0 : -1;
+    }
+  }
+
+  private static final class CharClassBlock extends FmtBlock
+  {
+    final char type;
+
+    CharClassBlock(char type)
+    {
+      this.type = type;
+    }
+
+    int match(String value, int pos, Calendar cal)
+    {
+      char c = value.charAt(pos);
+      switch (type)
+      {
+      case 'x':
+        return 0;
+      case '#':
+        return (c >= '0' && c <= '9') ? 0 : -1;
+      case 'A':
+        return (c >= 'A' && c <= 'Z') ? 0 : -1;
+      case 'a':
+        return (c >= 'a' && c <= 'z') ? 0 : -1;
+      case 'c':
+        return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) ? 0 : -1;
+      default:
+        return -1;
+      }
+    }
+  }
+
+  private static final class CommaListBlock extends FmtBlock
+  {
+    final boolean[] validChars = new boolean[128];
+
+    CommaListBlock(String inner)
+    {
+      for (String s : inner.split(","))
+      {
+        if (s.length() == 1 && s.charAt(0) < 128)
+        {
+          validChars[s.charAt(0)] = true;
+        }
+      }
+    }
+
+    int match(String value, int pos, Calendar cal)
+    {
+      char ch = value.charAt(pos);
+      return (ch < 128 && validChars[ch]) ? 0 : -1;
+    }
+  }
+
+  private static final class RangeBlock extends FmtBlock
+  {
+    final int min;
+    final int max;
+    final int maxLen;
+
+    RangeBlock(int min, int max, int maxLen)
+    {
+      this.min = min;
+      this.max = max;
+      this.maxLen = maxLen;
+    }
+
+    int match(String value, int pos, Calendar cal)
+    {
+      return matchRange(value, pos, min, max, maxLen);
+    }
+  }
+
+  private static final class DateRangeBlock extends FmtBlock
+  {
+    final String rawBlock;
+
+    DateRangeBlock(String rawBlock)
+    {
+      this.rawBlock = rawBlock;
+    }
+
+    int match(String value, int pos, Calendar cal)
+    {
+      String resolved = (cal != null) ? resolveDateVariables(rawBlock, cal) : rawBlock;
+      String inner = resolved.substring(2, resolved.length() - 1);
+
+      if (inner.contains(","))
+      {
+        char ch = value.charAt(pos);
+        for (String s : inner.split(","))
+        {
+          if (s.length() == 1 && s.charAt(0) == ch)
+          {
+            return 0;
+          }
+        }
+        return -1;
+      }
+
+      String[] parts = inner.split("-");
+      if (parts.length != 2)
+      {
+        return ACCEPT_VALUE;
+      }
+
+      int minNum;
+      int maxNum;
+      int maxLenLocal;
+      try
+      {
+        minNum = Integer.parseInt(parts[0]);
+        maxNum = Integer.parseInt(parts[1]);
+        maxLenLocal = String.valueOf(maxNum).length();
+      }
+      catch (NumberFormatException e)
+      {
+        return ACCEPT_VALUE;
+      }
+
+      return matchRange(value, pos, minNum, maxNum, maxLenLocal);
+    }
+  }
+
+  private static final class PlaceholderBlock extends FmtBlock
+  {
+    int match(String value, int pos, Calendar cal)
+    {
+      return 0;
+    }
+  }
+}
