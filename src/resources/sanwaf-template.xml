@@ -356,7 +356,7 @@
                 <maxLen>-1</maxLen>
 
                 <!-- child shield to use if parameter exceeds the maxLen of the shield.  used as a secondary layer of protection -->
-                <child></child>
+                <child/>
 
                 <!-- Localized error messages for this shield - overrides global values -->
                 <!--
@@ -391,7 +391,7 @@
                     <enabled>false</enabled>
                     <!-- List of parameters to be ignored for the regex processing -->
                     <exclusions>
-                        <item></item>
+                        <item/>
                     </exclusions>
                 </forceStringPatterns>
 
@@ -481,9 +481,9 @@
                             <!-- Mode that the endpoint is running under (default is block)-->
                             <mode>block</mode>
                             <!-- URI must be unique -->
-                            <uri></uri>
+                            <uri/>
                             <!-- if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  Use "<" or "less" to not fail if there are less parameters than specified. -->
-                            <strict></strict>
+                            <strict/>
                             <!-- list of parameters for the URI -->
                             <items>
                                 <!--  note the additional attributes: <req> & <related>.  See the Sanwaf-ui project for details on using these paramters -->

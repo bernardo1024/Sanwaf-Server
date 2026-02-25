@@ -120,7 +120,7 @@
                             <name>char</name>
                             <type>c</type>
                             <msg>char error message</msg>
-                            <uri></uri>
+                            <uri/>
                         </item>
                         <item>
                             <name>java</name>
@@ -144,17 +144,17 @@
                             <max>2</max>
                             <min>1</min>
                             <msg>header error msg</msg>
-                            <uri></uri>
+                            <uri/>
                         </item>
                     </headers>
                     <cookies>
                         <item>
                             <name>aCookieAlphanumericAndMore</name>
                             <type>a{,}</type>
-                            <max></max>
-                            <min></min>
+                            <max/>
+                            <min/>
                             <msg>cookie error msg</msg>
-                            <uri></uri>
+                            <uri/>
                         </item>
                     </cookies>
                 </secured>

@@ -11,7 +11,7 @@
                 <name>XSS</name>
                 <minLen>4</minLen>
                 <maxLen>9999</maxLen>
-                <child></child>
+                <child/>
             </shield-settings>
             <regex-config>
                 <minLen>4</minLen>
@@ -43,18 +43,18 @@
                         <item>
                             <name>Numeric</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>Alphanumeric</name>
                             <type>a</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                     </parameters>
                 </secured>

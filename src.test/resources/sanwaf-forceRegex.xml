@@ -46,35 +46,35 @@
                                 <item>
                                     <name>parm1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm3</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                             </items>
                         </endpoint>
@@ -83,18 +83,18 @@
                         <item>
                             <name>Numeric</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>Alphanumeric</name>
                             <type>a</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                     </parameters>
                 </secured>

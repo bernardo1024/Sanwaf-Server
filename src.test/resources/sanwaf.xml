@@ -38,7 +38,7 @@
                 <name>XSS</name>
                 <minLen>0</minLen>
                 <maxLen>9999</maxLen>
-                <child></child>
+                <child/>
             </shield-settings>
             <regex-config>
                 <minLen>5</minLen>
@@ -96,302 +96,302 @@
                                 <item>
                                     <name>char</name>
                                     <type>c</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>charRequired</name>
                                     <type>c</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>numeric</name>
                                     <type>n</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>open</name>
                                     <type>o</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>numericRequired</name>
                                     <type>n</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>numericdelimited</name>
                                     <type>n{,}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>numericdelimitedRequired</name>
                                     <type>n{,}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>alphanumeric</name>
                                     <type>a</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>alphanumericRequired</name>
                                     <type>a</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>alphanumericandmore</name>
                                     <type>a{'\s!}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>alphanumericandmoreRequired</name>
                                     <type>a{'\s!}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>constant</name>
                                     <type>k{y,n}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>constantRequired</name>
                                     <type>k{y,n}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>regex</name>
                                     <type>r{^[^\s@]+@[^\s@]+$}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
                                     <msg>Must be a proper email address</msg>
-                                    <req></req>
-                                    <related></related>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>regexRequired</name>
                                     <type>r{^[^\s@]+@[^\s@]+$}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
                                     <msg>Must be a proper email address</msg>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>endpointRegex</name>
                                     <type>x{^[^\s@]+@[^\s@]+$}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
                                     <msg>Must be a proper email address</msg>
-                                    <req></req>
-                                    <related></related>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>required</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>max-min-value</name>
                                     <type>n</type>
-                                    <max></max>
-                                    <min></min>
+                                    <max/>
+                                    <min/>
                                     <max-value>100</max-value>
                                     <min-value>10</min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>max-min-value-required</name>
                                     <type>n</type>
-                                    <max></max>
-                                    <min></min>
+                                    <max/>
+                                    <min/>
                                     <max-value>100</max-value>
                                     <min-value>10</min-value>
-                                    <msg></msg>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>format</name>
                                     <type>f{(###) ###-#### aaa AAA}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>formatRequired</name>
                                     <type>f{(###) ###-#### aaa AAA}</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
 
                                 <item>
                                     <name>related-invalidX-child</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>(related-invalidX1-parent) && (related-invalidX2-parent)</related>
                                 </item>
                                 <item>
                                     <name>related-invalidX1-parent</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>(related-invalidX1)(related-invalidX2)</related>
                                 </item>
                                 <item>
                                     <name>related-invalidX2-parent]</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>(related-invalidX1)(related-invalidX2)</related>
                                 </item>
 
                                 <item>
                                     <name>related-invalid-child</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>related-invalid</related>
                                 </item>
 
                                 <item>
                                     <name>related-simple-child</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>related-simple-parent</related>
                                 </item>
                                 <item>
                                     <name>related-simple-parent</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
 
                                 <item>
@@ -403,47 +403,47 @@
                                 <item>
                                     <name>related-equals-child</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>related-equals-parent:=</related>
                                 </item>
                                 <item>
                                     <name>related-equals-parent</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
 
                                 <item>
                                     <name>related-equals-req-child</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>related-equals-req-parent:=</related>
                                 </item>
                                 <item>
                                     <name>related-equals-req-parent</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
                                     <req>true</req>
-                                    <related></related>
+                                    <related/>
                                 </item>
 
                                 <item>
@@ -455,159 +455,159 @@
                                 <item>
                                     <name>related-simple-or-child</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>related-simple-or-parent:aaa||bbb</related>
                                 </item>
                                 <item>
                                     <name>related-simple-or-parent</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
 
                                 <item>
                                     <name>related-or-child</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>(related-or-parent1:aaa||bbb)||(related-or-parent2:ccc||ddd)</related>
                                 </item>
                                 <item>
                                     <name>related-or-parent1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-or-parent2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
 
                                 <item>
                                     <name>related-and-or-child</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>(related-and-or-parent1:aaa||bbb)||(related-and-or-parent2:ccc||ddd)&&(related-and-or-parent3:eee||fff)</related>
                                 </item>
                                 <item>
                                     <name>related-and-or-parent1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parent2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parent3</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
 
                                 <item>
                                     <name>related-and-or-childX</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
                                     <related>(related-and-or-parentX1:aaa||bbb)&&(related-and-or-parentX2:ccc||ddd)||(related-and-or-parentX3:eee||fff)||(related-and-or-parentX4)</related>
                                 </item>
                                 <item>
                                     <name>related-and-or-parentX1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parentX2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parentX3</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parentX4</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
 
                                 <item>
@@ -622,57 +622,57 @@
                                 <item>
                                     <name>related-and-or-parentY1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parentY2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parentY3</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parentY4</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>related-and-or-parentY5</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
 
                             </items>
@@ -684,35 +684,35 @@
                                 <item>
                                     <name>parm1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm3</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                             </items>
                         </endpoint>
@@ -724,35 +724,35 @@
                                 <item>
                                     <name>parm1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm3</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                             </items>
                         </endpoint>
@@ -764,35 +764,35 @@
                                 <item>
                                     <name>parm1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm3</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                             </items>
                         </endpoint>
@@ -804,35 +804,35 @@
                                 <item>
                                     <name>parm1</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm2</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm3</name>
                                     <type>s</type>
-                                    <max></max>
-                                    <min></min>
-                                    <max-value></max-value>
-                                    <min-value></min-value>
-                                    <msg></msg>
-                                    <req></req>
-                                    <related></related>
+                                    <max/>
+                                    <min/>
+                                    <max-value/>
+                                    <min-value/>
+                                    <msg/>
+                                    <req/>
+                                    <related/>
                                 </item>
                             </items>
                         </endpoint>
@@ -843,9 +843,9 @@
                         <item>
                             <name>aParameterNumber</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
@@ -853,32 +853,32 @@
                             <type>a</type>
                             <max>3</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthAA_0_4</name>
                             <type>a{:}</type>
                             <max>4</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthN_0_5</name>
                             <type>n</type>
                             <max>5</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthNN_6_6</name>
                             <type>n{,}</type>
                             <max>6</max>
                             <min>6</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
                         <item>
@@ -886,56 +886,56 @@
                             <type>s</type>
                             <max>7</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthC_1_1</name>
                             <type>c</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthR_0_11</name>
                             <type>r{ssn}</type>
                             <max>11</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthA2_0_3</name>
                             <type>a</type>
                             <max>3</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthAA2_0_4</name>
                             <type>a{:}</type>
                             <max>4</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthN2_0_5</name>
                             <type>n</type>
                             <max>5</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthNN2_6_6</name>
                             <type>n{,}</type>
                             <max>6</max>
                             <min>6</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
                         <item>
@@ -943,134 +943,134 @@
                             <type>s</type>
                             <max>7</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthC2_1_1</name>
                             <type>c</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>lengthR2_0_11</name>
                             <type>r{ssn}</type>
                             <max>11</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>length_invalid_min</name>
                             <type>s</type>
                             <max>11</max>
                             <min>-2</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>Numeric</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>Integer</name>
                             <type>i</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>NumericRequired</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
                         <item>
                             <name>Numeric-maxval10-minval2</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
+                            <max/>
+                            <min/>
                             <max-value>10</max-value>
                             <min-value>2</min-value>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>NumericDelimited</name>
                             <type>n{,}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>IntegerDelimited</name>
                             <type>i{,}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>NumericDelimitedRequired</name>
                             <type>n{,}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
                         <item>
                             <name>NumericDelimitedInvalidConfig1</name>
                             <type>n{,</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>NumericDelimitedInvalidConfig2</name>
                             <type>n,}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>NumericDelimitedInvalidConfig3</name>
                             <type>n,</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>Alphanumeric</name>
                             <type>a</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericRequired</name>
                             <type>a</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
@@ -1079,126 +1079,126 @@
                             <type>a</type>
                             <max>8</max>
                             <min>5</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMore</name>
                             <type>a{?\s:}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreRequired</name>
                             <type>a{?\s:}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
                         <item>
                             <name>AlphanumericAndMoreSpecialChars</name>
                             <type>a{\s\t\n\r}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreCurlyBraces</name>
                             <type>a{{}}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreInvalidConfig1</name>
                             <type>a{? :</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreInvalidConfig2</name>
                             <type>a?} :</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreInvalidConfig3</name>
                             <type>a? :</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreInvalidConfig4</name>
                             <type>a{}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>String</name>
                             <type>s</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>StringRequired</name>
                             <type>s</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
                         <item>
                             <name>Char</name>
                             <type>c</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>CharRequired</name>
                             <type>c</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
                         <item>
                             <name>Open</name>
                             <type>o</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>OpenRequired</name>
                             <type>o</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
                         <item>
@@ -1220,16 +1220,16 @@
                             <type>r{telephone}</type>
                             <max>12</max>
                             <min>12</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>RegexRequired</name>
                             <type>r{telephone}</type>
                             <max>12</max>
                             <min>12</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
@@ -1238,40 +1238,40 @@
                             <type>r{telephone}</type>
                             <max>12</max>
                             <min>12</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>CustomDate</name>
                             <type>r{date}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>CustomRegexSSN</name>
                             <type>r{ssn}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>Constant</name>
                             <type>k{FOO,BAR,FAR}</type>
                             <max>3</max>
                             <min>3</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>ConstantRequired</name>
                             <type>k{FOO,BAR,FAR}</type>
                             <max>3</max>
                             <min>3</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
@@ -1280,294 +1280,294 @@
                             <type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type>
                             <max>10</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>JavaRequired</name>
                             <type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type>
                             <max>10</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <req>true</req>
                         </item>
 
                         <item>
                             <name>JavaMultiParm</name>
                             <type>j{com.sanwaf.core.JavaClass.multiParmsNotEqual()}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>JavaInvalidClass</name>
                             <type>j{com.sanwaf.core.JavaClassFOOBAR.over10trueElseFalse()}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>JavaInvalidClass2</name>
                             <type>j{</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>JavaInvalidMethod2</name>
                             <type>j{com.sanwaf.core.JavaClass.foobar()}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>JavaInvalidMethod3</name>
                             <type>j{com.sanwaf.core.JavaClass.foobar(}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>JavaInvalidMethod3</name>
                             <type>j{com.sanwaf.core.JavaClass.foobar)}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>JavaInvalidClassEmpty</name>
                             <type>j{}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>JavaInvalidClassNoPackage</name>
                             <type>j{foobar()}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                         <item>
                             <name>parmformat</name>
                             <type>f{(###) ###-#### aaa AAA}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                         </item>
                         <item>
                             <name>parmFormatRequired</name>
                             <type>f{(###) ###-#### aaa AAA}</type>
-                            <msg></msg>
+                            <msg/>
                             <req>true</req>
                         </item>
                         <item>
                             <name>parmFormatRequired2</name>
                             <type>f{\#\A\a\c #Aac}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
                             <req>true</req>
                         </item>
                         <item>
                             <name>parmformat2</name>
                             <type>f{#[1-12] / #[21-35]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformat3</name>
                             <type>f{#[1-9]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformat4</name>
                             <type>f{#[3,4,5,6]###-####-####-####}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
 
                         <item>
                             <name>parmbadformat1</name>
                             <type>f{#[1-]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmbadformat2</name>
                             <type>f{#[1]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmbadformat3</name>
                             <type>f{#[1-9}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmbadformat4</name>
                             <type>f{#[a-b]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
 
                         <item>
                             <name>parmformat2brackets</name>
                             <type>f{\[\]#[1-10]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformat2invalid1</name>
                             <type>f{\[\]#[1-]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformat2invalid2</name>
                             <type>f{\[\]#[-1]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformatEscapedChars</name>
                             <type>f{\#\A\a\c\x\[\]\(\)\|\:\=\+\-\;#}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformatEscapedXchar1</name>
                             <type>f{xxx}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformatEscapedXchar2</name>
                             <type>f{xxx #}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformatEscapedXchar3</name>
                             <type>f{xxx A}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformatEscapedXchar4</name>
                             <type>f{xxx a}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformatEscapedXchar5</name>
                             <type>f{xxx c}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
                         <item>
                             <name>parmformatEscapedXchar6</name>
                             <type>f{xxx #[1-3]}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
-                            <related></related>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
+                            <related/>
                         </item>
 
                         <item>
@@ -1641,225 +1641,225 @@
 
                         <item>
                             <name>depformatParent</name>
-                            <type></type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <type/>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformat</name>
                             <type>d{depformatParent:US=#####;Canada=A#A-#A#}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatMultiple</name>
                             <type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatRequired</name>
                             <type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
                             <req>true</req>
                         </item>
                         <item>
                             <name>depformatInvalidFormatBadParent</name>
                             <type>d{foobar:US=#####||#####-####;Canada=A#A-#A#}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat</name>
                             <type>d {depformatParent:US=#####||#####-####;Canada=A#A-#A#</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat1</name>
                             <type>d{depformatParent:US=}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat2</name>
                             <type>d{depformatParent}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat3</name>
                             <type>d{depformatParent:}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat4</name>
                             <type>d{depformatParent:US=12345=67890}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat5</name>
                             <type>d{depformatParent:US=12345=67890:foobar}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat6</name>
                             <type>d{}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat7</name>
                             <type>depformatParent:;}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat8</name>
                             <type>depformatParent::}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
                         <item>
                             <name>depformatInvalidFormat9</name>
                             <type>depformatParent:=}</type>
-                            <max></max>
-                            <min></min>
-                            <max-value></max-value>
-                            <min-value></min-value>
-                            <msg></msg>
-                            <req></req>
+                            <max/>
+                            <min/>
+                            <max-value/>
+                            <min-value/>
+                            <msg/>
+                            <req/>
                         </item>
 
                         <item>
                             <name>IntegerMask</name>
                             <type>i</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <mask-err>IntegerMask</mask-err>
                         </item>
                         <item>
                             <name>IntegerDelimitedMask</name>
                             <type>i{,}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <mask-err>IntegerDelimitedMask</mask-err>
                         </item>
                         <item>
                             <name>NumericMask</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <mask-err>NumericMask</mask-err>
                         </item>
                         <item>
                             <name>NumericDelimitedMask</name>
                             <type>n{,}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <mask-err>NumericDelimitedMask</mask-err>
                         </item>
                         <item>
                             <name>AlphanumericMask</name>
                             <type>a</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <mask-err>AlphanumericMask</mask-err>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreMask</name>
                             <type>a{?\s:}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <mask-err>AlphanumericAndMoreMask</mask-err>
                         </item>
                         <item>
                             <name>StringMask</name>
                             <type>s</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <mask-err>StringMask</mask-err>
                         </item>
                         <item>
                             <name>CharMask</name>
                             <type>c</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                             <mask-err>CharMask</mask-err>
                         </item>
                         <item>
@@ -1867,8 +1867,8 @@
                             <type>o</type>
                             <max>10</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <mask-err>OpenMask</mask-err>
                         </item>
                         <item>
@@ -1876,8 +1876,8 @@
                             <type>r{telephone}</type>
                             <max>12</max>
                             <min>12</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <mask-err>RegexMask</mask-err>
                         </item>
                         <item>
@@ -1885,16 +1885,16 @@
                             <type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type>
                             <max>10</max>
                             <min>0</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <mask-err>JavaMask</mask-err>
                         </item>
                         <item>
                             <name>parmformatMask</name>
                             <type>f{(###) ###-#### aaa AAA}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <mask-err>parmformatMask</mask-err>
                         </item>
                         <item>
@@ -1902,8 +1902,8 @@
                             <type>k{FOO,BAR,FAR}</type>
                             <max>3</max>
                             <min>3</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                             <mask-err>ConstantMask</mask-err>
                         </item>
 
@@ -1912,20 +1912,20 @@
                         <item>
                             <name>aHeaderNumber</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                     </headers>
                     <cookies>
                         <item>
                             <name>aCookieNumber</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                     </cookies>
                 </secured>
@@ -1937,15 +1937,15 @@
                 <name>ParmLength</name>
                 <minLen>-1</minLen>
                 <maxLen>-1</maxLen>
-                <child></child>
+                <child/>
             </shield-settings>
             <regex-config>
                 <minLen>-1</minLen>
                 <forceStringPatterns>
                     <enabled>false</enabled>
                 </forceStringPatterns>
-                <stringPatterns></stringPatterns>
-                <customPatterns></customPatterns>
+                <stringPatterns/>
+                <customPatterns/>
             </regex-config>
             <metadata>
                 <enabled>
@@ -1965,12 +1965,12 @@
                             <type>s</type>
                             <max>-1</max>
                             <min>-1</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                     </parameters>
-                    <headers></headers>
-                    <cookies></cookies>
+                    <headers/>
+                    <cookies/>
                 </secured>
             </metadata>
         </shield>

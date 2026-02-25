@@ -69,57 +69,57 @@
                         <item>
                             <name>Numeric</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>NumericDelimited</name>
                             <type>n{,}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>Alphanumeric</name>
                             <type>a</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>AlphanumericAndMore</name>
                             <type>a{?\s:}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>String</name>
                             <type>s</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>Open</name>
                             <type>s</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>Char</name>
                             <type>c</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
@@ -127,31 +127,31 @@
                             <type>r{telephone}</type>
                             <max>12</max>
                             <min>12</min>
-                            <msg></msg>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>Constant</name>
                             <type>k{FOO,BAR,FAR}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>Java</name>
                             <type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar</uri>
                         </item>
                         <item>
                             <name>MultipleUris</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
+                            <max/>
+                            <min/>
+                            <msg/>
                             <uri>/foo/bar:::/far/nar:::/tar/mar</uri>
                         </item>
                     </parameters>
@@ -159,20 +159,20 @@
                         <item>
                             <name>aHeaderNumber</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                     </headers>
                     <cookies>
                         <item>
                             <name>aCookieNumber</name>
                             <type>n</type>
-                            <max></max>
-                            <min></min>
-                            <msg></msg>
-                            <uri></uri>
+                            <max/>
+                            <min/>
+                            <msg/>
+                            <uri/>
                         </item>
                     </cookies>
                 </secured>
@@ -190,8 +190,8 @@
                 <forceStringPatterns>
                     <enabled>false</enabled>
                 </forceStringPatterns>
-                <stringPatterns></stringPatterns>
-                <customPatterns></customPatterns>
+                <stringPatterns/>
+                <customPatterns/>
             </regex-config>
             <metadata>
                 <enabled>
@@ -211,12 +211,12 @@
                             <type>s</type>
                             <max>-1</max>
                             <min>-1</min>
-                            <msg></msg>
-                            <uri></uri>
+                            <msg/>
+                            <uri/>
                         </item>
                     </parameters>
-                    <headers></headers>
-                    <cookies></cookies>
+                    <headers/>
+                    <cookies/>
                 </secured>
             </metadata>
         </shield>
