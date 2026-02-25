@@ -71,8 +71,9 @@ public class RemoveRelatedSpaceBenchmark {
       if (c == '(' && i + 1 < len && Character.isWhitespace(related.charAt(i + 1))) {
         // collapse "( " to "("
         buf[out++] = '(';
-        i++;
-        while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+        do
+          i++;
+        while (i < len && Character.isWhitespace(related.charAt(i)));
       } else if (Character.isWhitespace(c)) {
         // look ahead: might be whitespace before ), ||, or :
         int wsStart = i;
@@ -88,8 +89,9 @@ public class RemoveRelatedSpaceBenchmark {
         } else if (i < len && related.charAt(i) == ':') {
           // collapse " : " to ":"
           buf[out++] = ':';
-          i++;
-          while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+          do
+            i++;
+          while (i < len && Character.isWhitespace(related.charAt(i)));
         } else if (i < len && related.charAt(i) == '&' && i + 1 < len && related.charAt(i + 1) == '&') {
           // check if preceded by ) — look back in output buffer
           if (out > 0 && buf[out - 1] == ')') {

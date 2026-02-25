@@ -31,11 +31,7 @@ final class ItemJava extends Item
     {
       return false;
     }
-    if (runJavaMethod(javaMethod, value, req))
-    {
-      return true;
-    }
-    return false;
+    return runJavaMethod(javaMethod, value, req);
   }
 
   @Override

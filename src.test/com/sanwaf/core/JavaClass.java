@@ -13,22 +13,14 @@ public class JavaClass
 {
   public static boolean over10TrueElseFalse(String s, ServletRequest req)
   {
-    if (Integer.parseInt(s) > 10)
-    {
-      return true;
-    }
-    return false;
+    return Integer.parseInt(s) > 10;
   }
 
   public static boolean multiParmsNotEqual(String s, ServletRequest req)
   {
     String s2 = req.getParameter("JavaMultiParm2");
     String s3 = req.getParameter("JavaMultiParm3");
-    if (s.equals(s2) && s.equals(s3))
-    {
-      return false;
-    }
-    return true;
+    return !s.equals(s2) || !s.equals(s3);
   }
 }
 

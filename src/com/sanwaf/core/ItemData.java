@@ -2,15 +2,15 @@ package com.sanwaf.core;
 
 class ItemData
 {
-  String name;
-  String display;
-  Shield shield;
+  final String name;
+  final String display;
+  final Shield shield;
   String type;
-  int min;
-  int max;
-  String msg;
-  String uri;
-  Modes mode;
+  final int min;
+  final int max;
+  final String msg;
+  final String uri;
+  final Modes mode;
 
   ItemData(Shield shield, String name, Modes mode, String display, String type, String msg, String uri, int max, int min)
   {

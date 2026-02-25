@@ -12,9 +12,9 @@ public class DatatypeXssEncodedPayloadsTest
   static Sanwaf sanwaf;
   static Shield shield;
 
-  static int iterations = 1;
-  static boolean doHex = false;
-  static boolean logErrors = true;
+  static final int iterations = 1;
+  static final boolean doHex = false;
+  static final boolean logErrors = true;
 
   @BeforeClass
   public static void setUpClass()

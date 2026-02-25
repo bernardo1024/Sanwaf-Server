@@ -13,7 +13,7 @@ final class ItemDependentFormat extends Item
   static final String INVALID_DEP_FORMAT = "Invalid Dependent Format: ";
   String depFormatString = null;
   String dependentElementName = null;
-  Map<String, ItemFormat> formats = new HashMap<>();
+  final Map<String, ItemFormat> formats = new HashMap<>();
 
   ItemDependentFormat(ItemData id)
   {
@@ -51,11 +51,7 @@ final class ItemDependentFormat extends Item
     }
     ItemFormat format = getFormatForValue(elementValue);
 
-    if (format != null && format.inError(req, shield, value, doAllBlocks, log))
-    {
-      return true;
-    }
-    return false;
+    return format != null && format.inError(req, shield, value, doAllBlocks, log);
   }
 
   private ItemFormat getFormatForValue(String value)

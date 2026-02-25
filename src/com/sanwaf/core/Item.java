@@ -1,5 +1,6 @@
 package com.sanwaf.core;
 
+import com.sanwaf.log.Logger;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -57,7 +58,7 @@ abstract class Item
     setUri(id.uri);
   }
 
-  static boolean handleStrictError(String value, ServletRequest req, com.sanwaf.log.Logger logger, boolean log)
+  static void handleStrictError(String value, ServletRequest req, Logger logger, boolean log)
   {
     ItemStrict item = new ItemStrict(value);
     if (log)
@@ -65,7 +66,6 @@ abstract class Item
       logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
     }
     appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true), req);
-    return true;
   }
 
   static void appendAttribute(String att, String value, ServletRequest req)

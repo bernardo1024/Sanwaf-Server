@@ -134,8 +134,9 @@ public class ItemFactory
       if (c == '(' && i + 1 < len && Character.isWhitespace(related.charAt(i + 1)))
       {
         buf[out++] = '(';
-        i++;
-        while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+        do
+          i++;
+        while (i < len && Character.isWhitespace(related.charAt(i)));
       }
       else if (Character.isWhitespace(c))
       {
@@ -155,8 +156,9 @@ public class ItemFactory
         else if (i < len && related.charAt(i) == ':')
         {
           buf[out++] = ':';
-          i++;
-          while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+          do
+            i++;
+          while (i < len && Character.isWhitespace(related.charAt(i)));
         }
         else if (i < len && related.charAt(i) == '&' && i + 1 < len && related.charAt(i + 1) == '&')
         {

@@ -30,12 +30,12 @@ final class Shield
   int maxLen = Integer.MAX_VALUE;
   int regexMinLen = 0;
   boolean regexAlways = false;
-  Map<String, String> errorMessages = new HashMap<>();
+  final Map<String, String> errorMessages = new HashMap<>();
   List<String> regexAlwaysExclusions = new ArrayList<>();
-  Map<String, Rule> rulePatterns = new HashMap<>();
-  Map<String, Rule> customRulePatterns = new HashMap<>();
-  Map<String, Rule> rulePatternsDetect = new HashMap<>();
-  Map<String, Rule> customRulePatternsDetect = new HashMap<>();
+  final Map<String, Rule> rulePatterns = new HashMap<>();
+  final Map<String, Rule> customRulePatterns = new HashMap<>();
+  final Map<String, Rule> rulePatternsDetect = new HashMap<>();
+  final Map<String, Rule> customRulePatternsDetect = new HashMap<>();
   Metadata parameters = null;
   Metadata cookies = null;
   Metadata headers = null;
@@ -313,10 +313,6 @@ final class Shield
         return null;
       }
       item = getItemFromMetadata(meta, a);
-      if (item == null)
-      {
-        return null;
-      }
     }
     return item;
   }

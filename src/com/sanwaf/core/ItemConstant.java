@@ -25,11 +25,7 @@ final class ItemConstant extends Item
     {
       return true;
     }
-    if (value != null && !value.isEmpty() && !constants.contains(value))
-    {
-      return true;
-    }
-    return false;
+    return value != null && !value.isEmpty() && !constants.contains(value);
   }
 
   @Override

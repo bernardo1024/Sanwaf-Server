@@ -12,12 +12,12 @@ public class MetadataEndpoints
   static final String XML_ENDPOINT = "endpoint";
   static final String XML_STRICT = "strict";
 
-  com.sanwaf.log.Logger logger;
+  final com.sanwaf.log.Logger logger;
   boolean enabled = false;
   boolean caseSensitive = true;
-  Map<String, Metadata> endpointParametersBlock = new HashMap<>();
-  Map<String, Metadata> endpointParametersDetect = new HashMap<>();
-  Shield shield;
+  final Map<String, Metadata> endpointParametersBlock = new HashMap<>();
+  final Map<String, Metadata> endpointParametersDetect = new HashMap<>();
+  final Shield shield;
 
   MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger, boolean isDetect)
   {

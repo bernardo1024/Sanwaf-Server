@@ -35,8 +35,8 @@ class Metadata
   boolean endpointIsStrict = false;
   boolean endpointIsStrictAllowLess = false;
   Modes endpointMode = Modes.BLOCK;
-  Map<String, Item> items = new HashMap<>();
-  Map<String, List<String>> index = new HashMap<>();
+  final Map<String, Item> items = new HashMap<>();
+  final Map<String, List<String>> index = new HashMap<>();
   Shield shield;
 
   Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger, boolean isDetect)

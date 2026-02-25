@@ -2,8 +2,8 @@ package com.sanwaf.core;
 
 final class Point
 {
-  int start;
-  int end;
+  final int start;
+  final int end;
 
   Point(int start, int end)
   {

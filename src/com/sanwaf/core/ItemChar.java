@@ -26,11 +26,7 @@ final class ItemChar extends Item
     {
       return false;
     }
-    if (value.length() > 1)
-    {
-      return true;
-    }
-    return false;
+    return value.length() > 1;
   }
 
   @Override

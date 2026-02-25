@@ -11,7 +11,7 @@ final class ItemFormat extends Item
 {
   static final String INVALID_FORMAT = "Invalid Format: ";
   String formatString = null;
-  List<List<String>> formatsBlocks = new ArrayList<>();
+  final List<List<String>> formatsBlocks = new ArrayList<>();
 
   ItemFormat(ItemData id)
   {
@@ -56,11 +56,7 @@ final class ItemFormat extends Item
       }
     }
 
-    if (!foundValidFormat)
-    {
-      return true;
-    }
-    return false;
+    return !foundValidFormat;
   }
 
   private boolean formatInError(final String value, List<String> formatBlocks)

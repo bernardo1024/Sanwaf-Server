@@ -6,7 +6,7 @@ public class UnitTestResult
   long end = 0;
   int pass = 0;
   int fail = 0;
-  StringBuilder errors = new StringBuilder();
+  final StringBuilder errors = new StringBuilder();
 
   public void start()
   {

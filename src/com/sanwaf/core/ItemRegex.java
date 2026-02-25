@@ -73,10 +73,7 @@ final class ItemRegex extends Item
     if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match))
     {
       handleMode(true, value, req, rule.mode, log);
-      if (rule.mode == Modes.BLOCK && mode == Modes.BLOCK)
-      {
-        return true;
-      }
+      return rule.mode == Modes.BLOCK && mode == Modes.BLOCK;
     }
     return false;
   }
