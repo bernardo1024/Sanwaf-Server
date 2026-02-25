@@ -4,10 +4,12 @@ import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 final class ItemNumericDelimited extends ItemNumeric
 {
   String delimiter = "";
+  Pattern delimiterPattern;
 
   ItemNumericDelimited(ItemData id, boolean isInt)
   {
@@ -26,7 +28,7 @@ final class ItemNumericDelimited extends ItemNumeric
 
     if (value != null)
     {
-      String[] ns = value.split(delimiter, -1);
+      String[] ns = delimiterPattern.split(value, -1);
       for (String n : ns)
       {
         if (!n.isEmpty())
@@ -45,7 +47,7 @@ final class ItemNumericDelimited extends ItemNumeric
     {
       return false;
     }
-    String[] ns = value.split(delimiter);
+    String[] ns = delimiterPattern.split(value);
     for (String n : ns)
     {
       if (super.inError(req, shield, n, doAllBlocks, log))
@@ -72,6 +74,7 @@ final class ItemNumericDelimited extends ItemNumeric
     int start = value.indexOf(ItemFactory.SEP_START);
     int end = value.lastIndexOf(ItemFactory.SEP_END);
     delimiter = value.substring(start + ItemFactory.SEP_START.length(), end);
+    delimiterPattern = Pattern.compile(delimiter);
   }
 
   @Override
