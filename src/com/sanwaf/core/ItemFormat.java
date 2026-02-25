@@ -252,8 +252,12 @@ final class ItemFormat extends Item
       char arith = parsedValue.charAt(last + 1);
       switch (arith)
       {
-        case '+': newValue += parsedNum; break;
-        case '-': newValue -= parsedNum; break;
+      case '+':
+        newValue += parsedNum;
+        break;
+      case '-':
+        newValue -= parsedNum;
+        break;
       }
     }
     return String.valueOf(newValue);
@@ -264,33 +268,68 @@ final class ItemFormat extends Item
     char[] src = s.toCharArray();
     char[] dst = new char[src.length];
     int d = 0;
-    for (int i = 0; i < src.length; i++) {
-      if (src[i] == '\\' && i + 1 < src.length) {
+    for (int i = 0; i < src.length; i++)
+    {
+      if (src[i] == '\\' && i + 1 < src.length)
+      {
         char next = src[i + 1];
         char replacement;
-        switch (next) {
-          case '#': replacement = '\t'; break;
-          case 'A': replacement = '\n'; break;
-          case 'a': replacement = '\r'; break;
-          case 'c': replacement = '\f'; break;
-          case '[': replacement = '\b'; break;
-          case ']': replacement = '\0'; break;
-          case '|': replacement = '\1'; break;
-          case 'x': replacement = '\2'; break;
-          case ':': replacement = '\3'; break;
-          case '=': replacement = '\4'; break;
-          case '(': replacement = '\5'; break;
-          case ')': replacement = '\6'; break;
-          case '+': replacement = '\7'; break;
-          case '-': replacement = '\016'; break;
-          case ';': replacement = '\017'; break;
-          default:
-            dst[d++] = src[i];
-            continue;
+        switch (next)
+        {
+        case '#':
+          replacement = '\t';
+          break;
+        case 'A':
+          replacement = '\n';
+          break;
+        case 'a':
+          replacement = '\r';
+          break;
+        case 'c':
+          replacement = '\f';
+          break;
+        case '[':
+          replacement = '\b';
+          break;
+        case ']':
+          replacement = '\0';
+          break;
+        case '|':
+          replacement = '\1';
+          break;
+        case 'x':
+          replacement = '\2';
+          break;
+        case ':':
+          replacement = '\3';
+          break;
+        case '=':
+          replacement = '\4';
+          break;
+        case '(':
+          replacement = '\5';
+          break;
+        case ')':
+          replacement = '\6';
+          break;
+        case '+':
+          replacement = '\7';
+          break;
+        case '-':
+          replacement = '\016';
+          break;
+        case ';':
+          replacement = '\017';
+          break;
+        default:
+          dst[d++] = src[i];
+          continue;
         }
         dst[d++] = replacement;
         i++;
-      } else {
+      }
+      else
+      {
         dst[d++] = src[i];
       }
     }

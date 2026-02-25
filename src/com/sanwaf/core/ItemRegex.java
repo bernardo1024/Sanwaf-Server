@@ -10,15 +10,36 @@ import java.util.regex.Pattern;
 final class ItemRegex extends Item
 {
   static final String FAILED_CUSTOM_PATTERN = "Failed Custom Pattern: ";
-  String patternName = null;
-  String patternString = null;
-  boolean isInline = false;
+  final String patternName;
+  final String patternString;
+  final boolean isInline;
   Rule rule = null;
 
   ItemRegex(ItemData id)
   {
     super(id);
-    setPattern(id);
+    String value = id.type;
+    this.patternString = value.length() > 100 ? value.substring(0, 100) : value;
+
+    String pn = null;
+    boolean il = false;
+    if (value.startsWith(ItemFactory.INLINE_REGEX))
+    {
+      il = true;
+      Pattern inlinePattern = Pattern.compile(value.substring(ItemFactory.INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
+      rule = new Rule(id.mode, inlinePattern, "pass", null);
+      pn = "inline-regex: " + rule.pattern;
+    }
+    else
+    {
+      int start = value.indexOf(ItemFactory.REGEX);
+      if (start >= 0)
+      {
+        pn = value.substring(start + ItemFactory.REGEX.length(), value.length() - 1);
+      }
+    }
+    this.patternName = pn;
+    this.isInline = il;
   }
 
   @Override
@@ -77,35 +98,6 @@ final class ItemRegex extends Item
       return rule.mode == Modes.BLOCK && mode == Modes.BLOCK;
     }
     return false;
-  }
-
-  private void setPattern(ItemData id)
-  {
-    String value = id.type;
-    if (value.length() > 100)
-    {
-      patternString = value.substring(0, 100);
-    }
-    else
-    {
-      patternString = value;
-    }
-
-    if (value.startsWith(ItemFactory.INLINE_REGEX))
-    {
-      isInline = true;
-      Pattern inlinePattern = Pattern.compile(value.substring(ItemFactory.INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
-      rule = new Rule(id.mode, inlinePattern, "pass", null);
-      patternName = "inline-regex: " + rule.pattern;
-    }
-    else
-    {
-      int start = value.indexOf(ItemFactory.REGEX);
-      if (start >= 0)
-      {
-        patternName = value.substring(start + ItemFactory.REGEX.length(), value.length() - 1);
-      }
-    }
   }
 
   @Override

@@ -10,33 +10,35 @@ import java.util.regex.Pattern;
  * 4. Single-pass char[] scan — one traversal, no intermediate strings
  */
 @SuppressWarnings("ALL")
-public class EscapeCharsBenchmark {
+public class EscapeCharsBenchmark
+{
 
   // --- Precompiled patterns for approach 3 ---
-  private static final Pattern P_HASH  = Pattern.compile("\\\\#");
-  private static final Pattern P_A     = Pattern.compile("\\\\A");
-  private static final Pattern P_a     = Pattern.compile("\\\\a");
-  private static final Pattern P_c     = Pattern.compile("\\\\c");
-  private static final Pattern P_LBRK  = Pattern.compile("\\\\\\[");
-  private static final Pattern P_RBRK  = Pattern.compile("\\\\\\]");
-  private static final Pattern P_PIPE  = Pattern.compile("\\\\\\|");
-  private static final Pattern P_x     = Pattern.compile("\\\\x");
+  private static final Pattern P_HASH = Pattern.compile("\\\\#");
+  private static final Pattern P_A = Pattern.compile("\\\\A");
+  private static final Pattern P_a = Pattern.compile("\\\\a");
+  private static final Pattern P_c = Pattern.compile("\\\\c");
+  private static final Pattern P_LBRK = Pattern.compile("\\\\\\[");
+  private static final Pattern P_RBRK = Pattern.compile("\\\\\\]");
+  private static final Pattern P_PIPE = Pattern.compile("\\\\\\|");
+  private static final Pattern P_x = Pattern.compile("\\\\x");
   private static final Pattern P_COLON = Pattern.compile("\\\\:");
-  private static final Pattern P_EQ    = Pattern.compile("\\\\=");
-  private static final Pattern P_LPAR  = Pattern.compile("\\\\\\(");
-  private static final Pattern P_RPAR  = Pattern.compile("\\\\\\)");
-  private static final Pattern P_PLUS  = Pattern.compile("\\\\\\+");
+  private static final Pattern P_EQ = Pattern.compile("\\\\=");
+  private static final Pattern P_LPAR = Pattern.compile("\\\\\\(");
+  private static final Pattern P_RPAR = Pattern.compile("\\\\\\)");
+  private static final Pattern P_PLUS = Pattern.compile("\\\\\\+");
   private static final Pattern P_MINUS = Pattern.compile("\\\\\\-");
-  private static final Pattern P_SEMI  = Pattern.compile("\\\\;");
+  private static final Pattern P_SEMI = Pattern.compile("\\\\;");
 
   private static final String TEST_INPUT =
       "field\\#name\\Aupper\\alower\\cctrl\\[left\\]right\\|pipe\\xhex\\:colon\\=eq\\(lp\\)rp\\+plus\\-minus\\;semi some normal text";
 
   private static final int WARMUP_ITERS = 10_000;
-  private static final int BENCH_ITERS  = 100_000;
+  private static final int BENCH_ITERS = 100_000;
 
   // --- Approach 1: Current (String.replaceAll) ---
-  private static String escapeCharsCurrent(String s) {
+  private static String escapeCharsCurrent(String s)
+  {
     s = s.replaceAll("\\\\#", "\t");
     s = s.replaceAll("\\\\A", "\n");
     s = s.replaceAll("\\\\a", "\r");
@@ -56,7 +58,8 @@ public class EscapeCharsBenchmark {
   }
 
   // --- Approach 2: String.replace (literal) ---
-  private static String escapeCharsReplace(String s) {
+  private static String escapeCharsReplace(String s)
+  {
     s = s.replace("\\#", "\t");
     s = s.replace("\\A", "\n");
     s = s.replace("\\a", "\r");
@@ -76,7 +79,8 @@ public class EscapeCharsBenchmark {
   }
 
   // --- Approach 3: Precompiled Pattern ---
-  private static String escapeCharsPrecompiled(String s) {
+  private static String escapeCharsPrecompiled(String s)
+  {
     s = P_HASH.matcher(s).replaceAll("\t");
     s = P_A.matcher(s).replaceAll("\n");
     s = P_a.matcher(s).replaceAll("\r");
@@ -96,48 +100,86 @@ public class EscapeCharsBenchmark {
   }
 
   // --- Approach 4: Single-pass char[] scan ---
-  private static String escapeCharsSinglePass(String s) {
+  private static String escapeCharsSinglePass(String s)
+  {
     char[] src = s.toCharArray();
     char[] dst = new char[src.length];
     int d = 0;
-    for (int i = 0; i < src.length; i++) {
-      if (src[i] == '\\' && i + 1 < src.length) {
+    for (int i = 0; i < src.length; i++)
+    {
+      if (src[i] == '\\' && i + 1 < src.length)
+      {
         char next = src[i + 1];
         char replacement;
-        switch (next) {
-          case '#': replacement = '\t'; break;
-          case 'A': replacement = '\n'; break;
-          case 'a': replacement = '\r'; break;
-          case 'c': replacement = '\f'; break;
-          case '[': replacement = '\b'; break;
-          case ']': replacement = '\0'; break;
-          case '|': replacement = '\1'; break;
-          case 'x': replacement = '\2'; break;
-          case ':': replacement = '\3'; break;
-          case '=': replacement = '\4'; break;
-          case '(': replacement = '\5'; break;
-          case ')': replacement = '\6'; break;
-          case '+': replacement = '\7'; break;
-          case '-': replacement = '\016'; break;
-          case ';': replacement = '\017'; break;
-          default:
-            dst[d++] = src[i];
-            continue;
+        switch (next)
+        {
+        case '#':
+          replacement = '\t';
+          break;
+        case 'A':
+          replacement = '\n';
+          break;
+        case 'a':
+          replacement = '\r';
+          break;
+        case 'c':
+          replacement = '\f';
+          break;
+        case '[':
+          replacement = '\b';
+          break;
+        case ']':
+          replacement = '\0';
+          break;
+        case '|':
+          replacement = '\1';
+          break;
+        case 'x':
+          replacement = '\2';
+          break;
+        case ':':
+          replacement = '\3';
+          break;
+        case '=':
+          replacement = '\4';
+          break;
+        case '(':
+          replacement = '\5';
+          break;
+        case ')':
+          replacement = '\6';
+          break;
+        case '+':
+          replacement = '\7';
+          break;
+        case '-':
+          replacement = '\016';
+          break;
+        case ';':
+          replacement = '\017';
+          break;
+        default:
+          dst[d++] = src[i];
+          continue;
         }
         dst[d++] = replacement;
         i++; // skip next char
-      } else {
+      }
+      else
+      {
         dst[d++] = src[i];
       }
     }
     return new String(dst, 0, d);
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args)
+  {
     new EscapeCharsBenchmark().benchmarkEscapeChars();
   }
 
-  public void benchmarkEscapeChars() {
+  public void benchmarkEscapeChars()
+  {
     // Verify all 4 approaches produce the same result
     String expected = escapeCharsCurrent(TEST_INPUT);
     String replaceResult = escapeCharsReplace(TEST_INPUT);
@@ -149,7 +191,8 @@ public class EscapeCharsBenchmark {
     assert expected.equals(singlePassResult) : "Single-pass result differs!";
 
     // Warmup
-    for (int i = 0; i < WARMUP_ITERS; i++) {
+    for (int i = 0; i < WARMUP_ITERS; i++)
+    {
       escapeCharsCurrent(TEST_INPUT);
       escapeCharsReplace(TEST_INPUT);
       escapeCharsPrecompiled(TEST_INPUT);
@@ -158,28 +201,32 @@ public class EscapeCharsBenchmark {
 
     // Benchmark 1: Current (replaceAll)
     long start = System.nanoTime();
-    for (int i = 0; i < BENCH_ITERS; i++) {
+    for (int i = 0; i < BENCH_ITERS; i++)
+    {
       escapeCharsCurrent(TEST_INPUT);
     }
     long currentNs = System.nanoTime() - start;
 
     // Benchmark 2: String.replace
     start = System.nanoTime();
-    for (int i = 0; i < BENCH_ITERS; i++) {
+    for (int i = 0; i < BENCH_ITERS; i++)
+    {
       escapeCharsReplace(TEST_INPUT);
     }
     long replaceNs = System.nanoTime() - start;
 
     // Benchmark 3: Precompiled Pattern
     start = System.nanoTime();
-    for (int i = 0; i < BENCH_ITERS; i++) {
+    for (int i = 0; i < BENCH_ITERS; i++)
+    {
       escapeCharsPrecompiled(TEST_INPUT);
     }
     long precompiledNs = System.nanoTime() - start;
 
     // Benchmark 4: Single-pass char[]
     start = System.nanoTime();
-    for (int i = 0; i < BENCH_ITERS; i++) {
+    for (int i = 0; i < BENCH_ITERS; i++)
+    {
       escapeCharsSinglePass(TEST_INPUT);
     }
     long singlePassNs = System.nanoTime() - start;

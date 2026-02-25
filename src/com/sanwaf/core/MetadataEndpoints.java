@@ -43,7 +43,7 @@ public class MetadataEndpoints
       Modes mode = Modes.getMode(mx.get(ItemFactory.XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
 
       boolean needed = (!isDetect && mode == Modes.BLOCK) ||
-                       (isDetect && (mode == Modes.DETECT || mode == Modes.DETECT_ALL));
+          (isDetect && (mode == Modes.DETECT || mode == Modes.DETECT_ALL));
       if (!needed)
       {
         continue;

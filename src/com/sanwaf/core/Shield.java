@@ -397,24 +397,22 @@ final class Shield
 
   String getAllowListedValue(String name, AllowListType type, HttpServletRequest req)
   {
-    if (name == null || req == null)
+    if (name == null || type == null || req == null)
     {
       return null;
     }
 
-    if (type == AllowListType.HEADER)
+    switch (type)
     {
+    case HEADER:
       return getAllowListedHeader(name, req);
-    }
-    else if (type == AllowListType.COOKIE)
-    {
+    case COOKIE:
       return getAllowListedCookie(name, req);
-    }
-    else if (type == AllowListType.PARAMETER)
-    {
+    case PARAMETER:
       return getAllowListedParameter(name, req);
+    default:
+      return null;
     }
-    return null;
   }
 
   String getAllowListedHeader(String name, HttpServletRequest req)

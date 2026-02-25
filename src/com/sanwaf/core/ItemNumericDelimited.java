@@ -8,13 +8,16 @@ import java.util.regex.Pattern;
 
 final class ItemNumericDelimited extends ItemNumeric
 {
-  String delimiter = "";
-  Pattern delimiterPattern;
+  final String delimiter;
+  final Pattern delimiterPattern;
 
   ItemNumericDelimited(ItemData id, boolean isInt)
   {
     super(id, isInt);
-    setDelimiter(id.type);
+    int start = id.type.indexOf(ItemFactory.SEP_START);
+    int end = id.type.lastIndexOf(ItemFactory.SEP_END);
+    this.delimiter = id.type.substring(start + ItemFactory.SEP_START.length(), end);
+    this.delimiterPattern = Pattern.compile(delimiter);
   }
 
   @Override
@@ -67,14 +70,6 @@ final class ItemNumericDelimited extends ItemNumeric
       return errorMsg.substring(0, i) + Metadata.jsonEncode(delimiter) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
     }
     return errorMsg;
-  }
-
-  private void setDelimiter(String value)
-  {
-    int start = value.indexOf(ItemFactory.SEP_START);
-    int end = value.lastIndexOf(ItemFactory.SEP_END);
-    delimiter = value.substring(start + ItemFactory.SEP_START.length(), end);
-    delimiterPattern = Pattern.compile(delimiter);
   }
 
   @Override

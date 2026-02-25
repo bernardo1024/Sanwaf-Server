@@ -12,7 +12,8 @@ import java.util.regex.Pattern;
  * M regex rules (the hot path in ItemString / ItemRegex).
  */
 @SuppressWarnings("ALL")
-public class MatcherCacheBenchmark {
+public class MatcherCacheBenchmark
+{
 
   // Representative XSS/injection patterns from sanwaf's default ruleset
   private static final Pattern[] RULES = {
@@ -41,14 +42,18 @@ public class MatcherCacheBenchmark {
   };
 
   private static final int WARMUP_ITERS = 10_000;
-  private static final int BENCH_ITERS  = 100_000;
+  private static final int BENCH_ITERS = 100_000;
 
   // --- Approach 1: New Matcher per call (old code) ---
-  private static int matchNewMatcher(Pattern[] rules, String[] values) {
+  private static int matchNewMatcher(Pattern[] rules, String[] values)
+  {
     int found = 0;
-    for (String value : values) {
-      for (Pattern p : rules) {
-        if (p.matcher(value).find()) {
+    for (String value : values)
+    {
+      for (Pattern p : rules)
+      {
+        if (p.matcher(value).find())
+        {
           found++;
         }
       }
@@ -58,18 +63,25 @@ public class MatcherCacheBenchmark {
 
   // --- Approach 2: ThreadLocal cached Matcher (new code) ---
   private static final ThreadLocal<Matcher>[] CACHED_MATCHERS = new ThreadLocal[RULES.length];
-  static {
-    for (int i = 0; i < RULES.length; i++) {
+
+  static
+  {
+    for (int i = 0; i < RULES.length; i++)
+    {
       final int idx = i;
       CACHED_MATCHERS[i] = ThreadLocal.withInitial(() -> RULES[idx].matcher(""));
     }
   }
 
-  private static int matchCachedMatcher(ThreadLocal<Matcher>[] cached, String[] values) {
+  private static int matchCachedMatcher(ThreadLocal<Matcher>[] cached, String[] values)
+  {
     int found = 0;
-    for (String value : values) {
-      for (ThreadLocal<Matcher> tl : cached) {
-        if (tl.get().reset(value).find()) {
+    for (String value : values)
+    {
+      for (ThreadLocal<Matcher> tl : cached)
+      {
+        if (tl.get().reset(value).find())
+        {
           found++;
         }
       }
@@ -83,13 +95,15 @@ public class MatcherCacheBenchmark {
   private static final String SIMPLE_VALUE = "HelloWorld";
   private static final int ALLOC_ITERS = 1_000_000;
 
-  public static void main(String[] args) {
+  public static void main(String[] args)
+  {
     MatcherCacheBenchmark bench = new MatcherCacheBenchmark();
     bench.benchmarkMatcherCache();
     bench.benchmarkAllocationOnly();
   }
 
-  public void benchmarkMatcherCache() {
+  public void benchmarkMatcherCache()
+  {
     // Verify both approaches produce the same result
     int expected = matchNewMatcher(RULES, VALUES);
     int cachedResult = matchCachedMatcher(CACHED_MATCHERS, VALUES);
@@ -98,21 +112,24 @@ public class MatcherCacheBenchmark {
     int checksPerIter = RULES.length * VALUES.length;
 
     // Warmup
-    for (int i = 0; i < WARMUP_ITERS; i++) {
+    for (int i = 0; i < WARMUP_ITERS; i++)
+    {
       matchNewMatcher(RULES, VALUES);
       matchCachedMatcher(CACHED_MATCHERS, VALUES);
     }
 
     // Benchmark 1: New Matcher per call
     long start = System.nanoTime();
-    for (int i = 0; i < BENCH_ITERS; i++) {
+    for (int i = 0; i < BENCH_ITERS; i++)
+    {
       matchNewMatcher(RULES, VALUES);
     }
     long newNs = System.nanoTime() - start;
 
     // Benchmark 2: ThreadLocal cached Matcher
     start = System.nanoTime();
-    for (int i = 0; i < BENCH_ITERS; i++) {
+    for (int i = 0; i < BENCH_ITERS; i++)
+    {
       matchCachedMatcher(CACHED_MATCHERS, VALUES);
     }
     long cachedNs = System.nanoTime() - start;
@@ -129,23 +146,27 @@ public class MatcherCacheBenchmark {
     System.out.println("=====================================================\n");
   }
 
-  public void benchmarkAllocationOnly() {
+  public void benchmarkAllocationOnly()
+  {
     // Warmup
-    for (int i = 0; i < WARMUP_ITERS; i++) {
+    for (int i = 0; i < WARMUP_ITERS; i++)
+    {
       SIMPLE.matcher(SIMPLE_VALUE).find();
       SIMPLE_CACHED.get().reset(SIMPLE_VALUE).find();
     }
 
     // Benchmark 1: New Matcher each time
     long start = System.nanoTime();
-    for (int i = 0; i < ALLOC_ITERS; i++) {
+    for (int i = 0; i < ALLOC_ITERS; i++)
+    {
       SIMPLE.matcher(SIMPLE_VALUE).find();
     }
     long newNs = System.nanoTime() - start;
 
     // Benchmark 2: Reuse via reset()
     start = System.nanoTime();
-    for (int i = 0; i < ALLOC_ITERS; i++) {
+    for (int i = 0; i < ALLOC_ITERS; i++)
+    {
       SIMPLE_CACHED.get().reset(SIMPLE_VALUE).find();
     }
     long cachedNs = System.nanoTime() - start;

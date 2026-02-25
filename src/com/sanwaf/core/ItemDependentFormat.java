@@ -10,14 +10,35 @@ import java.util.Map;
 final class ItemDependentFormat extends Item
 {
   static final String INVALID_DEP_FORMAT = "Invalid Dependent Format: ";
-  String depFormatString = null;
-  String dependentElementName = null;
+  final String depFormatString;
+  final String dependentElementName;
   final Map<String, ItemFormat> formats = new HashMap<>();
 
   ItemDependentFormat(ItemData id)
   {
     super(id);
-    initDependentFormat(id);
+    String depFmt = null;
+    String depName = null;
+    int start = id.type.indexOf(ItemFactory.DEPENDENT_FORMAT);
+    if (start >= 0)
+    {
+      depFmt = id.type.substring(start + ItemFactory.DEPENDENT_FORMAT.length(), id.type.length() - 1);
+      if (!depFmt.isEmpty())
+      {
+        String[] elementFormatData = depFmt.split(":");
+        if (elementFormatData.length == 2)
+        {
+          depName = elementFormatData[0];
+          String[] valueFormatPairs = elementFormatData[1].split(";");
+          if (valueFormatPairs.length > 0)
+          {
+            parseFormats(id, valueFormatPairs);
+          }
+        }
+      }
+    }
+    this.depFormatString = depFmt;
+    this.dependentElementName = depName;
   }
 
   @Override
@@ -78,29 +99,6 @@ final class ItemDependentFormat extends Item
       return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
     }
     return errorMsg;
-  }
-
-  private void initDependentFormat(ItemData id)
-  {
-    int start = id.type.indexOf(ItemFactory.DEPENDENT_FORMAT);
-    if (start >= 0)
-    {
-      depFormatString = id.type.substring(start + ItemFactory.DEPENDENT_FORMAT.length(), id.type.length() - 1);
-      if (depFormatString.isEmpty())
-      {
-        return;
-      }
-      String[] elementFormatData = depFormatString.split(":");
-      if (elementFormatData.length == 2)
-      {
-        dependentElementName = elementFormatData[0];
-        String[] valueFormatPairs = elementFormatData[1].split(";");
-        if (valueFormatPairs.length > 0)
-        {
-          parseFormats(id, valueFormatPairs);
-        }
-      }
-    }
   }
 
   private void parseFormats(ItemData id, String[] valueFormatPairs)

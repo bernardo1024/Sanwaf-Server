@@ -19,15 +19,31 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   static final String NEWLINE_LONG = "<newline>";
   static final String CARRIAGE_RETURN_LONG = "<carriage return>";
 
-  char[] moreChars = new char[0];
-  private String moreCharsDisplay;
-  private boolean[] asciiLookup = new boolean[128];
-  private Set<Character> nonAsciiSet = new HashSet<>();
+  final char[] moreChars;
+  private final String moreCharsDisplay;
+  private final boolean[] asciiLookup;
+  private final Set<Character> nonAsciiSet;
 
   ItemAlphanumericAndMore(ItemData id)
   {
     super(id);
-    setMoreChars(id.type);
+    int start = id.type.indexOf(ItemFactory.SEP_START);
+    int end = id.type.lastIndexOf(ItemFactory.SEP_END);
+    this.moreChars = getMoreCharArray(id.type.substring(start + ItemFactory.SEP_START.length(), end));
+    this.asciiLookup = new boolean[128];
+    this.nonAsciiSet = new HashSet<>();
+    for (char c : moreChars)
+    {
+      if (c < 128)
+      {
+        asciiLookup[c] = true;
+      }
+      else
+      {
+        nonAsciiSet.add(c);
+      }
+    }
+    this.moreCharsDisplay = Metadata.jsonEncode(handleSpecialChars(moreChars));
   }
 
   @Override
@@ -151,27 +167,6 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
       s = s.substring(0, i) + to + s.substring(i + from.length());
     }
     return s;
-  }
-
-  private void setMoreChars(String value)
-  {
-    int start = value.indexOf(ItemFactory.SEP_START);
-    int end = value.lastIndexOf(ItemFactory.SEP_END);
-    moreChars = getMoreCharArray(value.substring(start + ItemFactory.SEP_START.length(), end));
-    asciiLookup = new boolean[128];
-    nonAsciiSet = new HashSet<>();
-    for (char c : moreChars)
-    {
-      if (c < 128)
-      {
-        asciiLookup[c] = true;
-      }
-      else
-      {
-        nonAsciiSet.add(c);
-      }
-    }
-    moreCharsDisplay = Metadata.jsonEncode(handleSpecialChars(moreChars));
   }
 
   @Override

@@ -10,12 +10,12 @@ import java.util.Set;
 final class ItemConstant extends Item
 {
   static final String INVALID_CONSTANT = "Invalid Constant: ";
-  Set<String> constants = null;
+  final Set<String> constants;
 
   ItemConstant(ItemData id)
   {
     super(id);
-    setConstants(id.type);
+    this.constants = parseConstants(id.type);
   }
 
   @Override
@@ -52,19 +52,21 @@ final class ItemConstant extends Item
     return points;
   }
 
-  private void setConstants(String value)
+  private static Set<String> parseConstants(String value)
   {
     int start = value.indexOf(ItemFactory.CONSTANT);
     if (start >= 0)
     {
       String s = value.substring(start + ItemFactory.CONSTANT.length(), value.length() - 1);
       String[] parts = s.split(",");
-      constants = new LinkedHashSet<>(parts.length * 2);
+      Set<String> result = new LinkedHashSet<>(parts.length * 2);
       for (String part : parts)
       {
-        constants.add(part);
+        result.add(part);
       }
+      return result;
     }
+    return null;
   }
 
   @Override

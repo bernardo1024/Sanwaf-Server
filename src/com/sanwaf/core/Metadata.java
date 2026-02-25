@@ -17,6 +17,7 @@ class Metadata
   static final String STAR = "*";
 
   private static final String[] CHAR_STRINGS = new String[128];
+
   static
   {
     for (int i = 0; i < 128; i++)
@@ -54,7 +55,7 @@ class Metadata
 
   //used for endpoints
   Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes,
-           String endpointIsStrict, com.sanwaf.log.Logger logger, boolean isDetect, Modes endpointMode)
+      String endpointIsStrict, com.sanwaf.log.Logger logger, boolean isDetect, Modes endpointMode)
   {
     this.logger = logger;
     this.enabled = true;
@@ -242,10 +243,18 @@ class Metadata
       String esc;
       switch (c)
       {
-      case '\\': esc = "\\\\"; break;
-      case '"':  esc = "\\\""; break;
-      case '/':  esc = "\\/";  break;
-      default:   esc = null;   break;
+      case '\\':
+        esc = "\\\\";
+        break;
+      case '"':
+        esc = "\\\"";
+        break;
+      case '/':
+        esc = "\\/";
+        break;
+      default:
+        esc = null;
+        break;
       }
       if (esc != null)
       {

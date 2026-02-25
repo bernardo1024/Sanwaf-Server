@@ -24,7 +24,7 @@ public final class Sanwaf
   static final String ATT_LOG_DETECT = "~sanwaf-detects";
   static final String ATT_TRANS_ID = "~sanwaf-id";
 
-  private String xmlFilename = null;
+  private final String xmlFilename;
   final Logger logger;
 
   boolean enabled = false;

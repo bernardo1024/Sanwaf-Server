@@ -10,13 +10,15 @@ import java.util.List;
 final class ItemJava extends Item
 {
   static final String INVALID_JAVA = "Invalid Java: ";
-  Method javaMethod = null;
-  String sClazzAndMethod = null;
+  final Method javaMethod;
+  final String sClazzAndMethod;
 
   ItemJava(ItemData id)
   {
     super(id);
-    setJavaMethod(id.type);
+    String type = id.type;
+    this.sClazzAndMethod = type.substring(type.indexOf(ItemFactory.JAVA) + ItemFactory.JAVA.length(), type.length() - 1);
+    this.javaMethod = resolveMethod(sClazzAndMethod);
   }
 
   @Override
@@ -46,23 +48,20 @@ final class ItemJava extends Item
     return points;
   }
 
-  private void setJavaMethod(String type)
+  private static Method resolveMethod(String sClazzAndMethod)
   {
-    sClazzAndMethod = type.substring(type.indexOf(ItemFactory.JAVA) + ItemFactory.JAVA.length(), type.length() - 1);
     if (sClazzAndMethod.isEmpty())
     {
-      return;
+      return null;
     }
-
-    Class<?> clazz = null;
     try
     {
-      clazz = Class.forName(parseClazz(sClazzAndMethod));
-      javaMethod = clazz.getMethod(parseMethod(sClazzAndMethod), String.class, ServletRequest.class);
+      Class<?> clazz = Class.forName(parseClazz(sClazzAndMethod));
+      return clazz.getMethod(parseMethod(sClazzAndMethod), String.class, ServletRequest.class);
     }
     catch (ClassNotFoundException | NullPointerException | NoSuchMethodException e)
     {
-      javaMethod = null;
+      return null;
     }
   }
 

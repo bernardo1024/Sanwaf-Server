@@ -9,7 +9,7 @@ class ItemNumeric extends Item
 {
   static final String INVALID_NUMBER = "Invalid Number";
   static final String INVALID_MAX_MIN = "Invalid Max Min Range";
-  boolean isInt = false;
+  final boolean isInt;
 
   ItemNumeric(ItemData id, boolean isInt)
   {

@@ -175,8 +175,14 @@ abstract class Item
       if (doLog || doAttr)
       {
         String json = toJson(value, mode, req, true);
-        if (doLog) { logger.error(json); }
-        if (doAttr) { appendAttribute(Sanwaf.ATT_LOG_ERROR, json, req); }
+        if (doLog)
+        {
+          logger.error(json);
+        }
+        if (doAttr)
+        {
+          appendAttribute(Sanwaf.ATT_LOG_ERROR, json, req);
+        }
       }
       return true;
     }
@@ -188,8 +194,14 @@ abstract class Item
       if (doLog || doAttr)
       {
         String json = toJson(value, mode, req, true);
-        if (doLog) { logger.warn(json); }
-        if (doAttr) { appendAttribute(Sanwaf.ATT_LOG_DETECT, json, req); }
+        if (doLog)
+        {
+          logger.warn(json);
+        }
+        if (doAttr)
+        {
+          appendAttribute(Sanwaf.ATT_LOG_DETECT, json, req);
+        }
       }
     }
     return false;

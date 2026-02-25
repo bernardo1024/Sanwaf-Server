@@ -141,7 +141,8 @@ public class ItemFactory
       else if (Character.isWhitespace(c))
       {
         int wsStart = i;
-        while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+        while (i < len && Character.isWhitespace(related.charAt(i)))
+          i++;
         if (i < len && related.charAt(i) == ')')
         {
           // collapse " )" to ")"
@@ -151,7 +152,8 @@ public class ItemFactory
           buf[out++] = '|';
           buf[out++] = '|';
           i += 2;
-          while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+          while (i < len && Character.isWhitespace(related.charAt(i)))
+            i++;
         }
         else if (i < len && related.charAt(i) == ':')
         {
@@ -167,16 +169,19 @@ public class ItemFactory
             buf[out++] = '&';
             buf[out++] = '&';
             i += 2;
-            while (i < len && Character.isWhitespace(related.charAt(i))) i++;
+            while (i < len && Character.isWhitespace(related.charAt(i)))
+              i++;
           }
           else
           {
-            for (int j = wsStart; j < i; j++) buf[out++] = related.charAt(j);
+            for (int j = wsStart; j < i; j++)
+              buf[out++] = related.charAt(j);
           }
         }
         else
         {
-          for (int j = wsStart; j < i; j++) buf[out++] = related.charAt(j);
+          for (int j = wsStart; j < i; j++)
+            buf[out++] = related.charAt(j);
         }
       }
       else
