@@ -55,7 +55,26 @@ final class Xml
     {
       return "";
     }
-    return s.replaceAll("<!--.*-->", "").replaceAll("<!--((?!<!--)[\\s\\S])*-->", "");
+    StringBuilder sb = new StringBuilder(s.length());
+    int pos = 0;
+    while (pos < s.length())
+    {
+      int commentStart = s.indexOf("<!--", pos);
+      if (commentStart < 0)
+      {
+        sb.append(s, pos, s.length());
+        break;
+      }
+      sb.append(s, pos, commentStart);
+      int commentEnd = s.indexOf("-->", commentStart + 4);
+      if (commentEnd < 0)
+      {
+        sb.append(s, commentStart, s.length());
+        break;
+      }
+      pos = commentEnd + 3;
+    }
+    return sb.toString();
   }
 
   public String toString()
