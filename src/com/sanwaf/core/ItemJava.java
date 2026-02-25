@@ -99,7 +99,7 @@ final class ItemJava extends Item
     try
     {
       Object o = method.invoke(null, v, req);
-      return Boolean.valueOf(String.valueOf(o));
+      return Boolean.parseBoolean(String.valueOf(o));
     }
     catch (NullPointerException | IllegalAccessException | InvocationTargetException e)
     {

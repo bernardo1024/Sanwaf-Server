@@ -65,7 +65,7 @@ public class XmlTest
   }
 
   @Test
-  public void testXmlPassingNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testXmlPassingNull()
   {
     Xml xml = new Xml("");
     String s = xml.get(null, "test");
@@ -73,7 +73,7 @@ public class XmlTest
   }
 
   @Test
-  public void testXmlInvalidEndTag() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testXmlInvalidEndTag()
   {
     Xml xml = new Xml("<sanwaf><foo>foo<foo></sanwaf>");
     String s = xml.get("<sanwaf><foo>foo<foo></sanwaf>", "foo");

@@ -33,7 +33,7 @@ public class VerboseTest
   }
 
   @Test
-  public void verboseDisabledTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void verboseDisabledTest() throws IOException
   {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf.xml");
     String s = outContent.toString();
@@ -48,7 +48,7 @@ public class VerboseTest
   }
 
   @Test
-  public void verboseEnabledTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void verboseEnabledTest() throws IOException
   {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-verbose.xml");
     String s = outContent.toString();
@@ -82,7 +82,7 @@ public class VerboseTest
   }
 
   @Test
-  public void verboseEnabledRegexTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void verboseEnabledRegexTest() throws IOException
   {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-verboseRegexAlways.xml");
     String s = outContent.toString();
@@ -95,7 +95,7 @@ public class VerboseTest
   }
 
   @Test
-  public void verboseChildShieldTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void verboseChildShieldTest() throws IOException
   {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-childShield.xml");
     String s = outContent.toString();

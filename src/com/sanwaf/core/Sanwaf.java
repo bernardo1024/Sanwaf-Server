@@ -53,7 +53,6 @@ public final class Sanwaf
    *  -default Sanwaf XML configuration file (sanwaf.xml on classpath)
    * </pre>
    *
-   * @return void
    */
   public Sanwaf() throws IOException
   {
@@ -72,7 +71,6 @@ public final class Sanwaf
    * @param logger
    *          A logger of your choice that implements the com.sanwaf.log.Logger
    *          interface
-   * @return void
    */
   public Sanwaf(Logger logger) throws IOException
   {
@@ -91,7 +89,6 @@ public final class Sanwaf
    *          interface
    * @param filename
    *          Fully qualified path to a valid Sanwaf XML file
-   * @return void
    */
   public Sanwaf(Logger logger, String filename) throws IOException
   {
@@ -445,7 +442,6 @@ public final class Sanwaf
   /**
    * Dynamically reload sanwaf
    *
-   * @return void
    */
   public final void reLoad() throws IOException
   {

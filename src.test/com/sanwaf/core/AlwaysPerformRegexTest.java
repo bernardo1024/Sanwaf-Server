@@ -29,7 +29,7 @@ public class AlwaysPerformRegexTest
   }
 
   @Test
-  public void testRegexAlways() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testRegexAlways()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("StringExcluded", "<script>alert(1)</script>");

@@ -33,7 +33,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testXssNoThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testXssNoThreat()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "abcdefghij");
@@ -42,7 +42,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testXssWithThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testXssWithThreat()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1);</script>");
@@ -51,7 +51,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testTrackIdAndGetErrorsNumbersDelimited() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testTrackIdAndGetErrorsNumbersDelimited()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
@@ -63,14 +63,14 @@ public class SanwafTest
     assertTrue(trackId != null);
 
     String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"name\":\"NumericDelimited\",") >= 0);
+    assertTrue(s.contains("{\"name\":\"NumericDelimited\","));
 
     s = Sanwaf.getDetects(request);
     assertTrue(s == null || s.length() == 0);
   }
 
   @Test
-  public void testTrackIdAndGetErrorsAlphanumericAndMore() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testTrackIdAndGetErrorsAlphanumericAndMore()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
@@ -82,11 +82,11 @@ public class SanwafTest
     assertTrue(trackId != null);
 
     String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"name\":\"AlphanumericAndMore\"") >= 0);
+    assertTrue(s.contains("{\"name\":\"AlphanumericAndMore\""));
   }
 
   @Test
-  public void testTrackIdDisabled() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testTrackIdDisabled()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
@@ -124,7 +124,7 @@ public class SanwafTest
       sw.reLoad();
       assertTrue(sw != null);
     }
-    catch (IOException ioe)
+    catch (IOException ignored)
     {
     }
   }
@@ -138,7 +138,7 @@ public class SanwafTest
       assertTrue(sw != null);
       sw.reLoad();
     }
-    catch (IOException ioe)
+    catch (IOException ignored)
     {
     }
   }
@@ -152,7 +152,7 @@ public class SanwafTest
       assertTrue(sw != null);
       sw.reLoad();
     }
-    catch (IOException ioe)
+    catch (IOException ignored)
     {
     }
   }

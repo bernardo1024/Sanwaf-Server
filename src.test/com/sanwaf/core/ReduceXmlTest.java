@@ -29,7 +29,7 @@ public class ReduceXmlTest
   }
 
   @Test
-  public void numericTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void numericTest()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("Numeric", "abc123");

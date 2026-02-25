@@ -32,7 +32,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointChar() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointChar()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -48,7 +48,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRegex() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRegex()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -64,7 +64,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointMaxMinValue() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointMaxMinValue()
   {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -117,7 +117,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRequired() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRequired()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -133,7 +133,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointOpen() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointOpen()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -143,7 +143,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointFormat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointFormat()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -255,7 +255,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedSimple() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedSimple()
   {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -281,7 +281,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedInvalidConfig() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedInvalidConfig()
   {
     // related-invalid-child<related>related-invalid</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -322,7 +322,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedEqualsNoParent() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedEqualsNoParent()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -333,7 +333,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedEquals() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedEquals()
   {
     // related-equals-child<related>related-equals-parent:=</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -407,7 +407,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedNoParentDefined() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedNoParentDefined()
   {
     // related-simple-or-no-parent-parent:Yes<
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -432,7 +432,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedSimpleOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedSimpleOr()
   {
     // related-simple-or-child<related>related-simple-or-parent:aaa||bbb</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -472,7 +472,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedOr()
   {
     // related-or-child<related>(related-or-parent1:aaa||bbb)||(related-or-parent2:ccc||ddd)</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -533,7 +533,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedAndOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedAndOr()
   {
     // related-and-or-child<related>(related-and-or-parent1:aaa||bbb)||(related-and-or-parent2:ccc||ddd)&&(related-and-or-parent3:eee|fff)</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -612,7 +612,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedRemoveSpace() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointRelatedRemoveSpace()
   {
     // <related> ( related-and-or-parentY1 : aaa || bbb ) || (
     // related-and-or-parentY2 : ccc || ddd ) && ( related-and-or-parentY3 : eee
@@ -632,7 +632,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointStrictWithLess() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointStrictWithLess()
   {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -643,7 +643,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointStrictTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testEndpointStrictTest()
   {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();

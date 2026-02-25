@@ -189,22 +189,25 @@ final class ItemFormat extends Item
         startMdyReplacePos = last;
         endMdyReplacePos = last + dateOrder[i].length();
 
-        if (dateOrder[i].equals("yy"))
+        switch (dateOrder[i])
+        {
+        case "yy":
         {
           int year = Calendar.getInstance().get(Calendar.YEAR);
           newMdy = String.valueOf(year).substring(2);
           last += 2;
           newMdy = adjustDate(parsedValue, last, newMdy);
+          break;
         }
-        else if (dateOrder[i].equals("yyyy"))
+        case "yyyy":
         {
           int year = Calendar.getInstance().get(Calendar.YEAR);
           newMdy = String.valueOf(year);
           last += 4;
           newMdy = adjustDate(parsedValue, last, newMdy);
+          break;
         }
-        else if (dateOrder[i].equals("mm"))
-        {
+        case "mm":
           int month = Calendar.getInstance().get(Calendar.MONTH);
           newMdy = String.valueOf(month + 1);
           last += 2;
@@ -213,9 +216,8 @@ final class ItemFormat extends Item
           {
             newMdy = "12";
           }
-        }
-        else if (dateOrder[i].equals("dd"))
-        {
+          break;
+        case "dd":
           int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
           newMdy = String.valueOf(day);
           last += 2;
@@ -224,6 +226,7 @@ final class ItemFormat extends Item
           {
             newMdy = "31";
           }
+          break;
         }
 
         if (parsedValue.substring(last, last + 1).equals("("))

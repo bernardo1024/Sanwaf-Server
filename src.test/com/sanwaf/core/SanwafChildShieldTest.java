@@ -30,14 +30,14 @@ public class SanwafChildShieldTest
   }
 
   @Test
-  public void testHasChildShield() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testHasChildShield()
   {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss");
     assertTrue(shield.childShield.name.equals("XSS-CHILD"));
   }
 
   @Test
-  public void testChildShieldNoMaxViolationThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testChildShieldNoMaxViolationThreat()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "javascript: should pass short string has no javascript: test");
@@ -46,7 +46,7 @@ public class SanwafChildShieldTest
   }
 
   @Test
-  public void testChildShieldMaxViolationThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testChildShieldMaxViolationThreat()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail");
@@ -55,7 +55,7 @@ public class SanwafChildShieldTest
   }
 
   @Test
-  public void testIsThreatNoMaxViolation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testIsThreatNoMaxViolation()
   {
     String value = "javascript: should pass short string has no javascript: test";
     Boolean result = sanwaf.isThreat(value);
@@ -63,7 +63,7 @@ public class SanwafChildShieldTest
   }
 
   @Test
-  public void testIsThreatMaxViolation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testIsThreatMaxViolation()
   {
     String value = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail";
     Boolean result = sanwaf.isThreat(value);
@@ -71,7 +71,7 @@ public class SanwafChildShieldTest
   }
 
   @Test
-  public void testHasInvalidChildShield() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+  public void testHasInvalidChildShield()
   {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss-invalid-child-shield");
     assertTrue(shield.childShield == null);

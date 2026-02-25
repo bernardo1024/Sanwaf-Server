@@ -54,7 +54,7 @@ public class UnitTestUtil
     file = file.replace("\r", "");
     String[] lines = file.split("\n");
 
-    List<String[]> lineArrays = new ArrayList<String[]>();
+    List<String[]> lineArrays = new ArrayList<>();
     for (String line : lines)
     {
       if (line.startsWith("#"))

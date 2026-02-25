@@ -88,20 +88,20 @@ public class ItemFactory
     }
     Item item = getNewItem(new ItemData(shield, name, mode, display, type, msg, uri, max, min));
     item.logger = logger;
-    item.required = Boolean.valueOf(xml.get(XML_ITEM_REQUIRED));
+    item.required = Boolean.parseBoolean(xml.get(XML_ITEM_REQUIRED));
 
     item.maxValue = Integer.MAX_VALUE;
     String sMaxVal = xml.get(XML_ITEM_MAX_VAL);
     if (sMaxVal.length() > 0)
     {
-      item.maxValue = Double.valueOf(sMaxVal);
+      item.maxValue = Double.parseDouble(sMaxVal);
     }
 
     item.minValue = Integer.MIN_VALUE;
     String sMinVal = xml.get(XML_ITEM_MIN_VAL);
     if (sMinVal.length() > 0)
     {
-      item.minValue = Double.valueOf(sMinVal);
+      item.minValue = Double.parseDouble(sMinVal);
     }
 
     item.maskError = xml.get(XML_ITEM_MASK_ERROR);
@@ -142,59 +142,40 @@ public class ItemFactory
     {
       t = t.substring(0, pos + ItemFactory.SEP_START.length());
     }
-    if (t.equals(NUMERIC))
+    switch (t)
     {
+    case NUMERIC:
       return new ItemNumeric(id, false);
-    }
-    else if (t.equals(OPEN))
-    {
+    case OPEN:
       return new ItemOpen(id);
-    }
-    else if (t.equals(INTEGER))
-    {
+    case INTEGER:
       return new ItemNumeric(id, true);
-    }
-    else if (t.equals(ALPHANUMERIC))
-    {
+    case ALPHANUMERIC:
       return new ItemAlphanumeric(id);
-    }
-    else if (t.equals(CHAR))
-    {
+    case CHAR:
       return new ItemChar(id);
     }
 
     id.type = ensureComplexTypeFormat(id.type);
 
-    if (t.equals(NUMERIC_DELIMITED))
+    switch (t)
     {
+    case NUMERIC_DELIMITED:
       return new ItemNumericDelimited(id, false);
-    }
-    else if (t.equals(INTEGER_DELIMITED))
-    {
+    case INTEGER_DELIMITED:
       return new ItemNumericDelimited(id, true);
-    }
-    else if (t.equals(ALPHANUMERIC_AND_MORE))
-    {
+    case ALPHANUMERIC_AND_MORE:
       return new ItemAlphanumericAndMore(id);
-    }
-    else if (t.equals(REGEX) || t.equals(INLINE_REGEX))
-    {
+    case REGEX:
+    case INLINE_REGEX:
       return new ItemRegex(id);
-    }
-    else if (t.equals(JAVA))
-    {
+    case JAVA:
       return new ItemJava(id);
-    }
-    else if (t.equals(CONSTANT))
-    {
+    case CONSTANT:
       return new ItemConstant(id);
-    }
-    else if (t.equals(FORMAT))
-    {
+    case FORMAT:
       return new ItemFormat(id);
-    }
-    else if (t.equals(DEPENDENT_FORMAT))
-    {
+    case DEPENDENT_FORMAT:
       return new ItemDependentFormat(id);
     }
     return new ItemString(id);
