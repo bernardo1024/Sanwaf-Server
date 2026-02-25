@@ -164,7 +164,7 @@ final class Shield
     Enumeration<?> names = ((HttpServletRequest) req).getHeaderNames();
     while (names.hasMoreElements())
     {
-      String s = String.valueOf(names.nextElement());
+      String s = (String) names.nextElement();
       Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
       while (headerEnumeration.hasMoreElements())
       {
@@ -175,7 +175,7 @@ final class Shield
     names = ((HttpServletRequest) req).getHeaderNames();
     while (names.hasMoreElements())
     {
-      String s = String.valueOf(names.nextElement());
+      String s = (String) names.nextElement();
       Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
       while (headerEnumeration.hasMoreElements())
       {

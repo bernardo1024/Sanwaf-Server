@@ -4,8 +4,9 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 abstract class Item
 {
@@ -20,7 +21,7 @@ abstract class Item
   double maxValue;
   double minValue;
   String msg = null;
-  String[] uri = null;
+  Set<String> uriSet = null;
   Modes mode = Modes.BLOCK;
   boolean required = false;
   String related;
@@ -90,19 +91,12 @@ abstract class Item
 
   boolean isUriValid(ServletRequest req)
   {
-    if (uri == null || req == null)
+    if (uriSet == null || req == null)
     {
       return true;
     }
     String reqUri = ((HttpServletRequest) req).getRequestURI();
-    for (String u : uri)
-    {
-      if (u.equals(reqUri))
-      {
-        return true;
-      }
-    }
-    return false;
+    return uriSet.contains(reqUri);
   }
 
   boolean isSizeError(String value)
@@ -123,7 +117,12 @@ abstract class Item
   {
     if (uriString != null && !uriString.isEmpty())
     {
-      uri = uriString.split(Shield.SEPARATOR);
+      String[] parts = uriString.split(Shield.SEPARATOR);
+      uriSet = new HashSet<>(parts.length * 2);
+      for (String part : parts)
+      {
+        uriSet.add(part);
+      }
     }
   }
 
@@ -502,7 +501,7 @@ abstract class Item
       sb.append("\"maxlength\":\"").append(max).append("\"");
       sb.append(",\"minlength\":\"").append(min).append("\"");
       sb.append(",\"msg\":\"").append(Metadata.jsonEncode(msg)).append("\"");
-      sb.append(",\"uri\":\"").append(Metadata.jsonEncode(Arrays.toString(uri))).append("\"");
+      sb.append(",\"uri\":\"").append(Metadata.jsonEncode(String.valueOf(uriSet))).append("\"");
       sb.append(",\"req\":\"").append(required).append("\"");
       sb.append(",\"maxvalue\":\"").append(maxValue).append("\"");
       sb.append(",\"minvalue\":\"").append(minValue).append("\"");
