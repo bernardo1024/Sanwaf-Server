@@ -1,6 +1,7 @@
 package com.sanwaf.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +33,13 @@ class Metadata
   }
 
   final com.sanwaf.log.Logger logger;
-  boolean enabled;
+  final boolean enabled;
   final boolean caseSensitive;
   final boolean endpointIsStrict;
   final boolean endpointIsStrictAllowLess;
   final Modes endpointMode;
   final Map<String, Item> items;
-  final Map<String, List<String>> index = new HashMap<>();
+  final Map<String, List<String>> index;
 
   Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger, boolean isDetect)
   {
@@ -46,11 +47,14 @@ class Metadata
     ParsedMetadataXml parsed = parseMetadataXml(xml, type);
     this.enabled = parsed.enabled;
     this.caseSensitive = parsed.caseSensitive;
-    this.items = parsed.caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     this.endpointIsStrict = false;
     this.endpointIsStrictAllowLess = false;
     this.endpointMode = Modes.BLOCK;
-    loadItems(shield, parsed, isDetect);
+    Map<String, Item> mutableItems = parsed.caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<String, List<String>> mutableIndex = new HashMap<>();
+    loadItems(shield, parsed, isDetect, mutableItems, mutableIndex);
+    this.items = Collections.unmodifiableMap(mutableItems);
+    this.index = Collections.unmodifiableMap(mutableIndex);
   }
 
   //used for endpoints
@@ -60,7 +64,6 @@ class Metadata
     this.logger = logger;
     this.enabled = true;
     this.caseSensitive = caseSensitive;
-    this.items = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     this.endpointMode = endpointMode;
     if ("true".equalsIgnoreCase(endpointIsStrict))
     {
@@ -77,7 +80,11 @@ class Metadata
       this.endpointIsStrict = false;
       this.endpointIsStrictAllowLess = false;
     }
-    loadEndpointItems(shield, itemsString, includeEndpointAttributes, isDetect);
+    Map<String, Item> mutableItems = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<String, List<String>> mutableIndex = new HashMap<>();
+    loadEndpointItems(shield, itemsString, includeEndpointAttributes, isDetect, mutableItems, mutableIndex);
+    this.items = Collections.unmodifiableMap(mutableItems);
+    this.index = Collections.unmodifiableMap(mutableIndex);
   }
 
   static ParsedMetadataXml parseMetadataXml(Xml xml, String type)
@@ -94,17 +101,19 @@ class Metadata
     return new ParsedMetadataXml(enabled, caseSensitive, subBlockXml);
   }
 
-  private void loadItems(Shield shield, ParsedMetadataXml parsed, boolean isDetect)
+  private void loadItems(Shield shield, ParsedMetadataXml parsed, boolean isDetect,
+      Map<String, Item> items, Map<String, List<String>> index)
   {
     initA2Zindex(index);
     String[] xmlItems = parsed.subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
-      loadItem(shield, itemString, false, isDetect);
+      loadItem(shield, itemString, false, isDetect, items, index);
     }
   }
 
-  private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes, boolean isDetect)
+  private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes, boolean isDetect,
+      Map<String, Item> items, Map<String, List<String>> index)
   {
     Xml xml = new Xml(itemString);
     Item item = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
@@ -141,14 +150,15 @@ class Metadata
     }
   }
 
-  private void loadEndpointItems(Shield shield, String itemsString, boolean includeEndpointAttributes, boolean isDetect)
+  private void loadEndpointItems(Shield shield, String itemsString, boolean includeEndpointAttributes, boolean isDetect,
+      Map<String, Item> items, Map<String, List<String>> index)
   {
     initA2Zindex(index);
     Xml itemsXml = new Xml(itemsString);
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
-      loadItem(shield, itemString, includeEndpointAttributes, isDetect);
+      loadItem(shield, itemString, includeEndpointAttributes, isDetect, items, index);
     }
   }
 

@@ -110,18 +110,18 @@ public class ShieldTest
   @Test
   public void enabledTest()
   {
-    shield.parameters.enabled = true;
-    shield.headers.enabled = true;
-    shield.cookies.enabled = true;
+    UnitTestUtil.setField(shield.parameters, "enabled", true);
+    UnitTestUtil.setField(shield.headers, "enabled", true);
+    UnitTestUtil.setField(shield.cookies, "enabled", true);
     testNumeric(true);
   }
 
   @Test
   public void disabledTest()
   {
-    shield.parameters.enabled = false;
-    shield.headers.enabled = false;
-    shield.cookies.enabled = false;
+    UnitTestUtil.setField(shield.parameters, "enabled", false);
+    UnitTestUtil.setField(shield.headers, "enabled", false);
+    UnitTestUtil.setField(shield.cookies, "enabled", false);
     testNumeric(false);
   }
 

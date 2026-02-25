@@ -14,6 +14,20 @@ import java.util.List;
 public class UnitTestUtil
 {
 
+  static void setField(Object target, String fieldName, Object value)
+  {
+    try
+    {
+      java.lang.reflect.Field field = target.getClass().getDeclaredField(fieldName);
+      field.setAccessible(true);
+      field.set(target, value);
+    }
+    catch (ReflectiveOperationException e)
+    {
+      throw new RuntimeException("Failed to set field " + fieldName, e);
+    }
+  }
+
   public static void log(String title, UnitTestResult result)
   {
     if (result == null)

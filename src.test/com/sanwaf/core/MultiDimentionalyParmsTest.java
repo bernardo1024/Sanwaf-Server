@@ -9,6 +9,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -190,10 +193,13 @@ public class MultiDimentionalyParmsTest
     Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
     Shield sh = UnitTestUtil.getShield(sw, "MultiDimTest");
     Assert.assertNotNull(sh);
-    sh.parameters = new Metadata(shield, new Xml(""), "", sw.logger, false);
-    sh.parameters.enabled = true;
-    Metadata.initA2Zindex(sh.parameters.index);
-    sh.parameters.index.put("f", Collections.singletonList(Metadata.INDEX_PARM_MARKER + "foo"));
+    Metadata meta = new Metadata(shield, new Xml(""), "", sw.logger, false);
+    UnitTestUtil.setField(meta, "enabled", true);
+    Map<String, List<String>> mutableIndex = new HashMap<>();
+    Metadata.initA2Zindex(mutableIndex);
+    mutableIndex.put("f", Collections.singletonList(Metadata.INDEX_PARM_MARKER + "foo"));
+    UnitTestUtil.setField(meta, "index", Collections.unmodifiableMap(mutableIndex));
+    UnitTestUtil.setField(sh, "parameters", meta);
 
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo0", "<script>alert(1)</script>");

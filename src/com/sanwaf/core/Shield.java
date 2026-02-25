@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -31,14 +32,14 @@ final class Shield
   final int minLen;
   final int maxLen;
   final int regexMinLen;
-  boolean regexAlways;
-  final Map<String, String> errorMessages = new HashMap<>();
+  final boolean regexAlways;
+  final Map<String, String> errorMessages;
   final Set<String> regexAlwaysExclusions;
-  final Map<String, Rule> rulePatterns = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-  final Map<String, Rule> customRulePatterns = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-  final Map<String, Rule> rulePatternsDetect = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-  final Map<String, Rule> customRulePatternsDetect = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-  Metadata parameters;
+  final Map<String, Rule> rulePatterns;
+  final Map<String, Rule> customRulePatterns;
+  final Map<String, Rule> rulePatternsDetect;
+  final Map<String, Rule> customRulePatternsDetect;
+  final Metadata parameters;
   final Metadata cookies;
   final Metadata headers;
   final Metadata parametersDetect;
@@ -65,10 +66,20 @@ final class Shield
     String childShieldName = settingsBlockXml.get(XML_CHILD);
     this.childShield = childShieldName.isEmpty() ? null : findChildShield(sanwaf, xml, childShieldName, logger, verbose);
 
-    ItemFactory.setErrorMessages(errorMessages, settingsBlockXml);
+    Map<String, String> em = new HashMap<>();
+    ItemFactory.setErrorMessages(em, settingsBlockXml);
+    this.errorMessages = Collections.unmodifiableMap(em);
 
     Xml regexBlockXml = new Xml(shieldXml.get(XML_REGEX_CONFIG));
-    loadPatterns(regexBlockXml);
+    Map<String, Rule> rp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<String, Rule> crp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<String, Rule> rpd = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<String, Rule> crpd = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    loadPatterns(regexBlockXml, rp, crp, rpd, crpd);
+    this.rulePatterns = Collections.unmodifiableMap(rp);
+    this.customRulePatterns = Collections.unmodifiableMap(crp);
+    this.rulePatternsDetect = Collections.unmodifiableMap(rpd);
+    this.customRulePatternsDetect = Collections.unmodifiableMap(crpd);
 
     int parsedRegexMinLen = parseInt(regexBlockXml.get(XML_MIN_LEN), 0);
     this.regexMinLen = (parsedRegexMinLen == -1) ? Integer.MAX_VALUE : parsedRegexMinLen;
@@ -76,7 +87,9 @@ final class Shield
     String alwaysBlock = shieldXml.get(XML_REGEX_ALWAYS_REGEX);
     Xml alwaysBlockXml = new Xml(alwaysBlock);
     this.regexAlways = Boolean.parseBoolean(alwaysBlockXml.get(XML_ENABLED));
-    this.regexAlwaysExclusions = regexAlways ? loadRegexExclusions(alwaysBlockXml) : new LinkedHashSet<>();
+    this.regexAlwaysExclusions = regexAlways
+        ? Collections.unmodifiableSet(loadRegexExclusions(alwaysBlockXml))
+        : Collections.emptySet();
 
     this.endpoints = new MetadataEndpoints(this, shieldXml, logger, false);
     this.endpointsDetect = new MetadataEndpoints(this, shieldXml, logger, true);
@@ -510,7 +523,8 @@ final class Shield
     return exclusions;
   }
 
-  private void loadPatterns(Xml xml)
+  private void loadPatterns(Xml xml, Map<String, Rule> rulePatterns, Map<String, Rule> customRulePatterns,
+      Map<String, Rule> rulePatternsDetect, Map<String, Rule> customRulePatternsDetect)
   {
     String autoBlock = xml.get(XML_REGEX_PATTERNS_AUTO);
     Xml autoBlockXml = new Xml(autoBlock);

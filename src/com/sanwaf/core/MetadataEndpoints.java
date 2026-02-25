@@ -2,6 +2,7 @@ package com.sanwaf.core;
 
 import jakarta.servlet.ServletRequest;
 
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +16,8 @@ public class MetadataEndpoints
   final com.sanwaf.log.Logger logger;
   final boolean enabled;
   final boolean caseSensitive;
-  final Map<String, Metadata> endpointParametersBlock = new HashMap<>();
-  final Map<String, Metadata> endpointParametersDetect = new HashMap<>();
+  final Map<String, Metadata> endpointParametersBlock;
+  final Map<String, Metadata> endpointParametersDetect;
 
   MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger, boolean isDetect)
   {
@@ -24,10 +25,15 @@ public class MetadataEndpoints
     Metadata.ParsedMetadataXml parsed = Metadata.parseMetadataXml(xml, XML_ENDPOINTS);
     this.enabled = parsed.enabled;
     this.caseSensitive = parsed.caseSensitive;
-    loadEndpoints(shield, parsed, isDetect);
+    Map<String, Metadata> mutableBlock = new HashMap<>();
+    Map<String, Metadata> mutableDetect = new HashMap<>();
+    loadEndpoints(shield, parsed, isDetect, mutableBlock, mutableDetect);
+    this.endpointParametersBlock = Collections.unmodifiableMap(mutableBlock);
+    this.endpointParametersDetect = Collections.unmodifiableMap(mutableDetect);
   }
 
-  private void loadEndpoints(Shield shield, Metadata.ParsedMetadataXml parsed, boolean isDetect)
+  private void loadEndpoints(Shield shield, Metadata.ParsedMetadataXml parsed, boolean isDetect,
+      Map<String, Metadata> endpointParametersBlock, Map<String, Metadata> endpointParametersDetect)
   {
     String[] xmlEndpoints = parsed.subBlockXml.getAll(XML_ENDPOINT);
     for (String endpointString : xmlEndpoints)

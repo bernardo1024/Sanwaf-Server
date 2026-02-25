@@ -191,7 +191,7 @@ public class SanwafTest
   public void TestNonMappedParamDefaultToStingWithRegexAlwaysEnabled()
   {
     boolean xssAlways = shield.regexAlways;
-    shield.regexAlways = true;
+    UnitTestUtil.setField(shield, "regexAlways", true);
     boolean b = sanwaf.isThreatDetected(null);
     assertFalse(b);
 
@@ -201,7 +201,7 @@ public class SanwafTest
     boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
 
-    shield.regexAlways = xssAlways;
+    UnitTestUtil.setField(shield, "regexAlways", xssAlways);
   }
 }
 
