@@ -270,7 +270,7 @@ final class Shield
       item = new ItemString();
     }
 
-    if (item.required && value.length() == 0)
+    if (item.required && value.isEmpty())
     {
       item.handleMode(true, value, req, item.mode, log, doAllBlocks);
       //return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
@@ -462,7 +462,7 @@ final class Shield
       minLen = 0;
     }
     String childShieldName = settingsBlockXml.get(XML_CHILD);
-    if (childShieldName.length() > 0)
+    if (!childShieldName.isEmpty())
     {
       loadChildShield(sanwaf, xml, childShieldName, logger);
     }
@@ -553,7 +553,7 @@ final class Shield
           l = x;
         }
         String match = itemBlockXml.get(ItemFactory.XML_ITEM_MATCH);
-        if (match == null || match.length() == 0)
+        if (match == null || match.isEmpty())
         {
           match = defaultMatch;
         }
@@ -706,7 +706,7 @@ final class Shield
   static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label)
   {
     sb.append(label);
-    if (map != null && map.size() > 0)
+    if (map != null && !map.isEmpty())
     {
       Iterator<?> it = map.entrySet().iterator();
       while (it.hasNext())
@@ -722,12 +722,12 @@ final class Shield
   static List<String> split(String s)
   {
     List<String> out = new ArrayList<>();
-    if (s != null && s.length() > 0)
+    if (s != null && !s.isEmpty())
     {
       String[] vs = s.split(SEPARATOR);
       for (String v : vs)
       {
-        if (v.length() > 0)
+        if (!v.isEmpty())
         {
           out.add(v);
         }

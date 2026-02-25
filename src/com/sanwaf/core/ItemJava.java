@@ -27,7 +27,7 @@ final class ItemJava extends Item
     {
       return true;
     }
-    if (value.length() == 0)
+    if (value.isEmpty())
     {
       return false;
     }
@@ -42,7 +42,7 @@ final class ItemJava extends Item
   List<Point> getErrorPoints(Shield shield, String value)
   {
     List<Point> points = new ArrayList<>();
-    if (maskError.length() > 0)
+    if (!maskError.isEmpty())
     {
       return points;
     }
@@ -53,7 +53,7 @@ final class ItemJava extends Item
   private void setJavaMethod(String type)
   {
     sClazzAndMethod = type.substring(type.indexOf(ItemFactory.JAVA) + ItemFactory.JAVA.length(), type.length() - 1);
-    if (sClazzAndMethod.length() == 0)
+    if (sClazzAndMethod.isEmpty())
     {
       return;
     }

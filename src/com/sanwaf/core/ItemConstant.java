@@ -25,7 +25,7 @@ final class ItemConstant extends Item
     {
       return true;
     }
-    if (value != null && value.length() > 0 && !constants.contains(value))
+    if (value != null && !value.isEmpty() && !constants.contains(value))
     {
       return true;
     }
@@ -47,7 +47,7 @@ final class ItemConstant extends Item
   List<Point> getErrorPoints(Shield shield, String value)
   {
     List<Point> points = new ArrayList<>();
-    if (maskError.length() > 0)
+    if (!maskError.isEmpty())
     {
       return points;
     }

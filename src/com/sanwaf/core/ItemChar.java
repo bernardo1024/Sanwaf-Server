@@ -37,7 +37,7 @@ final class ItemChar extends Item
   List<Point> getErrorPoints(Shield shield, String value)
   {
     List<Point> points = new ArrayList<>();
-    if (maskError.length() > 0)
+    if (!maskError.isEmpty())
     {
       return points;
     }

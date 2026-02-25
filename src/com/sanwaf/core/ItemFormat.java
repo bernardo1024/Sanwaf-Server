@@ -23,7 +23,7 @@ final class ItemFormat extends Item
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
     List<Point> points = new ArrayList<>();
-    if (value.length() == 0 || maskError.length() > 0)
+    if (value.isEmpty() || !maskError.isEmpty())
     {
       return points;
     }
@@ -42,7 +42,7 @@ final class ItemFormat extends Item
     {
       return false;
     }
-    if (!required && value.length() == 0)
+    if (!required && value.isEmpty())
     {
       return false;
     }
@@ -347,7 +347,7 @@ final class ItemFormat extends Item
 
   private void parseFormats(String format)
   {
-    if (format.length() == 0)
+    if (format.isEmpty())
     {
       return;
     }

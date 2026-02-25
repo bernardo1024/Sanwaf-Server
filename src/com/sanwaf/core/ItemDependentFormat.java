@@ -25,7 +25,7 @@ final class ItemDependentFormat extends Item
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
     List<Point> points = new ArrayList<>();
-    if (value.length() == 0 || maskError.length() > 0)
+    if (value.isEmpty() || !maskError.isEmpty())
     {
       return points;
     }
@@ -100,7 +100,7 @@ final class ItemDependentFormat extends Item
     if (start >= 0)
     {
       depFormatString = id.type.substring(start + ItemFactory.DEPENDENT_FORMAT.length(), id.type.length() - 1);
-      if (depFormatString.length() == 0)
+      if (depFormatString.isEmpty())
       {
         return;
       }

@@ -61,7 +61,7 @@ public class XmlTest
       fail("SanWaf Failed to load properties file");
       return;
     }
-    assertTrue(xml.toString().length() > 0 && xml.toString().contains("<sanwaf>"));
+    assertTrue(!xml.toString().isEmpty() && xml.toString().contains("<sanwaf>"));
   }
 
   @Test

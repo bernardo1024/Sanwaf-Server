@@ -46,7 +46,7 @@ public class UnitTestUtil
   {
     UnitTestResult result = new UnitTestResult();
     String file = UnitTestUtil.readFile(filename);
-    if (file == null || file.length() == 0)
+    if (file == null || file.isEmpty())
     {
       return null;
     }
@@ -97,7 +97,7 @@ public class UnitTestUtil
 
   static void testAllHexPermutations(Shield shield, UnitTestResult result, String parmName, String payload, boolean expected, boolean logError)
   {
-    if (payload == null || payload.length() == 0)
+    if (payload == null || payload.isEmpty())
     {
       return;
     }
@@ -234,7 +234,7 @@ public class UnitTestUtil
       if (i_pos > 0)
       {
         dir = dir.substring(0, i_pos);
-        if (dir != null && dir.trim().length() > 0 && !dir.equals("."))
+        if (dir != null && !dir.trim().isEmpty() && !dir.equals("."))
         {
           File f = new File(dir);
           if (!f.exists())

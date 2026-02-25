@@ -21,7 +21,7 @@ class ItemNumeric extends Item
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
     List<Point> points = new ArrayList<>();
-    if (maskError.length() > 0)
+    if (!maskError.isEmpty())
     {
       return points;
     }
@@ -82,7 +82,7 @@ class ItemNumeric extends Item
 
   private boolean isMaxMinValueError(String value)
   {
-    if (value.length() == 0 && !required)
+    if (value.isEmpty() && !required)
     {
       return false;
     }

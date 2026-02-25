@@ -69,7 +69,7 @@ public class SanwafTest
     assertTrue(s.contains("{\"name\":\"NumericDelimited\","));
 
     s = Sanwaf.getDetects(request);
-    assertTrue(s == null || s.length() == 0);
+    assertTrue(s == null || s.isEmpty());
   }
 
   @Test

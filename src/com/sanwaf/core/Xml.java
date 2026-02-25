@@ -51,7 +51,7 @@ final class Xml
 
   static String stripXmlComments(String s)
   {
-    if (s == null || s.length() == 0)
+    if (s == null || s.isEmpty())
     {
       return "";
     }
@@ -70,7 +70,7 @@ final class Xml
 
   String get(String xml, String key)
   {
-    if (xml == null || xml.length() == 0)
+    if (xml == null || xml.isEmpty())
     {
       return "";
     }

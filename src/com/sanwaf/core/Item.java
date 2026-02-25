@@ -40,7 +40,7 @@ abstract class Item
       logger = id.shield.logger;
     }
 
-    if (id.display.length() == 0)
+    if (id.display.isEmpty())
     {
       display = name;
     }
@@ -106,7 +106,7 @@ abstract class Item
 
   boolean isSizeError(String value)
   {
-    if (!required && (value == null || value.length() == 0))
+    if (!required && (value == null || value.isEmpty()))
     {
       return false;
     }
@@ -120,7 +120,7 @@ abstract class Item
 
   private void setUri(String uriString)
   {
-    if (uriString != null && uriString.length() > 0)
+    if (uriString != null && !uriString.isEmpty())
     {
       uri = uriString.split(Shield.SEPARATOR);
     }
@@ -209,7 +209,7 @@ abstract class Item
   // Item Relations code
   String isRelateValid(String value, ServletRequest req, Metadata meta)
   {
-    if (related == null || related.length() == 0)
+    if (related == null || related.isEmpty())
     {
       return null;
     }
@@ -243,7 +243,7 @@ abstract class Item
       }
     }
     String err = null;
-    if (andTrueCount == andRequired.size() && orFoundTrue && value.length() == 0)
+    if (andTrueCount == andRequired.size() && orFoundTrue && value.isEmpty())
     {
       // TODO: add better message
       err = " - Invalid relationship detected";
@@ -345,7 +345,7 @@ abstract class Item
       return false;
     }
 
-    return parentLen > 0 && value.length() == 0;
+    return parentLen > 0 && value.isEmpty();
   }
 
   private String isRelatedEqual(String value, ServletRequest req, Metadata meta)
@@ -438,11 +438,11 @@ abstract class Item
     }
     sb.append(",\"type\":\"").append(getType()).append("\"");
 
-    if (value != null && value.length() > 0)
+    if (value != null && !value.isEmpty())
     {
       sb.append(",\"value\":\"");
       String mValue = value;
-      if (maskError.length() > 0)
+      if (!maskError.isEmpty())
       {
         mValue = maskError;
       }
@@ -456,7 +456,7 @@ abstract class Item
     if (shield != null)
     {
       String errMsg = getErrorMessage(req, shield);
-      if (required && value != null && value.length() == 0)
+      if (required && value != null && value.isEmpty())
       {
         errMsg += getErrorMessage(req, shield, ItemFactory.XML_REQUIRED_MSG);
       }
@@ -466,7 +466,7 @@ abstract class Item
             max);
       }
 
-      if (relatedErrMsg != null && relatedErrMsg.length() > 0)
+      if (relatedErrMsg != null && !relatedErrMsg.isEmpty())
       {
         errMsg += relatedErrMsg;
       }
@@ -508,7 +508,7 @@ abstract class Item
       sb.append(",\"maskerr\":\"").append(Metadata.jsonEncode(maskError)).append("\"");
       sb.append(",\"related\":\"").append(Metadata.jsonEncode(related)).append("\"");
       String s = getProperties();
-      if (s != null && s.length() > 0)
+      if (s != null && !s.isEmpty())
       {
         sb.append(",").append(s);
       }
@@ -526,7 +526,7 @@ abstract class Item
   String getErrorMessage(final ServletRequest req, final Shield shield, String errorMsgKey)
   {
     String err = null;
-    if (msg != null && msg.length() > 0)
+    if (msg != null && !msg.isEmpty())
     {
       err = msg;
     }
@@ -540,7 +540,7 @@ abstract class Item
         errorMsgKey = getType().toString();
       }
       err = shield.errorMessages.get(errorMsgKey);
-      if (err == null || err.length() == 0)
+      if (err == null || err.isEmpty())
       {
         err = shield.sanwaf.globalErrorMessages.get(errorMsgKey);
       }

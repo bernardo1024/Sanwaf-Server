@@ -294,7 +294,7 @@ public class DatatypeTest
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "r{telephone}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemRegex p = new ItemRegex(id);
-    assertTrue(p.patternName != null && p.patternName.length() > 0);
+    assertTrue(p.patternName != null && !p.patternName.isEmpty());
 
     assertFalse(p.inError(req, shield, "416-555-5555", false, false));
     assertTrue(p.inError(req, shield, "abc-def-ghij", false, false));
@@ -445,7 +445,7 @@ public class DatatypeTest
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "f{(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemFormat p = new ItemFormat(id);
     assertNotNull(p.formatString);
-    assertTrue(p.formatString.length() > 0);
+    assertTrue(!p.formatString.isEmpty());
   }
 
   @Test

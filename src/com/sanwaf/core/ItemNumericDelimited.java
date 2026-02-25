@@ -19,7 +19,7 @@ final class ItemNumericDelimited extends ItemNumeric
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
     List<Point> points = new ArrayList<>();
-    if (maskError.length() > 0)
+    if (!maskError.isEmpty())
     {
       return points;
     }
@@ -29,7 +29,7 @@ final class ItemNumericDelimited extends ItemNumeric
       String[] ns = value.split(delimiter, -1);
       for (String n : ns)
       {
-        if (n.length() > 0)
+        if (!n.isEmpty())
         {
           points.addAll(super.getErrorPoints(shield, n));
         }

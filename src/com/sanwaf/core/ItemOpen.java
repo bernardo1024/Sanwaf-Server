@@ -26,7 +26,7 @@ class ItemOpen extends Item
   @Override
   List<Point> getErrorPoints(Shield shield, String value)
   {
-    if (maskError.length() > 0)
+    if (!maskError.isEmpty())
     {
       return new ArrayList<>();
     }

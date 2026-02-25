@@ -29,7 +29,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
     List<Point> points = new ArrayList<>();
-    if (value == null || maskError.length() > 0)
+    if (value == null || !maskError.isEmpty())
     {
       return points;
     }

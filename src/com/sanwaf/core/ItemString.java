@@ -25,7 +25,7 @@ final class ItemString extends Item
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
     List<Point> points = new ArrayList<>();
-    if (shield == null || maskError.length() > 0)
+    if (shield == null || !maskError.isEmpty())
     {
       return points;
     }

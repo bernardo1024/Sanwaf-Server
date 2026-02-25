@@ -62,11 +62,11 @@ public class ItemFactory
 
     int max = Integer.MAX_VALUE;
     int min = 0;
-    if (sMax.length() > 0)
+    if (!sMax.isEmpty())
     {
       max = Integer.parseInt(sMax);
     }
-    if (sMin.length() > 0)
+    if (!sMin.isEmpty())
     {
       min = Integer.parseInt(sMin);
     }
@@ -82,7 +82,7 @@ public class ItemFactory
     {
       min = 0;
     }
-    if (display != null && display.length() > 0 && display.contains(":::"))
+    if (display != null && !display.isEmpty() && display.contains(":::"))
     {
       display = name;
     }
@@ -92,14 +92,14 @@ public class ItemFactory
 
     item.maxValue = Integer.MAX_VALUE;
     String sMaxVal = xml.get(XML_ITEM_MAX_VAL);
-    if (sMaxVal.length() > 0)
+    if (!sMaxVal.isEmpty())
     {
       item.maxValue = Double.parseDouble(sMaxVal);
     }
 
     item.minValue = Integer.MIN_VALUE;
     String sMinVal = xml.get(XML_ITEM_MIN_VAL);
-    if (sMinVal.length() > 0)
+    if (!sMinVal.isEmpty())
     {
       item.minValue = Double.parseDouble(sMinVal);
     }

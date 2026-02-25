@@ -25,7 +25,7 @@ final class ItemRegex extends Item
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
     List<Point> points = new ArrayList<>();
-    if (value == null || value.length() == 0 || maskError.length() > 0)
+    if (value == null || value.isEmpty() || !maskError.isEmpty())
     {
       return points;
     }
@@ -65,7 +65,7 @@ final class ItemRegex extends Item
     {
       return false;
     }
-    if (value.length() == 0)
+    if (value.isEmpty())
     {
       return false;
     }
