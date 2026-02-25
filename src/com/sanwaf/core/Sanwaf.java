@@ -405,9 +405,9 @@ public final class Sanwaf
   /**
    * Retrieve an allow-listed parameter/header/cookie
    *
-   * <pre>
+   * <pre>{@code
    *  The header/cookie/parameter value will be returned IFF the its
-   *  name is set in any Shield's Metadata block
+   *  name is set in any Shield Metadata block
    *    <metadata>
    *      <secured>
    *        <headers></headers>
@@ -415,7 +415,7 @@ public final class Sanwaf
    *        <parameters></parameters>
    *      </secured>
    *    </metadata>
-   * </pre>
+   * }</pre>
    *
    * @param name
    *          the name of the header/cookie/parameter you want to retrieve
@@ -443,7 +443,7 @@ public final class Sanwaf
    * Dynamically reload sanwaf
    *
    */
-  public final void reLoad() throws IOException
+  public void reLoad() throws IOException
   {
     loadProperties();
   }
@@ -454,8 +454,7 @@ public final class Sanwaf
    * <pre>
    * useful for displaying to your users in case they call support. this allows
    * you to pull the exact exception from the log file
-   *
-   * <pre>
+   * </pre>
    *
    * @param req
    *          HttpServletRequest the request object where
