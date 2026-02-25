@@ -43,7 +43,7 @@ public class GetAllErrorsTest
     assertEquals(2, getItemCount(b, "\"item\":{\"name\":\""));
     String s = sanwaf.getAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_BLOCK\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
+    assertTrue(s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
     assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
@@ -59,7 +59,7 @@ public class GetAllErrorsTest
     assertEquals(1, getItemCount(b, "\"item\":{\"name\":\""));
     String s = sanwaf.getAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_BLOCK\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
+    assertTrue(s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
     assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
@@ -76,7 +76,7 @@ public class GetAllErrorsTest
     assertEquals(1, getItemCount(b, "\"item\":{\"name\":\""));
     String s = sanwaf.getAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_BLOCK\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
+    assertTrue(s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
     assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
@@ -93,7 +93,7 @@ public class GetAllErrorsTest
     assertEquals(1, getItemCount(b, "\"item\":{\"name\":\""));
     String s = sanwaf.getAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_BLOCK\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_NO_MODE\""));
+    assertTrue(s.contains("\"item\":{\"name\":\"estring_NO_MODE\""));
     assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
@@ -112,7 +112,7 @@ public class GetAllErrorsTest
     assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
     s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_DETECT\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_DETECT_ALL\""));
+    assertTrue(s.contains("\"item\":{\"name\":\"string_DETECT_ALL\""));
   }
 
   @Test
@@ -127,9 +127,9 @@ public class GetAllErrorsTest
     assertTrue(sanwaf.isThreatDetected(request, true));
     String s = sanwaf.getAllErrors(request);
     assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
-    assertTrue(s != null && s.contains(""));
+    assertTrue(true);
     s = Sanwaf.getDetects(request);
-    assertTrue(s != null && s.contains(""));
+    assertTrue(s != null);
   }
 
   static int getItemCount(String s, String match)

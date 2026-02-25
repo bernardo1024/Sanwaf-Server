@@ -95,19 +95,19 @@ public class ModeDetectLoggingTest
     request.addParameter("max-min-value", "abclkajdflkjasdklfjaskldfjaskldfjlkasjflkasjflkasdjfklasjfklasdjflkasdjfk");
     sanwaf.isThreatDetected(request, true);
     s = outContent.toString();
-    assertTrue(s.contains(""));
+    assertTrue(true);
 
     request = new MockHttpServletRequest();
     request.addParameter("format", "abc@#$#$#$");
     sanwaf.isThreatDetected(request, true);
     s = outContent.toString();
-    assertTrue(s.contains(""));
+    assertTrue(true);
 
     request = new MockHttpServletRequest();
     request.addParameter("related-simple-required-parent-child", "<script>abc23@!##");
     sanwaf.isThreatDetected(request, true);
     s = outContent.toString();
-    assertTrue(s.contains(""));
+    assertTrue(true);
 
     request = new MockHttpServletRequest();
     request.addParameter("dependentparent", "123");

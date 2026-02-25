@@ -229,14 +229,14 @@ final class ItemFormat extends Item
           break;
         }
 
-        if (parsedValue.substring(last, last + 1).equals("("))
+        if (parsedValue.charAt(last) == '(')
         {
           int endOfNum = parsedValue.indexOf(')', last);
-          parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endOfNum + 1, parsedValue.length());
+          parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endOfNum + 1);
         }
         else
         {
-          parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endMdyReplacePos, parsedValue.length());
+          parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endMdyReplacePos);
         }
       }
     }
@@ -246,7 +246,7 @@ final class ItemFormat extends Item
   private String adjustDate(String parsedValue, int last, String newMdy)
   {
     int newValue = Integer.parseInt(newMdy);
-    if (parsedValue.substring(last, last + 1).equals("("))
+    if (parsedValue.charAt(last) == '(')
     {
       int endOfNum = parsedValue.indexOf(')', last);
       String num = parsedValue.substring(last + 2, endOfNum);
@@ -330,7 +330,7 @@ final class ItemFormat extends Item
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0)
     {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
     }
     return errorMsg;
   }
@@ -433,7 +433,7 @@ final class ItemFormat extends Item
       }
       String s = block.substring(0, x);
       formatBlocks.addAll(Arrays.asList(s.split("")));
-      block = block.substring(x, block.length());
+      block = block.substring(x);
     }
     return block;
   }
@@ -442,7 +442,7 @@ final class ItemFormat extends Item
   {
     if (last < format.length())
     {
-      formatBlocks.addAll(Arrays.asList(format.substring(last, format.length()).split("")));
+      formatBlocks.addAll(Arrays.asList(format.substring(last).split("")));
     }
   }
 

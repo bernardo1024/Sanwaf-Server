@@ -86,8 +86,8 @@ final class Shield
             {
               continue;
             }
-            threat(req, metadataDetectDetect, k, v, true, doAllBlocks, log);
-            threat(req, metadataDetectBlock, k, v, true, doAllBlocks, log);
+            threat(req, metadataDetectDetect, k, v, true, true, log);
+            threat(req, metadataDetectBlock, k, v, true, true, log);
           }
         }
       }
@@ -106,7 +106,7 @@ final class Shield
         {
           for (String v : values)
           {
-            threat(req, metadataBlockDetect, k, v, true, doAllBlocks, log);
+            threat(req, metadataBlockDetect, k, v, true, false, log);
           }
         }
         for (String v : values)
@@ -553,7 +553,7 @@ final class Shield
           l = x;
         }
         String match = itemBlockXml.get(ItemFactory.XML_ITEM_MATCH);
-        if (match == null || match.isEmpty())
+        if (match.isEmpty())
         {
           match = defaultMatch;
         }

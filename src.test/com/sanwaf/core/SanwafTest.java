@@ -169,7 +169,7 @@ public class SanwafTest
     }
     catch (IOException ioe)
     {
-      assertTrue(ioe instanceof IOException);
+      assertTrue(true);
     }
   }
 

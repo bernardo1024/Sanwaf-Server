@@ -9,83 +9,46 @@ import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class XmlTest
 {
-  @Test
-  public void TestXmlInit()
+  @Test(expected = IOException.class)
+  public void TestXmlInit() throws IOException
   {
-    boolean error;
-    try
-    {
-      URL url = null;
-      new Xml(url);
-      error = false;
-    }
-    catch (IOException ioe)
-    {
-      error = true;
-    }
-    assertTrue(error);
+    new Xml((URL) null);
+  }
+
+  @Test(expected = IOException.class)
+  public void TestXmlNullUrl() throws IOException
+  {
+    //noinspection SpellCheckingInspection
+    new Xml(new URL("lakdfsj"));
   }
 
   @Test
-  public void TestXmlNullUrl()
+  public void TestXmlToString() throws IOException
   {
-    boolean error;
-    try
-    {
-      URL url = new URL("lakdfsj");
-      new Xml(url);
-      error = false;
-    }
-    catch (IOException ioe)
-    {
-      error = true;
-    }
-    assertTrue(error);
-  }
-
-  @Test
-  public void TestXmlToString()
-  {
-    Xml xml;
-    try
-    {
-      xml = new Xml(Sanwaf.class.getResource("/sanwaf.xml"));
-    }
-    catch (IOException e)
-    {
-      fail("SanWaf Failed to load properties file");
-      return;
-    }
-    assertTrue(!xml.toString().isEmpty() && xml.toString().contains("<sanwaf>"));
+    Xml xml = new Xml(Sanwaf.class.getResource("/sanwaf.xml"));
+    assertTrue(xml.toString().contains("<sanwaf>"));
   }
 
   @Test
   public void testXmlPassingNull()
   {
-    Xml xml = new Xml("");
-    String s = xml.get(null, "test");
-    assertEquals("", s);
+    assertEquals("", new Xml("").get(null, "test"));
   }
 
   @Test
   public void testXmlInvalidEndTag()
   {
-    Xml xml = new Xml("<sanwaf><foo>foo<foo></sanwaf>");
-    String s = xml.get("<sanwaf><foo>foo<foo></sanwaf>", "foo");
-    assertEquals("", s);
+    String data = "<sanwaf><foo>foo<foo></sanwaf>";
+    Xml xml = new Xml(data);
 
-    assertEquals("<sanwaf><foo>foo<foo></sanwaf>", xml.toString());
-
-    s = xml.get("<sanwaf></foo>foo<foo></sanwaf>", "foo");
-    assertEquals("", s);
-
-    String[] sa = xml.getAll("<sanwaf></foo>foo<foo></sanwaf>", "foo");
-    assertEquals(0, sa.length);
+    assertEquals("", xml.get(data, "foo"));
+    assertEquals(data, xml.toString());
+    assertEquals("", xml.get("<sanwaf></foo>foo<foo></sanwaf>", "foo"));
+    assertEquals(0, xml.getAll("<sanwaf></foo>foo<foo></sanwaf>", "foo").length);
   }
 }
 

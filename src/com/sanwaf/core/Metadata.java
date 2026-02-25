@@ -102,10 +102,6 @@ class Metadata
         {
           name = name.toLowerCase();
         }
-        if (thisItem == null)
-        {
-          thisItem = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
-        }
         thisItem.name = name;
         thisItem.display = name;
         items.put(name, thisItem);
@@ -170,7 +166,7 @@ class Metadata
       }
       else
       {
-        markerChars = f + name.substring(starPos + 1, starPos + 2);
+        markerChars = f + name.charAt(starPos + 1);
         if (!isNotAlphanumeric(markerChars))
         {
           return null;
@@ -182,7 +178,7 @@ class Metadata
       {
         chars.add(markerChars);
       }
-      name = name.substring(0, starPos) + name.substring(starPos + 1, name.length());
+      name = name.substring(0, starPos) + name.substring(starPos + 1);
     }
   }
 
@@ -258,7 +254,7 @@ class Metadata
         }
         int end = key.indexOf(s.charAt(1), start + 1);
         last = end + 1;
-        key = key.substring(0, start + 1) + key.substring(end, key.length());
+        key = key.substring(0, start + 1) + key.substring(end);
       }
     }
     return key;

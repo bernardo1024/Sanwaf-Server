@@ -82,7 +82,7 @@ public class ItemFactory
     {
       min = 0;
     }
-    if (display != null && !display.isEmpty() && display.contains(":::"))
+    if (!display.isEmpty() && display.contains(":::"))
     {
       display = name;
     }

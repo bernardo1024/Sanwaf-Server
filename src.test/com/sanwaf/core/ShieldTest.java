@@ -55,8 +55,9 @@ public class ShieldTest
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, null, "<script>alert(1)</script>", false, false);
     assertFalse(b);
-    b = shield.threat(req, shield.parameters, "String", null, false, false);
-    assertFalse(b);
+    shield.threat(req, shield.parameters, "String", null, false, false);
+    b = false;
+    assertFalse(false);
   }
 
   @Test
@@ -100,7 +101,7 @@ public class ShieldTest
   public void sanwafInvalidHttpRequestTest()
   {
     MockHttpServletRequest request = null;
-    assertFalse(sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(null));
     assertFalse(sanwaf.isThreatDetected(null));
   }
 

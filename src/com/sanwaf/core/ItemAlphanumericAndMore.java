@@ -117,7 +117,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0)
     {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
     }
     return errorMsg;
   }
@@ -146,7 +146,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     int i = s.indexOf(from);
     if (i >= 0)
     {
-      s = s.substring(0, i) + to + s.substring(i + from.length(), s.length());
+      s = s.substring(0, i) + to + s.substring(i + from.length());
     }
     return s;
   }

@@ -46,7 +46,7 @@ public class UnitTestUtil
   {
     UnitTestResult result = new UnitTestResult();
     String file = UnitTestUtil.readFile(filename);
-    if (file == null || file.isEmpty())
+    if (file.isEmpty())
     {
       return null;
     }
@@ -57,14 +57,10 @@ public class UnitTestUtil
     List<String[]> lineArrays = new ArrayList<>();
     for (String line : lines)
     {
-      if (line.startsWith("#"))
-      {
-        continue;
-      }
-      else
+      if (!line.startsWith("#"))
       {
         String[] data = line.split("\t\t");
-        if (data != null && data.length == 3)
+        if (data.length == 3)
         {
           lineArrays.add(data);
         }
@@ -85,7 +81,7 @@ public class UnitTestUtil
           boolean runMultiple = data[2].startsWith("#");
           if (runMultiple)
           {
-            data[2] = data[2].substring(1, data[2].length());
+            data[2] = data[2].substring(1);
           }
           runTests(shield, result, data[0], data[2], Boolean.parseBoolean(data[1]), runMultiple, logErrors);
         }
@@ -104,7 +100,7 @@ public class UnitTestUtil
     boolean runMultiple = payload.startsWith("#");
     if (runMultiple)
     {
-      payload = payload.substring(1, payload.length());
+      payload = payload.substring(1);
     }
     int len = payload.length();
     for (int block = 0; block <= len + 1; block++)
@@ -113,7 +109,7 @@ public class UnitTestUtil
       {
         String start = payload.substring(0, pos);
         String middle = getHexValueOfString(payload.substring(pos, pos + block));
-        String end = payload.substring(pos + block, payload.length());
+        String end = payload.substring(pos + block);
         runTests(shield, result, parmName, start + middle + end, expected, runMultiple, logError);
         if (block == 0)
         {// block 0 is un-altered payload already run
@@ -234,7 +230,7 @@ public class UnitTestUtil
       if (i_pos > 0)
       {
         dir = dir.substring(0, i_pos);
-        if (dir != null && !dir.trim().isEmpty() && !dir.equals("."))
+        if (!dir.trim().isEmpty() && !dir.equals("."))
         {
           File f = new File(dir);
           if (!f.exists())

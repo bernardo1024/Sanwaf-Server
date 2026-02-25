@@ -148,7 +148,7 @@ abstract class Item
       {
         appendAttribute(Sanwaf.ATT_LOG_ERROR, toJson(value, mode, req, true), req);
       }
-      return err;
+      return true;
     }
     else
     {
@@ -386,7 +386,7 @@ abstract class Item
       {
         if (lastPos + 1 < s.length())
         {
-          blocks.add(s.substring(lastPos, s.length()));
+          blocks.add(s.substring(lastPos));
         }
         break;
       }
@@ -435,7 +435,7 @@ abstract class Item
     }
     else
     {
-      sb.append(",\"action\":\"").append("").append("\"");
+      sb.append(",\"action\":\"").append("\"");
     }
     sb.append(",\"type\":\"").append(getType()).append("\"");
 
@@ -555,13 +555,13 @@ abstract class Item
     if (i >= 0)
     {
       errorMsg = errorMsg.substring(0, i) + min
-          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
     }
     i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER2);
     if (i >= 0)
     {
       errorMsg = errorMsg.substring(0, i) + max
-          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
     }
     return errorMsg;
   }

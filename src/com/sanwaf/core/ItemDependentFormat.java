@@ -89,7 +89,7 @@ final class ItemDependentFormat extends Item
       {
         formatString = format.formatString;
       }
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
     }
     return errorMsg;
   }
@@ -122,7 +122,7 @@ final class ItemDependentFormat extends Item
     for (String valueFormatPair : valueFormatPairs)
     {
       String[] kv = valueFormatPair.split("=");
-      if (kv != null && kv.length == 2)
+      if (kv.length == 2)
       {
         id.type = "f{" + kv[1] + "}";
         ItemFormat item = new ItemFormat(id);
