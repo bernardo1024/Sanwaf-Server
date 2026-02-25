@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 
 final class ItemString extends Item
 {
+  static final ItemString DEFAULT_INSTANCE = new ItemString();
   static final String FAILED_PATTERN = "Failed Pattern: ";
   static final String MATCHED_PATTERN = "Matched Pattern: ";
 

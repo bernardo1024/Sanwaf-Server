@@ -313,7 +313,7 @@ final class Shield
       {
         if (forceStringPatterns)
         {
-          item = new ItemString();
+          item = ItemString.DEFAULT_INSTANCE;
         }
         else
         {
@@ -328,7 +328,7 @@ final class Shield
     }
     else
     {
-      item = new ItemString();
+      item = ItemString.DEFAULT_INSTANCE;
     }
 
     if (item.required && value.isEmpty())
@@ -403,7 +403,7 @@ final class Shield
     item = getItem(meta, key);
     if (item == null && regexAlways && !regexAlwaysExclusions.contains(key))
     {
-      item = new ItemString();
+      item = ItemString.DEFAULT_INSTANCE;
     }
     return item;
   }

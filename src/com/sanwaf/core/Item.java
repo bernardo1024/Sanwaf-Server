@@ -101,26 +101,11 @@ abstract class Item
   // results was found and caller continues validation
   ModeError isModeError(ServletRequest req, String value)
   {
-    ModeError me = new ModeError(false);
-    if (mode == Modes.DISABLED)
+    if (mode == Modes.DISABLED || !isUriValid(req) || isSizeError(value))
     {
-      return me;
+      return ModeError.INSTANCE;
     }
-    else if (!isUriValid(req))
-    {
-      me.error = true;
-      me.isUri = true;
-    }
-    else if (isSizeError(value))
-    {
-      me.error = true;
-      me.isSize = true;
-    }
-    else
-    {
-      return null;
-    }
-    return me;
+    return null;
   }
 
   boolean isUriValid(ServletRequest req)
