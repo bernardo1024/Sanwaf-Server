@@ -93,16 +93,16 @@ public class SanwafTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
-    boolean trackID = sanwaf.onErrorAddTrackId;
-    boolean trackErrors = sanwaf.onErrorAddParmErrors;
+    boolean trackID = sanwaf.config.onErrorAddTrackId;
+    boolean trackErrors = sanwaf.config.onErrorAddParmErrors;
     boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
     assertNotNull(Sanwaf.getTrackingId(request));
     String s = Sanwaf.getErrors(request);
     assertNotNull(s);
 
-    sanwaf.onErrorAddTrackId = false;
-    sanwaf.onErrorAddParmErrors = false;
+    Sanwaf.SanwafConfig cfg = sanwaf.config;
+    sanwaf.config = cfg.withOnErrorAddTrackId(false).withOnErrorAddParmErrors(false);
     request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
     result = sanwaf.isThreatDetected(request);
@@ -112,8 +112,8 @@ public class SanwafTest
     System.out.println("**********" + s);
     assertNull(s);
 
-    sanwaf.onErrorAddTrackId = trackID;
-    sanwaf.onErrorAddParmErrors = trackErrors;
+    cfg = sanwaf.config;
+    sanwaf.config = cfg.withOnErrorAddTrackId(trackID).withOnErrorAddParmErrors(trackErrors);
   }
 
   @Test

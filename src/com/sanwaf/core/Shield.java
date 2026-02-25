@@ -47,7 +47,7 @@ final class Shield
   final MetadataEndpoints endpoints;
   final MetadataEndpoints endpointsDetect;
 
-  Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger)
+  Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger, boolean verbose)
   {
     this.sanwaf = sanwaf;
     this.logger = logger;
@@ -63,7 +63,7 @@ final class Shield
     this.minLen = (parsedMinLen == -1) ? 0 : parsedMinLen;
 
     String childShieldName = settingsBlockXml.get(XML_CHILD);
-    this.childShield = childShieldName.isEmpty() ? null : findChildShield(sanwaf, xml, childShieldName, logger);
+    this.childShield = childShieldName.isEmpty() ? null : findChildShield(sanwaf, xml, childShieldName, logger, verbose);
 
     ItemFactory.setErrorMessages(errorMessages, settingsBlockXml);
 
@@ -87,7 +87,7 @@ final class Shield
     this.headers = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, false);
     this.headersDetect = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, true);
 
-    logStartup();
+    logStartup(verbose);
   }
 
   boolean threatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
@@ -481,7 +481,7 @@ final class Shield
   private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
   private static final Pattern PIPE_PATTERN = Pattern.compile("\\|");
 
-  private static Shield findChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger)
+  private static Shield findChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger, boolean verbose)
   {
     String[] children = xml.getAll(XML_CHILD_SHIELD);
     for (String child : children)
@@ -490,7 +490,7 @@ final class Shield
       Xml settings = new Xml(childXml.get(XML_SHIELD_SETTINGS));
       if (settings.get(XML_NAME).equals(childShieldName))
       {
-        return new Shield(sanwaf, xml, new Xml(child), logger);
+        return new Shield(sanwaf, xml, new Xml(child), logger, verbose);
       }
     }
     return null;
@@ -596,11 +596,11 @@ final class Shield
     return null;
   }
 
-  private void logStartup()
+  private void logStartup(boolean verbose)
   {
     StringBuilder sb = new StringBuilder();
     sb.append("Loading Shield: ").append(name).append(" - Mode: ").append(mode);
-    if (sanwaf.verbose)
+    if (verbose)
     {
       sb.append("\nSettings:\n");
       sb.append("\t").append(XML_MAX_LEN).append("=").append(maxLen).append("\n");

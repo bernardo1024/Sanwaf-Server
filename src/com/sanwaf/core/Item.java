@@ -168,10 +168,11 @@ abstract class Item
     {
       return false;
     }
+    Sanwaf.SanwafConfig cfg = (shield != null) ? shield.sanwaf.config : null;
     if (Modes.BLOCK == mode)
     {
-      boolean doLog = logger != null && log && !doAllBlocks && (shield == null || shield.sanwaf.onErrorLogParmErrors) && logger.isErrorEnabled();
-      boolean doAttr = (shield == null || shield.sanwaf.onErrorAddParmErrors);
+      boolean doLog = logger != null && log && !doAllBlocks && (cfg == null || cfg.onErrorLogParmErrors) && logger.isErrorEnabled();
+      boolean doAttr = (cfg == null || cfg.onErrorAddParmErrors);
       if (doLog || doAttr)
       {
         String json = toJson(value, mode, req, true);
@@ -189,8 +190,8 @@ abstract class Item
     else
     {
       // DO DETECTS
-      boolean doLog = logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections) && logger.isWarnEnabled();
-      boolean doAttr = (shield == null || shield.sanwaf.onErrorAddParmDetections);
+      boolean doLog = logger != null && log && (cfg == null || cfg.onErrorLogParmDetections) && logger.isWarnEnabled();
+      boolean doAttr = (cfg == null || cfg.onErrorAddParmDetections);
       if (doLog || doAttr)
       {
         String json = toJson(value, mode, req, true);
@@ -413,9 +414,10 @@ abstract class Item
 
     if (shield != null && verbose)
     {
+      Sanwaf.SanwafConfig c = shield.sanwaf.config;
       sb.append("\"shield\":{\"name\":\"").append(shield.name).append("\"");
       sb.append(",\"mode\":\"").append(shield.mode).append("\"");
-      sb.append(",\"appversion\":\"").append(Sanwaf.securedAppVersion).append("\"");
+      sb.append(",\"appversion\":\"").append(c != null ? c.securedAppVersion : "").append("\"");
       sb.append("},");
     }
 
@@ -535,7 +537,11 @@ abstract class Item
       err = shield.errorMessages.get(errorMsgKey);
       if (err == null || err.isEmpty())
       {
-        err = shield.sanwaf.globalErrorMessages.get(errorMsgKey);
+        Sanwaf.SanwafConfig c = shield.sanwaf.config;
+        if (c != null)
+        {
+          err = c.globalErrorMessages.get(errorMsgKey);
+        }
       }
     }
     return modifyErrorMsg(req, err);

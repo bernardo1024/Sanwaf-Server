@@ -64,31 +64,35 @@ public class AttributesTest
 
   private void setSanwafAtts(boolean b)
   {
-    onErrorAddParmDetections = sanwaf.onErrorAddParmDetections;
-    onErrorAddParmErrors = sanwaf.onErrorAddParmErrors;
-    onErrorAddTrackId = sanwaf.onErrorAddTrackId;
-    onErrorLogParmDetections = sanwaf.onErrorLogParmDetections;
-    onErrorLogParmDetectionsVerbose = sanwaf.onErrorLogParmDetectionsVerbose;
-    onErrorLogParmErrors = sanwaf.onErrorLogParmErrors;
-    onErrorLogParmErrorsVerbose = sanwaf.onErrorLogParmErrorsVerbose;
-    sanwaf.onErrorAddParmDetections = b;
-    sanwaf.onErrorAddParmErrors = b;
-    sanwaf.onErrorAddTrackId = b;
-    sanwaf.onErrorLogParmDetections = b;
-    sanwaf.onErrorLogParmDetectionsVerbose = b;
-    sanwaf.onErrorLogParmErrors = b;
-    sanwaf.onErrorLogParmErrorsVerbose = b;
+    Sanwaf.SanwafConfig cfg = sanwaf.config;
+    onErrorAddParmDetections = cfg.onErrorAddParmDetections;
+    onErrorAddParmErrors = cfg.onErrorAddParmErrors;
+    onErrorAddTrackId = cfg.onErrorAddTrackId;
+    onErrorLogParmDetections = cfg.onErrorLogParmDetections;
+    onErrorLogParmDetectionsVerbose = cfg.onErrorLogParmDetectionsVerbose;
+    onErrorLogParmErrors = cfg.onErrorLogParmErrors;
+    onErrorLogParmErrorsVerbose = cfg.onErrorLogParmErrorsVerbose;
+    sanwaf.config = cfg
+        .withOnErrorAddParmDetections(b)
+        .withOnErrorAddParmErrors(b)
+        .withOnErrorAddTrackId(b)
+        .withOnErrorLogParmDetections(b)
+        .withOnErrorLogParmDetectionsVerbose(b)
+        .withOnErrorLogParmErrors(b)
+        .withOnErrorLogParmErrorsVerbose(b);
   }
 
   private static void resetSanwafAtts()
   {
-    sanwaf.onErrorAddParmDetections = onErrorAddParmDetections;
-    sanwaf.onErrorAddParmErrors = onErrorAddParmErrors;
-    sanwaf.onErrorAddTrackId = onErrorAddTrackId;
-    sanwaf.onErrorLogParmDetections = onErrorLogParmDetections;
-    sanwaf.onErrorLogParmDetectionsVerbose = onErrorLogParmDetectionsVerbose;
-    sanwaf.onErrorLogParmErrors = onErrorLogParmErrors;
-    sanwaf.onErrorLogParmErrorsVerbose = onErrorLogParmErrorsVerbose;
+    Sanwaf.SanwafConfig cfg = sanwaf.config;
+    sanwaf.config = cfg
+        .withOnErrorAddParmDetections(onErrorAddParmDetections)
+        .withOnErrorAddParmErrors(onErrorAddParmErrors)
+        .withOnErrorAddTrackId(onErrorAddTrackId)
+        .withOnErrorLogParmDetections(onErrorLogParmDetections)
+        .withOnErrorLogParmDetectionsVerbose(onErrorLogParmDetectionsVerbose)
+        .withOnErrorLogParmErrors(onErrorLogParmErrors)
+        .withOnErrorLogParmErrorsVerbose(onErrorLogParmErrorsVerbose);
   }
 
 }

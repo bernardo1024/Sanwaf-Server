@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,24 +28,122 @@ public final class Sanwaf
   private final String xmlFilename;
   final Logger logger;
 
-  boolean enabled = false;
-  boolean verbose = false;
-  boolean onErrorAddTrackId = true;
-  boolean onErrorAddParmErrors = true;
-  boolean onErrorAddParmDetections = true;
-  boolean onErrorLogParmErrors = true;
-  boolean onErrorLogParmDetections = true;
-  boolean onErrorLogParmErrorsVerbose = true;
-  boolean onErrorLogParmDetectionsVerbose = true;
-
-  static String securedAppVersion = "unknown";
-  final List<Shield> shields = new ArrayList<>();
-  final Map<String, Shield> shieldMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-  final Map<String, String> globalErrorMessages = new HashMap<>();
+  volatile SanwafConfig config;
 
   public enum AllowListType
   {
     HEADER, COOKIE, PARAMETER
+  }
+
+  static final class SanwafConfig
+  {
+    final boolean enabled;
+    final boolean verbose;
+    final boolean onErrorAddTrackId;
+    final boolean onErrorAddParmErrors;
+    final boolean onErrorAddParmDetections;
+    final boolean onErrorLogParmErrors;
+    final boolean onErrorLogParmDetections;
+    final boolean onErrorLogParmErrorsVerbose;
+    final boolean onErrorLogParmDetectionsVerbose;
+    final String securedAppVersion;
+    final List<Shield> shields;
+    final Map<String, Shield> shieldMap;
+    final Map<String, String> globalErrorMessages;
+
+    SanwafConfig(boolean enabled, boolean verbose, boolean onErrorAddTrackId,
+        boolean onErrorAddParmErrors, boolean onErrorAddParmDetections,
+        boolean onErrorLogParmErrors, boolean onErrorLogParmDetections,
+        boolean onErrorLogParmErrorsVerbose, boolean onErrorLogParmDetectionsVerbose,
+        String securedAppVersion, List<Shield> shields, Map<String, Shield> shieldMap,
+        Map<String, String> globalErrorMessages)
+    {
+      this.enabled = enabled;
+      this.verbose = verbose;
+      this.onErrorAddTrackId = onErrorAddTrackId;
+      this.onErrorAddParmErrors = onErrorAddParmErrors;
+      this.onErrorAddParmDetections = onErrorAddParmDetections;
+      this.onErrorLogParmErrors = onErrorLogParmErrors;
+      this.onErrorLogParmDetections = onErrorLogParmDetections;
+      this.onErrorLogParmErrorsVerbose = onErrorLogParmErrorsVerbose;
+      this.onErrorLogParmDetectionsVerbose = onErrorLogParmDetectionsVerbose;
+      this.securedAppVersion = securedAppVersion;
+      this.shields = Collections.unmodifiableList(shields);
+      this.shieldMap = Collections.unmodifiableMap(shieldMap);
+      this.globalErrorMessages = Collections.unmodifiableMap(globalErrorMessages);
+    }
+
+    SanwafConfig withEnabled(boolean enabled)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
+
+    SanwafConfig withVerbose(boolean verbose)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
+
+    SanwafConfig withOnErrorAddTrackId(boolean onErrorAddTrackId)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
+
+    SanwafConfig withOnErrorAddParmErrors(boolean onErrorAddParmErrors)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
+
+    SanwafConfig withOnErrorAddParmDetections(boolean onErrorAddParmDetections)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
+
+    SanwafConfig withOnErrorLogParmErrors(boolean onErrorLogParmErrors)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
+
+    SanwafConfig withOnErrorLogParmDetections(boolean onErrorLogParmDetections)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
+
+    SanwafConfig withOnErrorLogParmErrorsVerbose(boolean onErrorLogParmErrorsVerbose)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
+
+    SanwafConfig withOnErrorLogParmDetectionsVerbose(boolean onErrorLogParmDetectionsVerbose)
+    {
+      return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+          onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+          onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+          shields, shieldMap, globalErrorMessages);
+    }
   }
 
   /**
@@ -213,17 +312,18 @@ public final class Sanwaf
    */
   public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks, boolean log)
   {
-    if (!enabled || !(req instanceof HttpServletRequest))
+    SanwafConfig cfg = this.config;
+    if (!cfg.enabled || !(req instanceof HttpServletRequest))
     {
       return false;
     }
-    if (onErrorAddTrackId)
+    if (cfg.onErrorAddTrackId)
     {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
     boolean threat = false;
     Set<String> shieldSet = shieldList != null ? new HashSet<>(shieldList) : null;
-    for (Shield sh : shields)
+    for (Shield sh : cfg.shields)
     {
       if ((shieldSet == null || shieldSet.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log))
       {
@@ -300,7 +400,8 @@ public final class Sanwaf
    */
   public boolean isThreat(String value, String shieldName, ServletRequest req)
   {
-    if (req != null && onErrorAddTrackId)
+    SanwafConfig cfg = this.config;
+    if (req != null && cfg.onErrorAddTrackId)
     {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
@@ -339,12 +440,13 @@ public final class Sanwaf
    */
   public boolean isThreat(String value, String shieldName, ServletRequest req, String xml)
   {
-    if (req != null && onErrorAddTrackId)
+    SanwafConfig cfg = this.config;
+    if (req != null && cfg.onErrorAddTrackId)
     {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
     Item item = ItemFactory.parseItem(null, new Xml(xml), logger);
-    Shield sh = getShield(shieldName);
+    Shield sh = (shieldName != null) ? cfg.shieldMap.get(shieldName) : null;
     if (sh == null)
     {
       logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
@@ -396,7 +498,8 @@ public final class Sanwaf
    */
   public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req, boolean log)
   {
-    for (Shield sh : shields)
+    SanwafConfig cfg = this.config;
+    for (Shield sh : cfg.shields)
     {
       if ((shieldName == null || shieldName.contains(sh.name)) && sh.threat(req, null, "", value, false, log))
       {
@@ -432,7 +535,8 @@ public final class Sanwaf
    */
   public String getAllowListedValue(String name, AllowListType type, HttpServletRequest req)
   {
-    for (Shield sh : shields)
+    SanwafConfig cfg = this.config;
+    for (Shield sh : cfg.shields)
     {
       String value = sh.getAllowListedValue(name, type, req);
       if (value != null)
@@ -514,7 +618,8 @@ public final class Sanwaf
     {
       return null;
     }
-    if (onErrorAddParmErrors)
+    SanwafConfig cfg = this.config;
+    if (cfg.onErrorAddParmErrors)
     {
       //clear out the one from the block
       req.setAttribute(ATT_LOG_ERROR, null);
@@ -562,7 +667,7 @@ public final class Sanwaf
     {
       return null;
     }
-    return shieldMap.get(name);
+    return config.shieldMap.get(name);
   }
 
   // XML LOAD CODE
@@ -595,33 +700,42 @@ public final class Sanwaf
 
     String settingsBlock = xml.get(XML_GLOBAL_SETTINGS);
     Xml settingsBlockXml = new Xml(settingsBlock);
-    enabled = Boolean.parseBoolean(settingsBlockXml.get(XML_ENABLED));
-    verbose = Boolean.parseBoolean(settingsBlockXml.get(XML_VERBOSE));
-    securedAppVersion = settingsBlockXml.get(XML_APP_VER);
+    boolean enabled = Boolean.parseBoolean(settingsBlockXml.get(XML_ENABLED));
+    boolean verbose = Boolean.parseBoolean(settingsBlockXml.get(XML_VERBOSE));
+    String securedAppVersion = settingsBlockXml.get(XML_APP_VER);
     logger.info("Starting Sanwaf:");
     logger.info("\n\tenabled=" + enabled + "\n\t" + XML_VERBOSE + "=" + verbose + "\n\t" + XML_APP_VER + "=" + securedAppVersion);
 
     String errorBlock = xml.get(XML_ERR_HANDLING);
     Xml errorBlockXml = new Xml(errorBlock);
-    onErrorAddTrackId = Boolean.parseBoolean(errorBlockXml.get(XML_ERR_SET_ATT_TRACK_ID));
-    onErrorAddParmErrors = Boolean.parseBoolean(errorBlockXml.get(XML_SET_ATT_PARM_ERR));
-    onErrorAddParmDetections = Boolean.parseBoolean(errorBlockXml.get(XML_SET_ATT_PARM_DETECT));
-    onErrorLogParmErrors = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_ERR));
-    onErrorLogParmDetections = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_DETECT));
-    onErrorLogParmErrorsVerbose = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_ERR_VERB));
-    onErrorLogParmDetectionsVerbose = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_DETECT_VERB));
+    boolean onErrorAddTrackId = Boolean.parseBoolean(errorBlockXml.get(XML_ERR_SET_ATT_TRACK_ID));
+    boolean onErrorAddParmErrors = Boolean.parseBoolean(errorBlockXml.get(XML_SET_ATT_PARM_ERR));
+    boolean onErrorAddParmDetections = Boolean.parseBoolean(errorBlockXml.get(XML_SET_ATT_PARM_DETECT));
+    boolean onErrorLogParmErrors = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_ERR));
+    boolean onErrorLogParmDetections = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_DETECT));
+    boolean onErrorLogParmErrorsVerbose = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_ERR_VERB));
+    boolean onErrorLogParmDetectionsVerbose = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_DETECT_VERB));
 
+    Map<String, String> globalErrorMessages = new HashMap<>();
     ItemFactory.setErrorMessages(globalErrorMessages, xml);
     logger.info("\tAddTrackId=" + onErrorAddTrackId + "\n\tAddErrors=" + onErrorAddParmErrors + "\n\tLogErrors=" + onErrorLogParmErrors + "\n\tLogErrorsVerbose=" + onErrorLogParmErrorsVerbose
         + "\n\tAddDetections=" + onErrorAddParmDetections + "\n\tLogDetects=" + onErrorLogParmDetections + "\n\tLogDetectsVerbose=" + onErrorLogParmDetectionsVerbose);
 
+    List<Shield> shields = new ArrayList<>();
+    Map<String, Shield> shieldMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     String[] xmls = xml.getAll(XML_SHIELD);
     for (String item : xmls)
     {
-      Shield sh = new Shield(this, xml, new Xml(item), logger);
+      Shield sh = new Shield(this, xml, new Xml(item), logger, verbose);
       shields.add(sh);
       shieldMap.put(sh.name, sh);
     }
+
+    this.config = new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
+        onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
+        onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
+        shields, shieldMap, globalErrorMessages);
+
     logger.info("Started in: " + (System.currentTimeMillis() - start) + " ms.");
   }
 
