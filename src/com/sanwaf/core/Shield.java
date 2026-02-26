@@ -119,7 +119,17 @@ final class Shield
       return false;
     }
 
-    boolean threat = false;
+    boolean strictError = meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta);
+    if (strictError)
+    {
+      Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
+      if (!doAllBlocks)
+      {
+        return true;
+      }
+    }
+
+    boolean threat = strictError;
     Enumeration<?> names = req.getParameterNames();
     while (names.hasMoreElements())
     {
@@ -253,11 +263,6 @@ final class Shield
         }
         else
         {
-          if (meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta))
-          {
-            Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
-            return true;
-          }
           return false;
         }
       }
@@ -279,8 +284,7 @@ final class Shield
       return item.handleMode(true, value, req, item.mode, log, doAllBlocks);
     }
 
-    if ((isEndpoint && isEndpointStrictValid(item, value, req, meta, doAllBlocks, log)) ||
-        item.inError(req, this, value, doAllBlocks, log))
+    if (item.inError(req, this, value, doAllBlocks, log))
     {
       return item.handleMode(true, value, req, item.mode, log, doAllBlocks);
     }
@@ -300,16 +304,6 @@ final class Shield
       item = getItemFromMetadata(meta, a);
     }
     return item;
-  }
-
-  private boolean isEndpointStrictValid(Item item, String value, ServletRequest req, Metadata meta, boolean doAllBlocks, boolean log)
-  {
-    if (MetadataEndpoints.isStrictError(req, meta))
-    {
-      Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
-      return true;
-    }
-    return false;
   }
 
   private boolean handleChildShield(ServletRequest req, String value, boolean log)
