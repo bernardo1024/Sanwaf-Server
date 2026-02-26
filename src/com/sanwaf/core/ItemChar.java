@@ -8,7 +8,7 @@ import java.util.List;
 
 final class ItemChar extends Item
 {
-  static final String INVALID_CHAR = "Invalid Constant: ";
+  static final String INVALID_CHAR = "Invalid Char: ";
 
   ItemChar(ItemData id)
   {
@@ -39,6 +39,12 @@ final class ItemChar extends Item
     List<Point> points = new ArrayList<>();
     points.add(new Point(0, value.length()));
     return points;
+  }
+
+  @Override
+  String getDefaultErrorMessage()
+  {
+    return INVALID_CHAR;
   }
 
   @Override

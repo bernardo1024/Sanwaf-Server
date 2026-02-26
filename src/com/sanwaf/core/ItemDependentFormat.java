@@ -152,6 +152,12 @@ final class ItemDependentFormat extends Item
   }
 
   @Override
+  String getDefaultErrorMessage()
+  {
+    return INVALID_DEP_FORMAT;
+  }
+
+  @Override
   Types getType()
   {
     return Types.DEPENDENT_FORMAT;

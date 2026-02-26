@@ -115,6 +115,12 @@ final class ItemJava extends Item
   }
 
   @Override
+  String getDefaultErrorMessage()
+  {
+    return INVALID_JAVA;
+  }
+
+  @Override
   String getProperties()
   {
     return "\"typespecific\":\"" + Metadata.jsonEncode(sClazzAndMethod) + "\"";

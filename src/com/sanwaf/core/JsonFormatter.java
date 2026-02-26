@@ -202,6 +202,10 @@ final class JsonFormatter
         }
       }
     }
+    if (err == null || err.isEmpty())
+    {
+      err = item.getDefaultErrorMessage();
+    }
     return item.modifyErrorMsg(req, err);
   }
 

@@ -71,6 +71,12 @@ class ItemAlphanumeric extends Item
   }
 
   @Override
+  String getDefaultErrorMessage()
+  {
+    return INVALID_AN;
+  }
+
+  @Override
   Types getType()
   {
     return Types.ALPHANUMERIC;

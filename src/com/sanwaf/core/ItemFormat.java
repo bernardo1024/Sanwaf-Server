@@ -453,6 +453,12 @@ final class ItemFormat extends Item
   }
 
   @Override
+  String getDefaultErrorMessage()
+  {
+    return INVALID_FORMAT;
+  }
+
+  @Override
   String getProperties()
   {
     return "\"format\":\"" + Metadata.jsonEncode(formatString) + "\"";

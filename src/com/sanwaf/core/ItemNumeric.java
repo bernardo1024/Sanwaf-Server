@@ -9,7 +9,6 @@ import java.util.List;
 class ItemNumeric extends Item
 {
   static final String INVALID_NUMBER = "Invalid Number";
-  static final String INVALID_MAX_MIN = "Invalid Max Min Range";
   final boolean isInt;
 
   ItemNumeric(ItemData id, boolean isInt)
@@ -132,6 +131,12 @@ class ItemNumeric extends Item
       }
     }
     return isMaxMinValueError(value);
+  }
+
+  @Override
+  String getDefaultErrorMessage()
+  {
+    return INVALID_NUMBER;
   }
 
   @Override

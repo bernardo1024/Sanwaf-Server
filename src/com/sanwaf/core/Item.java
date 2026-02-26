@@ -10,8 +10,6 @@ import java.util.Set;
 
 abstract class Item
 {
-  static final String INVALID_SIZE = "Invalid Size";
-  static final String INVALID_URI = "Invalid URI";
   com.sanwaf.log.Logger logger;
   String name;
   String display;
@@ -155,6 +153,11 @@ abstract class Item
   String isRelateValid(String value, ServletRequest req, Metadata meta)
   {
     return RelationValidator.validate(related, value, req, meta);
+  }
+
+  String getDefaultErrorMessage()
+  {
+    return "Validation Error";
   }
 
   String getProperties()

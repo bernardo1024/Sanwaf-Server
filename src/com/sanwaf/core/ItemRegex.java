@@ -116,6 +116,12 @@ final class ItemRegex extends Item
   }
 
   @Override
+  String getDefaultErrorMessage()
+  {
+    return FAILED_CUSTOM_PATTERN;
+  }
+
+  @Override
   String getProperties()
   {
     if (rule != null && rule.pattern != null)

@@ -81,6 +81,12 @@ final class ItemConstant extends Item
   }
 
   @Override
+  String getDefaultErrorMessage()
+  {
+    return INVALID_CONSTANT;
+  }
+
+  @Override
   Types getType()
   {
     return Types.CONSTANT;

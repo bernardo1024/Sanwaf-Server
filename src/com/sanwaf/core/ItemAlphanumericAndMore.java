@@ -175,6 +175,12 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   }
 
   @Override
+  String getDefaultErrorMessage()
+  {
+    return INVALID_AN_MORE;
+  }
+
+  @Override
   Types getType()
   {
     return Types.ALPHANUMERIC_AND_MORE;
