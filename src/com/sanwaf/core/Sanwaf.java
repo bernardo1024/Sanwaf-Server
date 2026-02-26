@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public final class Sanwaf
 {
@@ -25,8 +27,12 @@ public final class Sanwaf
   static final String ATT_LOG_DETECT = "~sanwaf-detects";
   static final String ATT_TRANS_ID = "~sanwaf-id";
 
+  private static final int MAX_ITEM_CACHE_SIZE = 64;
+  private static final ConcurrentHashMap<String, Item> itemCache = new ConcurrentHashMap<>();
+
   private final String xmlFilename;
   final Logger logger;
+  private final ConcurrentHashMap<String, Item> instanceItemCache = new ConcurrentHashMap<>();
 
   volatile SanwafConfig config;
 
@@ -370,7 +376,8 @@ public final class Sanwaf
    */
   public static boolean isThreat(String value, String sXml)
   {
-    Item item = ItemFactory.parseItem(null, new Xml(sXml), false, null);
+    Item item = cachedParseItem(itemCache, sXml,
+        xml -> ItemFactory.parseItem(null, new Xml(xml), false, null));
     return item.inError(null, null, value, false, false);
   }
 
@@ -445,7 +452,8 @@ public final class Sanwaf
     {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
-    Item item = ItemFactory.parseItem(null, new Xml(xml), logger);
+    Item item = cachedParseItem(instanceItemCache, xml,
+        x -> ItemFactory.parseItem(null, new Xml(x), logger));
     Shield sh = (shieldName != null) ? cfg.shieldMap.get(shieldName) : null;
     if (sh == null)
     {
@@ -553,6 +561,7 @@ public final class Sanwaf
    */
   public void reLoad() throws IOException
   {
+    instanceItemCache.clear();
     loadProperties();
   }
 
@@ -668,6 +677,16 @@ public final class Sanwaf
       return null;
     }
     return config.shieldMap.get(name);
+  }
+
+  private static Item cachedParseItem(ConcurrentHashMap<String, Item> cache, String xml,
+      Function<String, Item> parser)
+  {
+    if (cache.size() >= MAX_ITEM_CACHE_SIZE)
+    {
+      cache.clear();
+    }
+    return cache.computeIfAbsent(xml, parser);
   }
 
   // XML LOAD CODE

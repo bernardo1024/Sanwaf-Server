@@ -44,8 +44,6 @@ public class ItemFactory
 
   static Item parseItem(Shield shield, Xml xml, com.sanwaf.log.Logger logger)
   {
-    // TODO: Cache the dynamic creation of Items - hash regex as key and look up
-    // in table. if found, return, else build new
     return parseItem(shield, xml, false, logger);
   }
 
