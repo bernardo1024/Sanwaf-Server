@@ -87,6 +87,10 @@ public final class ItemFactory
     {
       display = name;
     }
+    if (type.contains("{"))
+    {
+      type = ensureComplexTypeFormat(type);
+    }
     Item item = getNewItem(new ItemData(shield, name, mode, display, type, msg, uri, max, min));
     item.logger = logger;
     item.required = Boolean.parseBoolean(xml.get(XML_ITEM_REQUIRED));
@@ -155,8 +159,6 @@ public final class ItemFactory
     case CHAR:
       return new ItemChar(id);
     }
-
-    id.type = ensureComplexTypeFormat(id.type);
 
     switch (t)
     {

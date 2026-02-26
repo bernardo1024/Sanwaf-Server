@@ -5,7 +5,7 @@ class ItemData
   final String name;
   final String display;
   final Shield shield;
-  String type;
+  final String type;
   final int min;
   final int max;
   final String msg;

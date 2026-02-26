@@ -104,8 +104,8 @@ final class ItemDependentFormat extends Item
       String[] kv = valueFormatPair.split("=");
       if (kv.length == 2)
       {
-        id.type = "f{" + kv[1] + "}";
-        ItemFormat item = new ItemFormat(id);
+        ItemData formatId = new ItemData(id.shield, id.name, id.mode, id.display, "f{" + kv[1] + "}", id.msg, id.uri, id.max, id.min);
+        ItemFormat item = new ItemFormat(formatId);
         formats.put(kv[0], item);
       }
     }
