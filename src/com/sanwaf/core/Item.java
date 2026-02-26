@@ -520,7 +520,7 @@ abstract class Item
     if (i >= 0)
     {
       errorMsg = errorMsg.substring(0, i) + max
-          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
+          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER2.length());
     }
     return errorMsg;
   }

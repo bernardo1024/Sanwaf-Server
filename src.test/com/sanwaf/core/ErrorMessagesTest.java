@@ -6,6 +6,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -46,6 +47,15 @@ public class ErrorMessagesTest
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
     String s = p.modifyErrorMsg(req, "some {0} String");
     assertTrue(s.contains(","));
+  }
+
+  @Test
+  public void modifyInvalidLengthErrorMsgTest()
+  {
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "s", "error msg1", null, Integer.MAX_VALUE, 0);
+    Item item = new ItemString(id);
+    String result = item.modifyInvalidLengthErrorMsg("between {0} and {1} chars", 5, 100);
+    assertEquals("between 5 and 100 chars", result);
   }
 
   @Test
