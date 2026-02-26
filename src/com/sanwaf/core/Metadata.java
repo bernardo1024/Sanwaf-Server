@@ -247,17 +247,23 @@ class Metadata
       String esc;
       switch (c)
       {
-      case '\\':
-        esc = "\\\\";
-        break;
-      case '"':
-        esc = "\\\"";
-        break;
-      case '/':
-        esc = "\\/";
-        break;
+      case '\\': esc = "\\\\"; break;
+      case '"':  esc = "\\\""; break;
+      case '/':  esc = "\\/";  break;
+      case '\n': esc = "\\n";  break;
+      case '\r': esc = "\\r";  break;
+      case '\t': esc = "\\t";  break;
+      case '\b': esc = "\\b";  break;
+      case '\f': esc = "\\f";  break;
       default:
-        esc = null;
+        if (c < 0x20 || c == '\u2028' || c == '\u2029')
+        {
+          esc = String.format("\\u%04x", (int) c);
+        }
+        else
+        {
+          esc = null;
+        }
         break;
       }
       if (esc != null)

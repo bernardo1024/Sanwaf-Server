@@ -77,8 +77,32 @@ public class OtherClassesTest
   @Test
   public void jsonEncodeTest()
   {
-    String s = Metadata.jsonEncode(null);
-    assertEquals("", s);
+    assertEquals("", Metadata.jsonEncode(null));
+
+    // named escapes
+    assertEquals("\\\\", Metadata.jsonEncode("\\"));
+    assertEquals("\\\"", Metadata.jsonEncode("\""));
+    assertEquals("\\/",  Metadata.jsonEncode("/"));
+    assertEquals("\\n", Metadata.jsonEncode("\n"));
+    assertEquals("\\r", Metadata.jsonEncode("\r"));
+    assertEquals("\\t", Metadata.jsonEncode("\t"));
+    assertEquals("\\b", Metadata.jsonEncode("\b"));
+    assertEquals("\\f", Metadata.jsonEncode("\f"));
+
+    // control chars via unicode escape
+    assertEquals("\\" + "u0000", Metadata.jsonEncode("\u0000"));
+    assertEquals("\\" + "u001f", Metadata.jsonEncode("\u001f"));
+
+    // Unicode line/paragraph separators
+    assertEquals("\\" + "u2028", Metadata.jsonEncode("\u2028"));
+    assertEquals("\\" + "u2029", Metadata.jsonEncode("\u2029"));
+
+    // clean string passthrough (no allocation)
+    String clean = "hello world 123";
+    assertTrue(clean == Metadata.jsonEncode(clean));
+
+    // mixed content
+    assertEquals("a\\nb\\\\c", Metadata.jsonEncode("a\nb\\c"));
   }
 
   @Test
