@@ -430,7 +430,7 @@ abstract class Item
 
     if (value != null && shield != null && verbose)
     {
-      List<Point> errorPoints = new ArrayList<>(getErrorPoints(shield, value));
+      List<Point> errorPoints = getErrorPoints(shield, value);
       sb.append(",\"samplePoints\":[");
       boolean doneFirst = false;
       for (Point p : errorPoints)
