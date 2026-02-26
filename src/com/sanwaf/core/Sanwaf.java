@@ -512,7 +512,7 @@ public final class Sanwaf
     SanwafConfig cfg = this.config;
     for (Shield sh : cfg.shields)
     {
-      if ((shieldName == null || shieldName.contains(sh.name)) && sh.threat(req, null, "", value, false, log))
+      if ((shieldName == null || shieldName.equals(sh.name)) && sh.threat(req, null, "", value, false, log))
       {
         return true;
       }
