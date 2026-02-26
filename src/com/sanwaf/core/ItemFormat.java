@@ -189,8 +189,8 @@ final class ItemFormat extends Item
       int endOfNum = parsedValue.indexOf(')', last);
       String num = parsedValue.substring(last + 2, endOfNum);
       int parsedNum = Integer.parseInt(num);
-      char arith = parsedValue.charAt(last + 1);
-      switch (arith)
+      char operator = parsedValue.charAt(last + 1);
+      switch (operator)
       {
       case '+':
         newValue += parsedNum;
