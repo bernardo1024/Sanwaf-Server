@@ -692,14 +692,6 @@ class Rule
   final Pattern pattern;
   final boolean failOnMatch;
   final String msg;
-  Rule()
-  {
-    this.mode = Modes.BLOCK;
-    this.pattern = null;
-    this.failOnMatch = true;
-    this.msg = null;
-  }
-
   Rule(Modes mode, Pattern pattern, String match, String msg)
   {
     this.mode = mode;
