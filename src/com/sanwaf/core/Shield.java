@@ -273,19 +273,18 @@ final class Shield
 
     if (item.required && value.isEmpty())
     {
-      return item.handleMode(true, value, req, item.mode, log, doAllBlocks);
+      return item.handleMode(true, value, req, item.mode, log, doAllBlocks, null);
     }
 
     String relmsg = item.isRelateValid(value, req, meta);
     if (relmsg != null)
     {
-      item.relatedErrMsg = relmsg;
-      return item.handleMode(true, value, req, item.mode, log, doAllBlocks);
+      return item.handleMode(true, value, req, item.mode, log, doAllBlocks, relmsg);
     }
 
     if (item.inError(req, this, value, doAllBlocks, log))
     {
-      return item.handleMode(true, value, req, item.mode, log, doAllBlocks);
+      return item.handleMode(true, value, req, item.mode, log, doAllBlocks, null);
     }
     return false;
   }

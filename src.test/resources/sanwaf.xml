@@ -423,6 +423,17 @@
                                     <req/>
                                     <related/>
                                 </item>
+                                <item>
+                                    <mode>detect</mode>
+                                    <name>related-detect-child</name>
+                                    <type>s</type>
+                                    <related>related-detect-parent:=</related>
+                                </item>
+                                <item>
+                                    <mode>detect</mode>
+                                    <name>related-detect-parent</name>
+                                    <type>s</type>
+                                </item>
 
                                 <item>
                                     <name>related-equals-req-child</name>

@@ -102,7 +102,7 @@ final class ItemRegex extends Item
     boolean match = rule.pattern.matcher(value).find();
     if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match))
     {
-      handleMode(true, value, req, rule.mode, log);
+      handleMode(true, value, req, rule.mode, log, null);
       return rule.mode == Modes.BLOCK && mode == Modes.BLOCK;
     }
     return false;

@@ -30,7 +30,6 @@ abstract class Item
   Modes mode = Modes.BLOCK;
   boolean required = false;
   String related;
-  String relatedErrMsg;
   String maskError = "";
 
   Item()
@@ -66,9 +65,9 @@ abstract class Item
     ItemStrict item = new ItemStrict(value);
     if (log && logger.isErrorEnabled())
     {
-      logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
+      logger.error(item.toJson(item.msg, Modes.BLOCK, null, true, null));
     }
-    appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true), req);
+    appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true, null), req);
   }
 
   @SuppressWarnings("unchecked")
@@ -142,12 +141,12 @@ abstract class Item
     }
   }
 
-  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log)
+  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, String relatedErrMsg)
   {
-    return handleMode(err, value, req, action, log, false);
+    return handleMode(err, value, req, action, log, false, relatedErrMsg);
   }
 
-  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks)
+  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks, String relatedErrMsg)
   {
     if (!err || Modes.DISABLED == action)
     {
@@ -160,7 +159,7 @@ abstract class Item
       boolean doAttr = (cfg == null || cfg.onErrorAddParmErrors);
       if (doLog || doAttr)
       {
-        String json = toJson(value, mode, req, true);
+        String json = toJson(value, mode, req, true, relatedErrMsg);
         if (doLog)
         {
           logger.error(json);
@@ -179,7 +178,7 @@ abstract class Item
       boolean doAttr = (cfg == null || cfg.onErrorAddParmDetections);
       if (doLog || doAttr)
       {
-        String json = toJson(value, mode, req, true);
+        String json = toJson(value, mode, req, true, relatedErrMsg);
         if (doLog)
         {
           logger.warn(json);
@@ -358,10 +357,10 @@ abstract class Item
 
   public String toString()
   {
-    return toJson(null, null, null, true);
+    return toJson(null, null, null, true, null);
   }
 
-  public String toJson(String value, Modes thisMode, ServletRequest req, boolean verbose)
+  public String toJson(String value, Modes thisMode, ServletRequest req, boolean verbose, String relatedErrMsg)
   {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
