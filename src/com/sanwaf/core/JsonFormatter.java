@@ -38,7 +38,7 @@ final class JsonFormatter
     }
     else
     {
-      sb.append(",\"value\":\"").append(value).append("\"");
+      sb.append(",\"value\":\"").append("\"");
     }
     sb.append("}}");
     return sb.toString();
@@ -107,7 +107,7 @@ final class JsonFormatter
     }
     else
     {
-      sb.append(",\"value\":\"").append(value).append("\"");
+      sb.append(",\"value\":\"").append("\"");
     }
 
     if (item.shield != null)

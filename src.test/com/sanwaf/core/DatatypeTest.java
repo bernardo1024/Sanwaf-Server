@@ -92,6 +92,15 @@ public class DatatypeTest
   }
 
   @Test
+  public void testNumericDelimitedInErrorNull()
+  {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "n{,}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemNumericDelimited p = new ItemNumericDelimited(id, false);
+    assertFalse(p.inError(req, shield, null, false, false));
+  }
+
+  @Test
   public void testIntegerDelimitedType()
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -254,6 +263,15 @@ public class DatatypeTest
     assertFalse(p.inError(req, shield, "1", false, false));
     assertFalse(p.inError(req, shield, "", false, false));
     assertFalse(p.inError(req, shield, null, false, false));
+  }
+
+  @Test
+  public void testCharGetErrorPointsNull()
+  {
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "error msg1", null, 1, 0);
+    ItemChar p = new ItemChar(id);
+    List<Point> points = p.getErrorPoints(shield, null);
+    assertEquals(0, points.size());
   }
 
   @Test
@@ -847,6 +865,35 @@ public class DatatypeTest
     assertEquals("depformatParent", p.dependentElementName);
     assertEquals("depformatParent:US=#####;Canada=A#A-#A#", p.depFormatString);
     assertEquals(2, p.formats.size());
+  }
+
+  @Test
+  public void testDependentFormatModifyErrorMsgNullDepName()
+  {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "d{noColon}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemDependentFormat p = new ItemDependentFormat(id);
+    assertNull(p.dependentElementName);
+    String result = p.modifyErrorMsg(req, "some error");
+    assertNotNull(result);
+  }
+
+  @Test
+  public void testFormatStrictErrorJsonNull()
+  {
+    String json = JsonFormatter.formatStrictErrorJson(null);
+    assertTrue(json.contains("\"value\":\"\""));
+    assertFalse(json.contains("\"value\":\"null\""));
+  }
+
+  @Test
+  public void testToJsonNullValue()
+  {
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "error msg1", null, 1, 0);
+    ItemChar item = new ItemChar(id);
+    String json = JsonFormatter.toJson(item, null, Modes.BLOCK, null, false, null);
+    assertTrue(json.contains("\"value\":\"\""));
+    assertFalse(json.contains("\"value\":\"null\""));
   }
 
   @Test

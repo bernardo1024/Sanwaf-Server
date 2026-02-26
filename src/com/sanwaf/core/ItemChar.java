@@ -32,7 +32,7 @@ final class ItemChar extends Item
   @Override
   List<Point> getErrorPoints(Shield shield, String value)
   {
-    if (!maskError.isEmpty())
+    if (value == null || !maskError.isEmpty())
     {
       return Collections.emptyList();
     }

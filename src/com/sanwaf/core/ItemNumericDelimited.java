@@ -46,7 +46,7 @@ final class ItemNumericDelimited extends ItemNumeric
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
   {
-    if (mode == Modes.DISABLED)
+    if (mode == Modes.DISABLED || value == null)
     {
       return false;
     }

@@ -83,7 +83,7 @@ final class ItemDependentFormat extends Item
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg)
   {
-    if (req == null)
+    if (req == null || dependentElementName == null)
     {
       return "";
     }
