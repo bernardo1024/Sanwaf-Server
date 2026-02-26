@@ -2,6 +2,7 @@ package com.sanwaf.core;
 
 import jakarta.servlet.ServletRequest;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ItemStrict extends Item
@@ -21,13 +22,13 @@ public class ItemStrict extends Item
   @Override
   List<Point> getErrorPoints(Shield shield, String value)
   {
-    return null;
+    return Collections.emptyList();
   }
 
   @Override
   Types getType()
   {
-    return null;
+    return Types.STRICT;
   }
 
 }

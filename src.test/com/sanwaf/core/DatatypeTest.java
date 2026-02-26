@@ -922,5 +922,14 @@ public class DatatypeTest
     assertTrue(shield.threat(req, shield.parameters, "parmFormatIP", "1"));
   }
 
+  @Test
+  public void testItemStrictNoNPE()
+  {
+    ItemStrict item = new ItemStrict("test value");
+    assertNotNull(item.getErrorPoints(shield, "test"));
+    assertTrue(item.getErrorPoints(shield, "test").isEmpty());
+    assertEquals(Types.STRICT, item.getType());
+  }
+
 }
 
