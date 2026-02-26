@@ -1,7 +1,10 @@
 package com.sanwaf.core;
 
+import jakarta.servlet.ServletRequest;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +14,9 @@ class Metadata
 {
   static final String XML_METADATA = "metadata";
   static final String XML_SECURED = "secured";
+  static final String XML_ENDPOINTS = "endpoints";
+  static final String XML_ENDPOINT = "endpoint";
+  static final String XML_STRICT = "strict";
   static final String XML_PARAMETERS = "parameters";
   static final String XML_HEADERS = "headers";
   static final String XML_COOKIES = "cookies";
@@ -281,6 +287,61 @@ class Metadata
       }
     }
     return sb != null ? sb.toString() : s;
+  }
+
+  boolean isStrictError(ServletRequest req)
+  {
+    if (!endpointIsStrict)
+    {
+      return false;
+    }
+    if (!endpointIsStrictAllowLess)
+    {
+      for (String name : items.keySet())
+      {
+        String s = req.getParameter(name);
+        if (s == null)
+        {
+          return true;
+        }
+      }
+    }
+    Enumeration<?> names = req.getParameterNames();
+    while (names.hasMoreElements())
+    {
+      String k = (String) names.nextElement();
+      if (items.get(k) == null)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static Map<String, Metadata> loadEndpoints(Shield shield, ParsedMetadataXml parsed,
+      boolean caseSensitive, com.sanwaf.log.Logger logger)
+  {
+    Map<String, Metadata> endpoints = new HashMap<>();
+    String[] xmlEndpoints = parsed.subBlockXml.getAll(XML_ENDPOINT);
+    for (String endpointString : xmlEndpoints)
+    {
+      Xml endpointXml = new Xml(endpointString);
+      String[] uris = endpointXml.get(ItemFactory.XML_ITEM_URI).split(":::");
+      String strict = endpointXml.get(XML_STRICT);
+
+      int start = endpointString.indexOf("<items>");
+      int end = endpointString.indexOf("</items>");
+      Xml mx = new Xml(endpointString.substring(0, start) + endpointString.substring(end + "</items>".length()));
+      Modes mode = Modes.getMode(mx.get(ItemFactory.XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
+      String items = endpointXml.get(ItemFactory.XML_ITEMS);
+
+      Metadata metadata = new Metadata(shield, items, caseSensitive, true, strict, logger, mode);
+      for (String uri : uris)
+      {
+        endpoints.put(uri, metadata);
+      }
+    }
+    return Collections.unmodifiableMap(endpoints);
   }
 
   static class ParsedMetadataXml

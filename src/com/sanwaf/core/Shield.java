@@ -41,7 +41,9 @@ final class Shield
   final Metadata parameters;
   final Metadata cookies;
   final Metadata headers;
-  final MetadataEndpoints endpoints;
+  final boolean endpointsEnabled;
+  final boolean endpointsCaseSensitive;
+  final Map<String, Metadata> endpointParameters;
 
   Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger, boolean verbose)
   {
@@ -86,7 +88,10 @@ final class Shield
         ? Collections.unmodifiableSet(loadRegexExclusions(alwaysBlockXml))
         : Collections.emptySet();
 
-    this.endpoints = new MetadataEndpoints(this, shieldXml, logger);
+    Metadata.ParsedMetadataXml epParsed = Metadata.parseMetadataXml(shieldXml, Metadata.XML_ENDPOINTS);
+    this.endpointsEnabled = epParsed.enabled;
+    this.endpointsCaseSensitive = epParsed.caseSensitive;
+    this.endpointParameters = Metadata.loadEndpoints(this, epParsed, epParsed.caseSensitive, logger);
     this.parameters = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger);
     this.cookies = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger);
     this.headers = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger);
@@ -96,7 +101,7 @@ final class Shield
 
   boolean threatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
   {
-    return ((endpoints.enabled && endpointsThreatDetected(req, doAllBlocks, log)) ||
+    return ((endpointsEnabled && endpointsThreatDetected(req, doAllBlocks, log)) ||
         (parameters.enabled && parameterThreatDetected(req, doAllBlocks, log)) ||
         (headers.enabled && headerThreatDetected(req, doAllBlocks, log)) ||
         (cookies.enabled && cookieThreatDetected(req, doAllBlocks, log)));
@@ -107,7 +112,7 @@ final class Shield
     HttpServletRequest hreq = (HttpServletRequest) req;
     String uri = hreq.getRequestURI();
 
-    Metadata meta = endpoints.endpointParameters.get(uri);
+    Metadata meta = endpointParameters.get(uri);
     if (meta == null || meta.endpointMode == Modes.DISABLED)
     {
       return false;
@@ -118,7 +123,7 @@ final class Shield
       return false;
     }
 
-    boolean strictError = meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta);
+    boolean strictError = meta.isStrictError(req);
     if (strictError)
     {
       JsonFormatter.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
@@ -557,7 +562,7 @@ final class Shield
         sb.append("\t").append(XML_CHILD_SHIELD).append("=").append(childShield.name).append("\n");
       }
       sb.append("\t").append("regex ").append(XML_MIN_LEN).append("=").append(regexMinLen).append("\n");
-      appendMetadataSettings(sb, MetadataEndpoints.XML_ENDPOINTS, endpoints.enabled, endpoints.caseSensitive);
+      appendMetadataSettings(sb, Metadata.XML_ENDPOINTS, endpointsEnabled, endpointsCaseSensitive);
       appendMetadataSettings(sb, Metadata.XML_PARAMETERS, parameters.enabled, parameters.caseSensitive);
       appendMetadataSettings(sb, Metadata.XML_COOKIES, cookies.enabled, cookies.caseSensitive);
       appendMetadataSettings(sb, Metadata.XML_HEADERS, headers.enabled, headers.caseSensitive);
@@ -588,7 +593,7 @@ final class Shield
         appendPItemMapToSB(cookies.items, sb, "\tCookies");
         appendPItemMapToSB(parameters.items, sb, "\tParameters");
         sb.append("\tEndpoints\n");
-        appendEndpoints(endpoints, sb, "\t");
+        appendEndpoints(endpointParameters, sb, "\t");
       }
     }
     logger.info(sb.toString());
@@ -626,9 +631,9 @@ final class Shield
     }
   }
 
-  static void appendEndpoints(MetadataEndpoints endpoints, StringBuilder sb, String label)
+  static void appendEndpoints(Map<String, Metadata> endpointParameters, StringBuilder sb, String label)
   {
-    appendItemToSb(sb, label, endpoints.endpointParameters);
+    appendItemToSb(sb, label, endpointParameters);
   }
 
   private static void appendItemToSb(StringBuilder sb, String label, Map<String, Metadata> map)
