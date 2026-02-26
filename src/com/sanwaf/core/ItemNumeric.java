@@ -106,7 +106,7 @@ class ItemNumeric extends Item
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
   {
-    if (isModeError(req, value) != null)
+    if (shouldSkipValidation(req, value))
     {
       return true;
     }

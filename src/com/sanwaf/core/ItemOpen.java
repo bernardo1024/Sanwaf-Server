@@ -16,8 +16,7 @@ class ItemOpen extends Item
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
   {
-    ModeError me = isModeError(req, value);
-    return me != null;
+    return shouldSkipValidation(req, value);
   }
 
   @Override

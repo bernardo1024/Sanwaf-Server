@@ -114,15 +114,9 @@ abstract class Item
 
   abstract Types getType();
 
-  // evaluate the mode, URI & size. The method returns null if no definitive
-  // results was found and caller continues validation
-  ModeError isModeError(ServletRequest req, String value)
+  boolean shouldSkipValidation(ServletRequest req, String value)
   {
-    if (mode == Modes.DISABLED || !isUriValid(req) || isSizeError(value))
-    {
-      return ModeError.INSTANCE;
-    }
-    return null;
+    return mode == Modes.DISABLED || !isUriValid(req) || isSizeError(value);
   }
 
   boolean isUriValid(ServletRequest req)

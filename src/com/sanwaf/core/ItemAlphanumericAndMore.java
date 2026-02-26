@@ -104,10 +104,8 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
   {
-    ModeError me = isModeError(req, value);
-    if (me != null)
+    if (shouldSkipValidation(req, value))
     {
-      //return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
       return true;
     }
     for (int i = 0; i < value.length(); i++)
