@@ -51,7 +51,7 @@ class Metadata
     this.endpointIsStrictAllowLess = false;
     this.endpointMode = Modes.BLOCK;
     Map<String, Item> mutableItems = parsed.caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    Map<String, List<String>> mutableIndex = new HashMap<>();
+    Map<String, List<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
     loadItems(shield, parsed, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
     this.index = Collections.unmodifiableMap(mutableIndex);
@@ -81,7 +81,7 @@ class Metadata
       this.endpointIsStrictAllowLess = false;
     }
     Map<String, Item> mutableItems = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    Map<String, List<String>> mutableIndex = new HashMap<>();
+    Map<String, List<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
     loadEndpointItems(shield, itemsString, includeEndpointAttributes, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
     this.index = Collections.unmodifiableMap(mutableIndex);

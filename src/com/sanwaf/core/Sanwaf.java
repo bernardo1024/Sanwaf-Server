@@ -735,7 +735,7 @@ public final class Sanwaf
     boolean onErrorLogParmErrorsVerbose = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_ERR_VERB));
     boolean onErrorLogParmDetectionsVerbose = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_DETECT_VERB));
 
-    Map<String, String> globalErrorMessages = new HashMap<>();
+    Map<String, String> globalErrorMessages = new HashMap<>(22); // 16 entries; (16/0.75)+1 avoids resize
     ItemFactory.setErrorMessages(globalErrorMessages, xml);
     logger.info("\tAddTrackId=" + onErrorAddTrackId + "\n\tAddErrors=" + onErrorAddParmErrors + "\n\tLogErrors=" + onErrorLogParmErrors + "\n\tLogErrorsVerbose=" + onErrorLogParmErrorsVerbose
         + "\n\tAddDetections=" + onErrorAddParmDetections + "\n\tLogDetects=" + onErrorLogParmDetections + "\n\tLogDetectsVerbose=" + onErrorLogParmDetectionsVerbose);

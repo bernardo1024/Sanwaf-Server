@@ -61,7 +61,7 @@ final class Shield
     String childShieldName = settingsBlockXml.get(XML_CHILD);
     this.childShield = childShieldName.isEmpty() ? null : findChildShield(sanwaf, xml, childShieldName, logger, verbose);
 
-    Map<String, String> em = new HashMap<>();
+    Map<String, String> em = new HashMap<>(22); // 16 entries; (16/0.75)+1 avoids resize
     ItemFactory.setErrorMessages(em, settingsBlockXml);
     this.errorMessages = Collections.unmodifiableMap(em);
 
