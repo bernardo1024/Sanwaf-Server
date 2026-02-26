@@ -33,6 +33,10 @@ final class ItemJava extends Item
     {
       return false;
     }
+    if (javaMethod == null)
+    {
+      return true;
+    }
     return runJavaMethod(javaMethod, value, req);
   }
 
@@ -48,7 +52,7 @@ final class ItemJava extends Item
     return points;
   }
 
-  private static Method resolveMethod(String sClazzAndMethod)
+  private Method resolveMethod(String sClazzAndMethod)
   {
     if (sClazzAndMethod.isEmpty())
     {
@@ -59,8 +63,12 @@ final class ItemJava extends Item
       Class<?> clazz = Class.forName(parseClazz(sClazzAndMethod));
       return clazz.getMethod(parseMethod(sClazzAndMethod), String.class, ServletRequest.class);
     }
-    catch (ClassNotFoundException | NullPointerException | NoSuchMethodException e)
+    catch (ClassNotFoundException | NoSuchMethodException e)
     {
+      if (logger != null && logger.isErrorEnabled())
+      {
+        logger.error("ItemJava: failed to resolve " + sClazzAndMethod + " - " + e);
+      }
       return null;
     }
   }
@@ -89,15 +97,19 @@ final class ItemJava extends Item
     return s;
   }
 
-  static boolean runJavaMethod(Method method, String v, ServletRequest req)
+  boolean runJavaMethod(Method method, String v, ServletRequest req)
   {
     try
     {
       Object o = method.invoke(null, v, req);
       return Boolean.TRUE.equals(o);
     }
-    catch (NullPointerException | IllegalAccessException | InvocationTargetException e)
+    catch (IllegalAccessException | InvocationTargetException e)
     {
+      if (logger != null && logger.isErrorEnabled())
+      {
+        logger.error("ItemJava: error invoking " + sClazzAndMethod + " - " + e);
+      }
       return true;
     }
   }
