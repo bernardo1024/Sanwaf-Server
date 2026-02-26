@@ -345,14 +345,28 @@ public class DatatypeTest
 
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "rk FOO,BAR", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemConstant p = new ItemConstant(id);
-    assertNull(p.constants);
+    assertTrue(p.constants.isEmpty());
     id = new ItemData(shield, "key1", Modes.BLOCK, "", "k FOO}", "error msg1", null, Integer.MAX_VALUE, 0);
     p = new ItemConstant(id);
-    assertNull(p.constants);
+    assertTrue(p.constants.isEmpty());
 
     id = new ItemData(shield, "key1", Modes.BLOCK, "", "", "error msg1", null, Integer.MAX_VALUE, 0);
     p = new ItemConstant(id);
-    assertNull(p.constants);
+    assertTrue(p.constants.isEmpty());
+  }
+
+  @Test
+  public void testConstantTypeNonExistentConstants()
+  {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "rk FOO,BAR", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemConstant p = new ItemConstant(id);
+    assertTrue(p.constants.isEmpty());
+    assertTrue(p.inError(req, shield, "anyvalue", false, false));
+    assertFalse(p.inError(req, shield, "", false, false));
+    assertFalse(p.inError(req, shield, null, false, false));
+    String props = p.getProperties();
+    assertNotNull(props);
   }
 
   @Test

@@ -4,6 +4,7 @@ import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,7 +65,7 @@ final class ItemConstant extends Item
       result.addAll(Arrays.asList(parts));
       return result;
     }
-    return null;
+    return Collections.emptySet();
   }
 
   @Override
