@@ -952,5 +952,21 @@ public class DatatypeTest
     assertEquals("-<space>.<space>", ItemAlphanumericAndMore.handleSpecialChars(new char[]{'-', ' ', '.', ' '}));
   }
 
+  @Test
+  public void testIsSizeErrorNullRequiredDoesNotNPE()
+  {
+    Item item = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
+    item.required = true;
+    assertTrue(item.isSizeError(null));
+  }
+
+  @Test
+  public void testIsSizeErrorNullNotRequired()
+  {
+    Item item = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
+    item.required = false;
+    assertFalse(item.isSizeError(null));
+  }
+
 }
 

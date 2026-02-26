@@ -81,6 +81,10 @@ abstract class Item
     {
       return false;
     }
+    if (value == null)
+    {
+      return true;
+    }
     return (value.length() < min || value.length() > max);
   }
 
