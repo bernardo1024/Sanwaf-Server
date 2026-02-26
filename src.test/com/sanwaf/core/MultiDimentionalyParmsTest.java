@@ -196,7 +196,6 @@ public class MultiDimentionalyParmsTest
     Metadata meta = new Metadata(shield, new Xml(""), "", sw.logger);
     UnitTestUtil.setField(meta, "enabled", true);
     Map<String, List<String>> mutableIndex = new HashMap<>();
-    Metadata.initA2Zindex(mutableIndex);
     mutableIndex.put("f", Collections.singletonList(Metadata.INDEX_PARM_MARKER + "foo"));
     UnitTestUtil.setField(meta, "index", Collections.unmodifiableMap(mutableIndex));
     UnitTestUtil.setField(sh, "parameters", meta);

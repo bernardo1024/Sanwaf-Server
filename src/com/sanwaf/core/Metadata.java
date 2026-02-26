@@ -116,7 +116,6 @@ class Metadata
   private void loadItems(Shield shield, ParsedMetadataXml parsed,
       Map<String, Item> items, Map<String, List<String>> index)
   {
-    initA2Zindex(index);
     String[] xmlItems = parsed.subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
@@ -159,20 +158,11 @@ class Metadata
   private void loadEndpointItems(Shield shield, String itemsString, boolean includeEndpointAttributes,
       Map<String, Item> items, Map<String, List<String>> index)
   {
-    initA2Zindex(index);
     Xml itemsXml = new Xml(itemsString);
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
       loadItem(shield, itemString, includeEndpointAttributes, items, index);
-    }
-  }
-
-  static void initA2Zindex(Map<String, List<String>> map)
-  {
-    for (char ch = 'a'; ch <= 'z'; ++ch)
-    {
-      map.put(charString(ch), null);
     }
   }
 

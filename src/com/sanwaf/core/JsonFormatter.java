@@ -44,14 +44,20 @@ final class JsonFormatter
     return sb.toString();
   }
 
-  @SuppressWarnings("unchecked")
   static void appendAttribute(String att, String value, ServletRequest req)
   {
     if (req == null)
     {
       return;
     }
-    Set<String> set = (Set<String>) req.getAttribute(att);
+    Object o = req.getAttribute(att);
+    Set<String> set = null;
+    if (o instanceof Set)
+    {
+      @SuppressWarnings("unchecked")
+      Set<String> tmp = (Set<String>) o;
+      set = tmp;
+    }
     if (set == null)
     {
       set = new LinkedHashSet<>();
