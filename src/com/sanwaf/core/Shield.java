@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 final class Shield
@@ -667,8 +666,6 @@ class Rule
   final Pattern pattern;
   final boolean failOnMatch;
   final String msg;
-  private volatile ThreadLocal<Matcher> cachedMatcher;
-
   Rule()
   {
     this.mode = Modes.BLOCK;
@@ -683,14 +680,5 @@ class Rule
     this.pattern = pattern;
     this.failOnMatch = !"pass".equalsIgnoreCase(match);
     this.msg = msg;
-  }
-
-  Matcher matcher(String value)
-  {
-    if (cachedMatcher == null)
-    {
-      cachedMatcher = ThreadLocal.withInitial(() -> pattern.matcher(""));
-    }
-    return cachedMatcher.get().reset(value);
   }
 }

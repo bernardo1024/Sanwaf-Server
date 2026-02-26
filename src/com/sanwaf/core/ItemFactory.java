@@ -80,7 +80,7 @@ public class ItemFactory
     {
       min = 0;
     }
-    if (!display.isEmpty() && display.contains(":::"))
+    if (display.contains(":::"))
     {
       display = name;
     }
@@ -143,7 +143,7 @@ public class ItemFactory
           i++;
         if (i < len && related.charAt(i) == ')')
         {
-          // collapse " )" to ")"
+          continue; // discard whitespace before ')'
         }
         else if (i + 1 < len && related.charAt(i) == '|' && related.charAt(i + 1) == '|')
         {
