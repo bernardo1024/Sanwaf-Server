@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,10 +61,7 @@ final class ItemConstant extends Item
       String s = value.substring(start + ItemFactory.CONSTANT.length(), value.length() - 1);
       String[] parts = s.split(",");
       Set<String> result = new LinkedHashSet<>(parts.length * 2);
-      for (String part : parts)
-      {
-        result.add(part);
-      }
+      result.addAll(Arrays.asList(parts));
       return result;
     }
     return null;
