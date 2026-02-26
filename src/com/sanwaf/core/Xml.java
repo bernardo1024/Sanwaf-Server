@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ final class Xml
 
   static String readFile(InputStream is) throws IOException
   {
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is), 4096))
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8), 4096))
     {
       StringBuilder sb = new StringBuilder();
       char[] buf = new char[4096];
