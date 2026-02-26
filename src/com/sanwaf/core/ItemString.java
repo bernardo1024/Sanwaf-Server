@@ -78,17 +78,18 @@ final class ItemString extends Item
     boolean inError = false;
     for (Map.Entry<String, Rule> rule : patterns.entrySet())
     {
-      Modes ruleMode = rule.getValue().mode;
+      Rule r = rule.getValue();
+      Modes ruleMode = r.mode;
       if (ruleMode != Modes.DISABLED)
       {
-        if (rule.getValue().pattern == null)
+        if (r.pattern == null)
         {
           continue;
         }
-        boolean match = rule.getValue().pattern.matcher(value).find();
-        if ((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match))
+        boolean match = r.pattern.matcher(value).find();
+        if ((r.failOnMatch && match) || (!r.failOnMatch && !match))
         {
-          if (rule.getValue().mode == Modes.BLOCK)
+          if (r.mode == Modes.BLOCK)
           {
             inError = true;
             handleMode(true, value, req, ruleMode, true, doAllBlocks, null);
