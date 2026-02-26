@@ -360,7 +360,7 @@ abstract class Item
 
   public String toJson(String value, Modes thisMode, ServletRequest req, boolean verbose, String relatedErrMsg)
   {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder(512);
     sb.append("{");
 
     if (req != null)
