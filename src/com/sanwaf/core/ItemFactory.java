@@ -1,6 +1,7 @@
 package com.sanwaf.core;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class ItemFactory
 {
@@ -36,6 +37,8 @@ public class ItemFactory
   static final String XML_ITEM_MIN_VAL = "min-value";
   static final String XML_ITEM_RELATED = "related";
   static final String XML_ITEM_MASK_ERROR = "mask-err";
+
+  private static final Pattern WHITESPACE_RUN = Pattern.compile("\\s+");
 
   ItemFactory()
   {
@@ -118,77 +121,17 @@ public class ItemFactory
   private static String removeRelatedSpace(String related)
   {
     related = related.trim();
-    int len = related.length();
-    if (len == 0)
+    if (related.isEmpty())
     {
       return related;
     }
-    char[] buf = new char[len];
-    int out = 0;
-    int i = 0;
-    while (i < len)
-    {
-      char c = related.charAt(i);
-      if (c == '(' && i + 1 < len && Character.isWhitespace(related.charAt(i + 1)))
-      {
-        buf[out++] = '(';
-        do
-          i++;
-        while (i < len && Character.isWhitespace(related.charAt(i)));
-      }
-      else if (Character.isWhitespace(c))
-      {
-        int wsStart = i;
-        while (i < len && Character.isWhitespace(related.charAt(i)))
-          i++;
-        if (i < len && related.charAt(i) == ')')
-        {
-          continue; // discard whitespace before ')'
-        }
-        else if (i + 1 < len && related.charAt(i) == '|' && related.charAt(i + 1) == '|')
-        {
-          buf[out++] = '|';
-          buf[out++] = '|';
-          i += 2;
-          while (i < len && Character.isWhitespace(related.charAt(i)))
-            i++;
-        }
-        else if (i < len && related.charAt(i) == ':')
-        {
-          buf[out++] = ':';
-          do
-            i++;
-          while (i < len && Character.isWhitespace(related.charAt(i)));
-        }
-        else if (i < len && related.charAt(i) == '&' && i + 1 < len && related.charAt(i + 1) == '&')
-        {
-          if (out > 0 && buf[out - 1] == ')')
-          {
-            buf[out++] = '&';
-            buf[out++] = '&';
-            i += 2;
-            while (i < len && Character.isWhitespace(related.charAt(i)))
-              i++;
-          }
-          else
-          {
-            for (int j = wsStart; j < i; j++)
-              buf[out++] = related.charAt(j);
-          }
-        }
-        else
-        {
-          for (int j = wsStart; j < i; j++)
-            buf[out++] = related.charAt(j);
-        }
-      }
-      else
-      {
-        buf[out++] = c;
-        i++;
-      }
-    }
-    return new String(buf, 0, out);
+    related = WHITESPACE_RUN.matcher(related).replaceAll(" ");
+    related = related.replace(") && (", ")&&(");
+    related = related.replace(" || ", "||");
+    related = related.replace(" : ", ":");
+    related = related.replace("( ", "(");
+    related = related.replace(" )", ")");
+    return related;
   }
 
   static Item getNewItem(ItemData id)

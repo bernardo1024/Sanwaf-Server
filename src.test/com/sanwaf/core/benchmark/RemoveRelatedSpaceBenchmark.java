@@ -62,7 +62,26 @@ public class RemoveRelatedSpaceBenchmark
     return related;
   }
 
-  // --- Approach 3: Single-pass char[] scan ---
+  // --- Approach 3: Whitespace-collapse + String.replace() ---
+  private static final Pattern WHITESPACE_RUN = Pattern.compile("\\s+");
+
+  private static String removeCollapseReplace(String related)
+  {
+    related = related.trim();
+    if (related.isEmpty())
+    {
+      return related;
+    }
+    related = WHITESPACE_RUN.matcher(related).replaceAll(" ");
+    related = related.replace(") && (", ")&&(");
+    related = related.replace(" || ", "||");
+    related = related.replace(" : ", ":");
+    related = related.replace("( ", "(");
+    related = related.replace(" )", ")");
+    return related;
+  }
+
+  // --- Approach 4: Single-pass char[] scan ---
   private static String removeSinglePass(String related)
   {
     related = related.trim();
@@ -162,9 +181,12 @@ public class RemoveRelatedSpaceBenchmark
     {
       String expected = removeCurrent(inputs[t]);
       String precompiled = removePrecompiled(inputs[t]);
+      String collapseReplace = removeCollapseReplace(inputs[t]);
       String singlePass = removeSinglePass(inputs[t]);
       assert expected.equals(precompiled)
           : labels[t] + ": Precompiled differs!\nExpected: [" + expected + "]\nActual:   [" + precompiled + "]";
+      assert expected.equals(collapseReplace)
+          : labels[t] + ": Collapse+replace differs!\nExpected: [" + expected + "]\nActual:   [" + collapseReplace + "]";
       assert expected.equals(singlePass)
           : labels[t] + ": Single-pass differs!\nExpected: [" + expected + "]\nActual:   [" + singlePass + "]";
     }
@@ -181,6 +203,7 @@ public class RemoveRelatedSpaceBenchmark
       {
         removeCurrent(input);
         removePrecompiled(input);
+        removeCollapseReplace(input);
         removeSinglePass(input);
       }
 
@@ -200,7 +223,15 @@ public class RemoveRelatedSpaceBenchmark
       }
       long precompiledNs = System.nanoTime() - start;
 
-      // Benchmark 3: Single-pass
+      // Benchmark 3: Collapse + replace
+      start = System.nanoTime();
+      for (int i = 0; i < BENCH_ITERS; i++)
+      {
+        removeCollapseReplace(input);
+      }
+      long collapseReplaceNs = System.nanoTime() - start;
+
+      // Benchmark 4: Single-pass
       start = System.nanoTime();
       for (int i = 0; i < BENCH_ITERS; i++)
       {
@@ -210,11 +241,13 @@ public class RemoveRelatedSpaceBenchmark
 
       System.out.println("\n--- " + labels[t] + " ---");
       System.out.printf("  Input: \"%s\"%n", input);
-      System.out.printf("  1. Current (replaceAll):  %,d ns total  |  %,d ns/op%n", currentNs, currentNs / BENCH_ITERS);
-      System.out.printf("  2. Precompiled Pattern:   %,d ns total  |  %,d ns/op%n", precompiledNs, precompiledNs / BENCH_ITERS);
-      System.out.printf("  3. Single-pass char[]:    %,d ns total  |  %,d ns/op%n", singlePassNs, singlePassNs / BENCH_ITERS);
-      System.out.printf("  Precompiled is %.2fx faster than current%n", (double) currentNs / precompiledNs);
-      System.out.printf("  Single-pass is %.2fx faster than current%n", (double) currentNs / singlePassNs);
+      System.out.printf("  1. Current (replaceAll):     %,d ns total  |  %,d ns/op%n", currentNs, currentNs / BENCH_ITERS);
+      System.out.printf("  2. Precompiled Pattern:      %,d ns total  |  %,d ns/op%n", precompiledNs, precompiledNs / BENCH_ITERS);
+      System.out.printf("  3. Collapse + replace (new): %,d ns total  |  %,d ns/op%n", collapseReplaceNs, collapseReplaceNs / BENCH_ITERS);
+      System.out.printf("  4. Single-pass char[]:       %,d ns total  |  %,d ns/op%n", singlePassNs, singlePassNs / BENCH_ITERS);
+      System.out.printf("  Precompiled is %.2fx faster than replaceAll%n", (double) currentNs / precompiledNs);
+      System.out.printf("  Collapse+replace is %.2fx faster than replaceAll%n", (double) currentNs / collapseReplaceNs);
+      System.out.printf("  Single-pass is %.2fx faster than replaceAll%n", (double) currentNs / singlePassNs);
     }
     System.out.println("\n==========================================================\n");
   }
