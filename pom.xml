@@ -25,8 +25,8 @@
              then either comment out the "testResources" section below or
              from the command line: "mvn install -Dmaven.test.skip=true"  -->
         <compiler.target>17</compiler.target>
-        <compiler.depecation>false</compiler.depecation>
-        <complier.warnings>false</complier.warnings>
+        <compiler.deprecation>false</compiler.deprecation>
+        <compiler.warnings>false</compiler.warnings>
 
         <!-- tests & code coverage -->
         <junit.version>4.13.1</junit.version>
