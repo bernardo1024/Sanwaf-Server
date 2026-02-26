@@ -64,7 +64,7 @@ public class SanwafIsThreatTest
     result = sanwaf.isThreat("< script>alert(1)</ script>", null, request);
     assertFalse(result);
     trackId = Sanwaf.getTrackingId(request);
-    assertNotNull(trackId);
+    assertNull(trackId);
     s = Sanwaf.getErrors(request);
     assertNull(s);
 

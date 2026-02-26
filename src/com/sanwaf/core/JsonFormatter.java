@@ -74,7 +74,7 @@ final class JsonFormatter
     if (req != null)
     {
       HttpServletRequest hreq = (HttpServletRequest) req;
-      sb.append("\"transid\":\"").append(hreq.getAttribute(Metadata.jsonEncode(Sanwaf.ATT_TRANS_ID))).append("\"");
+      sb.append("\"transid\":\"").append(hreq.getAttribute(Sanwaf.ATT_TRANS_ID)).append("\"");
       sb.append(",\"ip\":\"").append(hreq.getRemoteAddr()).append("\"");
       sb.append(",\"referer\":\"").append(Metadata.jsonEncode(hreq.getHeader("referer"))).append("\",");
     }
