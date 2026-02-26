@@ -208,39 +208,9 @@ abstract class Item
 
     List<String> andBlocks = parseBlocks(related, 0, "AND", ")&&(", "(", ")");
     List<String> andOrBlocks = parseOrBlocksFromAndBlocks(andBlocks);
-    List<Boolean> orRequired = new ArrayList<>();
-    List<Boolean> andRequired = new ArrayList<>();
-    setAndOrConditions(value, req, andOrBlocks, orRequired, andRequired);
-
     int andTrueCount = 0;
-    for (boolean and : andRequired)
-    {
-      if (and)
-      {
-        andTrueCount++;
-      }
-    }
+    int andTotalCount = 0;
     boolean orFoundTrue = false;
-    for (boolean or : orRequired)
-    {
-      if (or)
-      {
-        orFoundTrue = true;
-        break;
-      }
-    }
-    String err = null;
-    if (andTrueCount == andRequired.size() && orFoundTrue && value.isEmpty())
-    {
-      // TODO: add better message
-      err = " - Invalid relationship detected";
-    }
-    return err;
-  }
-
-  private void setAndOrConditions(String value, ServletRequest req, List<String> andOrBlocks, List<Boolean> orRequired,
-      List<Boolean> andRequired)
-  {
     boolean nextIsAnd = false;
     boolean skipIteration = false;
     for (int i = 0; i < andOrBlocks.size(); i++)
@@ -250,7 +220,19 @@ abstract class Item
         skipIteration = false;
         continue;
       }
-      setAndOrCondition(orRequired, andRequired, nextIsAnd, isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req));
+      boolean condResult = isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req);
+      if (nextIsAnd)
+      {
+        andTotalCount++;
+        if (condResult)
+        {
+          andTrueCount++;
+        }
+      }
+      else if (condResult)
+      {
+        orFoundTrue = true;
+      }
       nextIsAnd = false;
       if (andOrBlocks.size() > i + 1)
       {
@@ -261,20 +243,15 @@ abstract class Item
         skipIteration = true;
       }
     }
+    String err = null;
+    if (andTrueCount == andTotalCount && orFoundTrue && value.isEmpty())
+    {
+      // TODO: add better message
+      err = " - Invalid relationship detected";
+    }
+    return err;
   }
 
-  private void setAndOrCondition(List<Boolean> orRequired, List<Boolean> andRequired, boolean nextIsAnd,
-      boolean value)
-  {
-    if (nextIsAnd)
-    {
-      andRequired.add(value);
-    }
-    else
-    {
-      orRequired.add(value);
-    }
-  }
 
   private List<String> parseOrBlocksFromAndBlocks(List<String> andBlocks)
   {
