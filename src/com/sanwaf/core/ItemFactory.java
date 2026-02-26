@@ -3,7 +3,7 @@ package com.sanwaf.core;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class ItemFactory
+public final class ItemFactory
 {
   static final String INTEGER = "i";
   static final String INTEGER_DELIMITED = "i{";
@@ -40,7 +40,7 @@ public class ItemFactory
 
   private static final Pattern WHITESPACE_RUN = Pattern.compile("\\s+");
 
-  ItemFactory()
+  private ItemFactory()
   {
     // no instances allowed
   }
