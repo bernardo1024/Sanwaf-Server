@@ -7,6 +7,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -202,6 +203,22 @@ public class SanwafTest
     assertTrue(result);
 
     UnitTestUtil.setField(shield, "regexAlways", xssAlways);
+  }
+
+  @Test
+  public void testIsThreatDetectedWithShieldList()
+  {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addParameter("String", "<script>alert(1)</script>");
+    assertTrue(sanwaf.isThreatDetected(request, Arrays.asList("XSS"), false));
+
+    request = new MockHttpServletRequest();
+    request.addParameter("String", "<script>alert(1)</script>");
+    assertFalse(sanwaf.isThreatDetected(request, Arrays.asList("ParmLength"), false));
+
+    request = new MockHttpServletRequest();
+    request.addParameter("String", "<script>alert(1)</script>");
+    assertTrue(sanwaf.isThreatDetected(request, null, false));
   }
 }
 

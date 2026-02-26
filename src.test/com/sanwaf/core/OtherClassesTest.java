@@ -43,6 +43,15 @@ public class OtherClassesTest
   }
 
   @Test
+  public void testWithVerboseFalse()
+  {
+    Sanwaf.SanwafConfig cfg = sanwaf.config;
+    sanwaf.config = cfg.withVerbose(false);
+    assertFalse(sanwaf.config.verbose);
+    sanwaf.config = cfg;
+  }
+
+  @Test
   public void TestLoggerSystemOut()
   {
     SimpleLogger logger = new SimpleLogger();
