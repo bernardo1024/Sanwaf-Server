@@ -81,9 +81,8 @@ public class SanwafIsThreatTest
   public void testSanWafIsThreatDoNotAddErrorParms()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    boolean orig = sanwaf.config.onErrorAddParmErrors;
-    Sanwaf.SanwafConfig cfg = sanwaf.config;
-    sanwaf.config = cfg.withOnErrorAddParmErrors(false);
+    Sanwaf.SanwafConfig saved = sanwaf.config;
+    sanwaf.config = saved.toBuilder().onErrorAddParmErrors(false).build();
     boolean result = sanwaf.isThreat("<script>alert(1)</script>", null, request);
     assertTrue(result);
     String trackId = Sanwaf.getTrackingId(request);
@@ -97,8 +96,7 @@ public class SanwafIsThreatTest
     s = Sanwaf.getErrors(request);
     assertNull(s);
 
-    cfg = sanwaf.config;
-    sanwaf.config = cfg.withOnErrorAddParmErrors(orig);
+    sanwaf.config = saved;
   }
 
   @Test

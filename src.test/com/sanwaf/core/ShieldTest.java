@@ -92,11 +92,21 @@ public class ShieldTest
   @Test
   public void disableSanwafTest()
   {
-    Sanwaf.SanwafConfig cfg = sanwaf.config;
-    sanwaf.config = cfg.withEnabled(false);
+    Sanwaf.SanwafConfig saved = sanwaf.config;
+    sanwaf.config = saved.toBuilder().enabled(false).build();
     testNumeric(false);
-    cfg = sanwaf.config;
-    sanwaf.config = cfg.withEnabled(true);
+    sanwaf.config = saved;
+  }
+
+  @Test
+  public void enableSanwafTest()
+  {
+    Sanwaf.SanwafConfig saved = sanwaf.config;
+    sanwaf.config = saved.toBuilder().enabled(false).build();
+    testNumeric(false);
+    sanwaf.config = saved.toBuilder().enabled(true).build();
+    testNumeric(true);
+    sanwaf.config = saved;
   }
 
   @Test

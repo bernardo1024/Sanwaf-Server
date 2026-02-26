@@ -54,45 +54,25 @@ public class AttributesTest
     resetSanwafAttributes();
   }
 
-  static boolean onErrorAddParmDetections = false;
-  static boolean onErrorAddParmErrors = false;
-  static boolean onErrorAddTrackId = false;
-  static boolean onErrorLogParmDetections = false;
-  static boolean onErrorLogParmDetectionsVerbose = false;
-  static boolean onErrorLogParmErrors = false;
-  static boolean onErrorLogParmErrorsVerbose = false;
+  static Sanwaf.SanwafConfig savedConfig;
 
   private void setSanwafAttributes(boolean b)
   {
-    Sanwaf.SanwafConfig cfg = sanwaf.config;
-    onErrorAddParmDetections = cfg.onErrorAddParmDetections;
-    onErrorAddParmErrors = cfg.onErrorAddParmErrors;
-    onErrorAddTrackId = cfg.onErrorAddTrackId;
-    onErrorLogParmDetections = cfg.onErrorLogParmDetections;
-    onErrorLogParmDetectionsVerbose = cfg.onErrorLogParmDetectionsVerbose;
-    onErrorLogParmErrors = cfg.onErrorLogParmErrors;
-    onErrorLogParmErrorsVerbose = cfg.onErrorLogParmErrorsVerbose;
-    sanwaf.config = cfg
-        .withOnErrorAddParmDetections(b)
-        .withOnErrorAddParmErrors(b)
-        .withOnErrorAddTrackId(b)
-        .withOnErrorLogParmDetections(b)
-        .withOnErrorLogParmDetectionsVerbose(b)
-        .withOnErrorLogParmErrors(b)
-        .withOnErrorLogParmErrorsVerbose(b);
+    savedConfig = sanwaf.config;
+    sanwaf.config = savedConfig.toBuilder()
+        .onErrorAddParmDetections(b)
+        .onErrorAddParmErrors(b)
+        .onErrorAddTrackId(b)
+        .onErrorLogParmDetections(b)
+        .onErrorLogParmDetectionsVerbose(b)
+        .onErrorLogParmErrors(b)
+        .onErrorLogParmErrorsVerbose(b)
+        .build();
   }
 
   private static void resetSanwafAttributes()
   {
-    Sanwaf.SanwafConfig cfg = sanwaf.config;
-    sanwaf.config = cfg
-        .withOnErrorAddParmDetections(onErrorAddParmDetections)
-        .withOnErrorAddParmErrors(onErrorAddParmErrors)
-        .withOnErrorAddTrackId(onErrorAddTrackId)
-        .withOnErrorLogParmDetections(onErrorLogParmDetections)
-        .withOnErrorLogParmDetectionsVerbose(onErrorLogParmDetectionsVerbose)
-        .withOnErrorLogParmErrors(onErrorLogParmErrors)
-        .withOnErrorLogParmErrorsVerbose(onErrorLogParmErrorsVerbose);
+    sanwaf.config = savedConfig;
   }
 
 }

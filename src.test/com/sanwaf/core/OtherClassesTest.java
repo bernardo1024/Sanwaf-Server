@@ -36,7 +36,7 @@ public class OtherClassesTest
   public void TestDefaultContructorParameterItem()
   {
     Sanwaf.SanwafConfig cfg = sanwaf.config;
-    sanwaf.config = cfg.withVerbose(true);
+    sanwaf.config = cfg.toBuilder().verbose(true).build();
     Item pi = new ItemString();
     String s = pi.toString();
     assertTrue(s.contains("\"type\":\"STRING\""));
@@ -46,7 +46,7 @@ public class OtherClassesTest
   public void testWithVerboseFalse()
   {
     Sanwaf.SanwafConfig cfg = sanwaf.config;
-    sanwaf.config = cfg.withVerbose(false);
+    sanwaf.config = cfg.toBuilder().verbose(false).build();
     assertFalse(sanwaf.config.verbose);
     sanwaf.config = cfg;
   }
