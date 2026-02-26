@@ -231,7 +231,7 @@ final class ItemFormat extends Item
     {
       formatString = value.substring(start + ItemFactory.FORMAT.length(), value.length() - 1);
       parseFormats(formatString);
-      hasDateVariables = formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy") || formatString.contains("yyyy)");
+      hasDateVariables = formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy");
     }
   }
 
