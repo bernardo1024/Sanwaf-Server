@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 final class Shield
@@ -154,41 +155,16 @@ final class Shield
     return threat;
   }
 
-  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
-  {
-    boolean retstring = false;
-    Enumeration<?> names = req.getParameterNames();
-    while (names.hasMoreElements())
-    {
-      String k = (String) names.nextElement();
-      String[] values = req.getParameterValues(k);
-      for (String v : values)
-      {
-        if (threat(req, parameters, k, v, false, doAllBlocks, log))
-        {
-          if (!doAllBlocks)
-          {
-            return true;
-          }
-          retstring = true;
-        }
-      }
-    }
-    return retstring;
-  }
-
-  private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
+  private boolean detectThreats(ServletRequest req, Metadata meta, Enumeration<?> names,
+      Function<String, String[]> valuesForName, boolean doAllBlocks, boolean log)
   {
     boolean threat = false;
-    HttpServletRequest hreq = (HttpServletRequest) req;
-    Enumeration<?> names = hreq.getHeaderNames();
     while (names.hasMoreElements())
     {
-      String s = (String) names.nextElement();
-      Enumeration<?> headerValues = hreq.getHeaders(s);
-      while (headerValues.hasMoreElements())
+      String name = (String) names.nextElement();
+      for (String value : valuesForName.apply(name))
       {
-        if (threat(req, headers, s, (String) headerValues.nextElement(), false, doAllBlocks, log))
+        if (threat(req, meta, name, value, false, doAllBlocks, log))
         {
           if (!doAllBlocks)
           {
@@ -199,6 +175,18 @@ final class Shield
       }
     }
     return threat;
+  }
+
+  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
+  {
+    return detectThreats(req, parameters, req.getParameterNames(), req::getParameterValues, doAllBlocks, log);
+  }
+
+  private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
+  {
+    HttpServletRequest hreq = (HttpServletRequest) req;
+    return detectThreats(req, headers, hreq.getHeaderNames(),
+        name -> Collections.list(hreq.getHeaders(name)).toArray(new String[0]), doAllBlocks, log);
   }
 
   private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
