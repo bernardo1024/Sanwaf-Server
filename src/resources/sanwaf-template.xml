@@ -277,6 +277,7 @@
 	    -cookies     (uses shield mode if not specified)
  -->
 
+<!--suppress ALL -->
 <sanwaf>
     <global-settings>
         <!-- Master Enabled Flag; must be true for Sanwaf to detect issues -->
