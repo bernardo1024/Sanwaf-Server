@@ -73,8 +73,8 @@ final class ItemFormat extends Item
       return false;
     }
 
-    int formatlen = formatBlocks.size();
-    if (!hasDateVariables && value.length() != formatlen)
+    int formatLen = formatBlocks.size();
+    if (!hasDateVariables && value.length() != formatLen)
     {
       return true;
     }
