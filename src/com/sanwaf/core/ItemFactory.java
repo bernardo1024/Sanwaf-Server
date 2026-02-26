@@ -227,6 +227,10 @@ public class ItemFactory
     case INLINE_REGEX:
       return new ItemRegex(id);
     case JAVA:
+      if (id.shield == null)
+      {
+        return new ItemString(id);
+      }
       return new ItemJava(id);
     case CONSTANT:
       return new ItemConstant(id);

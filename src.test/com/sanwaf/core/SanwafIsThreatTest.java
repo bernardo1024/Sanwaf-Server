@@ -216,8 +216,9 @@ public class SanwafIsThreatTest
   @Test
   public void testSanWafIsThreatJava()
   {
+    // j{} type is blocked on the static API path (no shield) — falls back to string validation
     boolean result = Sanwaf.isThreat("100", "<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>");
-    assertTrue(result);
+    assertFalse(result);
 
     result = Sanwaf.isThreat("9", "<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertFalse(result);

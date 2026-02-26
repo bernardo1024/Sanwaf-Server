@@ -193,15 +193,15 @@ public class SanwafIsThreatDynamicTest
   @Test
   public void testSanWafIsThreatJava()
   {
+    // j{} type is blocked on XML-accepting API paths — falls back to string validation
     MockHttpServletRequest request = new MockHttpServletRequest();
     boolean result = sanwaf.isThreat("100", "XSS", request,
         "<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>");
-    assertTrue(result);
-    String trackId = Sanwaf.getTrackingId(request);
-    assertNotNull(trackId);
+    assertFalse(result);
 
     request = new MockHttpServletRequest();
-    result = sanwaf.isThreat("9", "XSS", request, "<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>");
+    result = sanwaf.isThreat("9", "XSS", request,
+        "<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertFalse(result);
   }
 
