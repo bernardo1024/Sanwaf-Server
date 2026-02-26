@@ -24,12 +24,18 @@ class Metadata
   static final String STAR = "*";
 
   private static final String[] CHAR_STRINGS = new String[128];
+  private static final String[] CTRL_UNICODE_ESCAPES = new String[0x20];
 
   static
   {
     for (int i = 0; i < 128; i++)
     {
       CHAR_STRINGS[i] = String.valueOf((char) i);
+    }
+    char[] hex = "0123456789abcdef".toCharArray();
+    for (int i = 0; i < 0x20; i++)
+    {
+      CTRL_UNICODE_ESCAPES[i] = "\\u00" + hex[i >> 4] + hex[i & 0xF];
     }
   }
 
@@ -262,9 +268,17 @@ class Metadata
       case '\b': esc = "\\b";  break;
       case '\f': esc = "\\f";  break;
       default:
-        if (c < 0x20 || c == '\u2028' || c == '\u2029')
+        if (c < 0x20)
         {
-          esc = String.format("\\u%04x", (int) c);
+          esc = CTRL_UNICODE_ESCAPES[c];
+        }
+        else if (c == '\u2028')
+        {
+          esc = "\\u2028";
+        }
+        else if (c == '\u2029')
+        {
+          esc = "\\u2029";
         }
         else
         {
