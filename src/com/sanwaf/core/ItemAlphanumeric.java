@@ -37,12 +37,16 @@ class ItemAlphanumeric extends Item
       }
       else
       {
-        if (start >= 0 || i == len - 1)
+        if (start >= 0)
         {
           points.add(new Point(start, i));
           start = -1;
         }
       }
+    }
+    if (start >= 0)
+    {
+      points.add(new Point(start, len));
     }
     return points;
   }

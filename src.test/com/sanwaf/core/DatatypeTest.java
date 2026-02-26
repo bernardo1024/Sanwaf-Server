@@ -160,6 +160,44 @@ public class DatatypeTest
   }
 
   @Test
+  public void testAlphanumericGetErrorPointsAllValid()
+  {
+    ItemAlphanumeric p = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
+    List<Point> list = p.getErrorPoints(shield, "abcde");
+    assertEquals(0, list.size());
+  }
+
+  @Test
+  public void testAlphanumericGetErrorPointsMiddleError()
+  {
+    ItemAlphanumeric p = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
+    List<Point> list = p.getErrorPoints(shield, "abc??de");
+    assertEquals(1, list.size());
+    assertEquals(3, list.get(0).start);
+    assertEquals(5, list.get(0).end);
+  }
+
+  @Test
+  public void testAlphanumericGetErrorPointsTrailingError()
+  {
+    ItemAlphanumeric p = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
+    List<Point> list = p.getErrorPoints(shield, "abc??");
+    assertEquals(1, list.size());
+    assertEquals(3, list.get(0).start);
+    assertEquals(5, list.get(0).end);
+  }
+
+  @Test
+  public void testAlphanumericGetErrorPointsAllInvalid()
+  {
+    ItemAlphanumeric p = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
+    List<Point> list = p.getErrorPoints(shield, "??");
+    assertEquals(1, list.size());
+    assertEquals(0, list.get(0).start);
+    assertEquals(2, list.get(0).end);
+  }
+
+  @Test
   public void testAlphanumericAndMoreType()
   {
     MockHttpServletRequest req = new MockHttpServletRequest();
