@@ -30,28 +30,28 @@ public class AttributesTest
   public void testAttributesAllOn()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    setSanwafAtts(true);
+    setSanwafAttributes(true);
     request.addParameter("regexParmNoModeWithRegexDetectMode", "AAAAAAA");
     request.addParameter("regexParmNoModeWithRegexDetectMode", "BBBBBBB");
     request.addParameter("numericdelimited", "aaaaaaaaaa");
     request.addParameter("numericdelimited", "bbbbbbbbbb");
     boolean threat = sanwaf.isThreatDetected(request);
     assertFalse(threat);
-    resetSanwafAtts();
+    resetSanwafAttributes();
   }
 
   @Test
   public void testAttributesAllOff()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    setSanwafAtts(false);
+    setSanwafAttributes(false);
     request.addParameter("regexParmNoModeWithRegexDetectMode", "AAAAAAA");
     request.addParameter("regexParmNoModeWithRegexDetectMode", "BBBBBBB");
     request.addParameter("numericdelimited", "aaaaaaaaaa");
     request.addParameter("numericdelimited", "bbbbbbbbbb");
     boolean threat = sanwaf.isThreatDetected(request);
     assertFalse(threat);
-    resetSanwafAtts();
+    resetSanwafAttributes();
   }
 
   static boolean onErrorAddParmDetections = false;
@@ -62,7 +62,7 @@ public class AttributesTest
   static boolean onErrorLogParmErrors = false;
   static boolean onErrorLogParmErrorsVerbose = false;
 
-  private void setSanwafAtts(boolean b)
+  private void setSanwafAttributes(boolean b)
   {
     Sanwaf.SanwafConfig cfg = sanwaf.config;
     onErrorAddParmDetections = cfg.onErrorAddParmDetections;
@@ -82,7 +82,7 @@ public class AttributesTest
         .withOnErrorLogParmErrorsVerbose(b);
   }
 
-  private static void resetSanwafAtts()
+  private static void resetSanwafAttributes()
   {
     Sanwaf.SanwafConfig cfg = sanwaf.config;
     sanwaf.config = cfg
