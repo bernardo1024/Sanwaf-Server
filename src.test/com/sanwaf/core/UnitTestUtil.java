@@ -38,7 +38,7 @@ public class UnitTestUtil
     {
       System.out.println(title + "\t#pass:\t" + result.pass + "\t#fail:\t" + result.fail + "\tin:\t" + result.getTestTime() + "\tper:\t" + result.getAvgTime());
 
-      if (result.errors != null && result.errors.length() > 0)
+      if (result.errors.length() > 0)
       {
         System.out.println(title + " ERRORS:\n" + result.errors);
       }
