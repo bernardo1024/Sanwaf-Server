@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -929,6 +930,26 @@ public class DatatypeTest
     assertNotNull(item.getErrorPoints(shield, "test"));
     assertTrue(item.getErrorPoints(shield, "test").isEmpty());
     assertEquals(Types.STRICT, item.getType());
+  }
+
+  @Test
+  public void testReplaceStringMultipleOccurrences()
+  {
+    assertEquals("a b ", ItemAlphanumericAndMore.replaceString("a\\sb\\s", "\\s", " "));
+    assertEquals("a\tb\t", ItemAlphanumericAndMore.replaceString("a\\tb\\t", "\\t", "\t"));
+  }
+
+  @Test
+  public void testGetMoreCharArrayMultipleSpecialChars()
+  {
+    char[] result = ItemAlphanumericAndMore.getMoreCharArray("-\\s.\\s");
+    assertArrayEquals(new char[]{'-', ' ', '.', ' '}, result);
+  }
+
+  @Test
+  public void testHandleSpecialCharsMultipleSpaces()
+  {
+    assertEquals("-<space>.<space>", ItemAlphanumericAndMore.handleSpecialChars(new char[]{'-', ' ', '.', ' '}));
   }
 
 }

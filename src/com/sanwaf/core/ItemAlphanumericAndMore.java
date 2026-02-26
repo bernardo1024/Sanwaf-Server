@@ -155,12 +155,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
 
   static String replaceString(String s, String from, String to)
   {
-    int i = s.indexOf(from);
-    if (i >= 0)
-    {
-      s = s.substring(0, i) + to + s.substring(i + from.length());
-    }
-    return s;
+    return s.replace(from, to);
   }
 
   @Override
