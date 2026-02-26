@@ -121,7 +121,7 @@ final class Shield
     boolean strictError = meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta);
     if (strictError)
     {
-      Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
+      JsonFormatter.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
       if (!doAllBlocks)
       {
         return true;

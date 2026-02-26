@@ -54,7 +54,7 @@ public class ErrorMessagesTest
   {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "s", "error msg1", null, Integer.MAX_VALUE, 0);
     Item item = new ItemString(id);
-    String result = item.modifyInvalidLengthErrorMsg("between {0} and {1} chars", 5, 100);
+    String result = JsonFormatter.modifyInvalidLengthErrorMsg("between {0} and {1} chars", 5, 100);
     assertEquals("between 5 and 100 chars", result);
   }
 
@@ -64,7 +64,7 @@ public class ErrorMessagesTest
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "k{foo,bar,far}", "", null, Integer.MAX_VALUE, 0);
     ItemConstant p = new ItemConstant(id);
-    String s = p.getErrorMessage(req, shield);
+    String s = JsonFormatter.getErrorMessage(p, req, shield);
     assertTrue(s.contains("foo"));
   }
 }
