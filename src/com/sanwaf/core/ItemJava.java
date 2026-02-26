@@ -94,7 +94,7 @@ final class ItemJava extends Item
     try
     {
       Object o = method.invoke(null, v, req);
-      return Boolean.parseBoolean(String.valueOf(o));
+      return Boolean.TRUE.equals(o);
     }
     catch (NullPointerException | IllegalAccessException | InvocationTargetException e)
     {
