@@ -362,7 +362,7 @@ class Metadata
   {
     if (key == null)
     {
-      return "";
+      return null;
     }
     List<String> list = index.get(charString(key.charAt(0)));
     if (list == null)
