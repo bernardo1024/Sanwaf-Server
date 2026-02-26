@@ -511,7 +511,10 @@ final class Shield
     }
     else if (a.length != 1)
     {
-      logger.error("invalid pattern definition (unable to load specified file):" + xml);
+      if (logger.isErrorEnabled())
+      {
+        logger.error("invalid pattern definition (unable to load specified file):" + xml);
+      }
       return null;
     }
 
@@ -529,13 +532,20 @@ final class Shield
     }
     catch (IOException e)
     {
-      logger.error("invalid pattern definition (unable to load specified file):" + filename);
+      if (logger.isErrorEnabled())
+      {
+        logger.error("invalid pattern definition (unable to load specified file):" + filename);
+      }
     }
     return null;
   }
 
   private void logStartup(boolean verbose)
   {
+    if (!logger.isInfoEnabled())
+    {
+      return;
+    }
     StringBuilder sb = new StringBuilder();
     sb.append("Loading Shield: ").append(name).append(" - Mode: ").append(mode);
     if (verbose)

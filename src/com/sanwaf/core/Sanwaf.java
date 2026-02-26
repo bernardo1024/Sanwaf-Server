@@ -457,7 +457,10 @@ public final class Sanwaf
     Shield sh = (shieldName != null) ? cfg.shieldMap.get(shieldName) : null;
     if (sh == null)
     {
-      logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
+      if (logger.isErrorEnabled())
+      {
+        logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
+      }
       return false;
     }
     return item.inError(req, sh, value, false, false);
@@ -722,8 +725,11 @@ public final class Sanwaf
     boolean enabled = Boolean.parseBoolean(settingsBlockXml.get(XML_ENABLED));
     boolean verbose = Boolean.parseBoolean(settingsBlockXml.get(XML_VERBOSE));
     String securedAppVersion = settingsBlockXml.get(XML_APP_VER);
-    logger.info("Starting Sanwaf:");
-    logger.info("\n\tenabled=" + enabled + "\n\t" + XML_VERBOSE + "=" + verbose + "\n\t" + XML_APP_VER + "=" + securedAppVersion);
+    if (logger.isInfoEnabled())
+    {
+      logger.info("Starting Sanwaf:");
+      logger.info("\n\tenabled=" + enabled + "\n\t" + XML_VERBOSE + "=" + verbose + "\n\t" + XML_APP_VER + "=" + securedAppVersion);
+    }
 
     String errorBlock = xml.get(XML_ERR_HANDLING);
     Xml errorBlockXml = new Xml(errorBlock);
@@ -737,8 +743,11 @@ public final class Sanwaf
 
     Map<String, String> globalErrorMessages = new HashMap<>(22); // 16 entries; (16/0.75)+1 avoids resize
     ItemFactory.setErrorMessages(globalErrorMessages, xml);
-    logger.info("\tAddTrackId=" + onErrorAddTrackId + "\n\tAddErrors=" + onErrorAddParmErrors + "\n\tLogErrors=" + onErrorLogParmErrors + "\n\tLogErrorsVerbose=" + onErrorLogParmErrorsVerbose
-        + "\n\tAddDetections=" + onErrorAddParmDetections + "\n\tLogDetects=" + onErrorLogParmDetections + "\n\tLogDetectsVerbose=" + onErrorLogParmDetectionsVerbose);
+    if (logger.isInfoEnabled())
+    {
+      logger.info("\tAddTrackId=" + onErrorAddTrackId + "\n\tAddErrors=" + onErrorAddParmErrors + "\n\tLogErrors=" + onErrorLogParmErrors + "\n\tLogErrorsVerbose=" + onErrorLogParmErrorsVerbose
+          + "\n\tAddDetections=" + onErrorAddParmDetections + "\n\tLogDetects=" + onErrorLogParmDetections + "\n\tLogDetectsVerbose=" + onErrorLogParmDetectionsVerbose);
+    }
 
     List<Shield> shields = new ArrayList<>();
     Map<String, Shield> shieldMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -755,7 +764,10 @@ public final class Sanwaf
         onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
         shields, shieldMap, globalErrorMessages);
 
-    logger.info("Started in: " + (System.currentTimeMillis() - start) + " ms.");
+    if (logger.isInfoEnabled())
+    {
+      logger.info("Started in: " + (System.currentTimeMillis() - start) + " ms.");
+    }
   }
 
 }
