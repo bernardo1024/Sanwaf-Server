@@ -62,11 +62,11 @@ public class ItemFactory
     int min = 0;
     if (!sMax.isEmpty())
     {
-      max = Integer.parseInt(sMax);
+      max = Shield.parseInt(sMax, Integer.MAX_VALUE);
     }
     if (!sMin.isEmpty())
     {
-      min = Integer.parseInt(sMin);
+      min = Shield.parseInt(sMin, 0);
     }
     if (max == -1)
     {
@@ -92,14 +92,14 @@ public class ItemFactory
     String sMaxVal = xml.get(XML_ITEM_MAX_VAL);
     if (!sMaxVal.isEmpty())
     {
-      item.maxValue = Double.parseDouble(sMaxVal);
+      item.maxValue = Shield.parseDouble(sMaxVal, Integer.MAX_VALUE);
     }
 
     item.minValue = Integer.MIN_VALUE;
     String sMinVal = xml.get(XML_ITEM_MIN_VAL);
     if (!sMinVal.isEmpty())
     {
-      item.minValue = Double.parseDouble(sMinVal);
+      item.minValue = Shield.parseDouble(sMinVal, Integer.MIN_VALUE);
     }
 
     item.maskError = xml.get(XML_ITEM_MASK_ERROR);

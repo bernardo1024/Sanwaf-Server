@@ -614,6 +614,18 @@ final class Shield
     }
   }
 
+  static double parseDouble(String s, double d)
+  {
+    try
+    {
+      return Double.parseDouble(s);
+    }
+    catch (NumberFormatException nfe)
+    {
+      return d;
+    }
+  }
+
   static void appendEndpoints(MetadataEndpoints endpoints, StringBuilder sb, String label)
   {
     appendItemToSb(sb, label, endpoints.endpointParameters);
