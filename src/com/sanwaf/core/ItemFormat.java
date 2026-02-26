@@ -221,12 +221,7 @@ final class ItemFormat extends Item
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg)
   {
-    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
-    if (i >= 0)
-    {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
-    }
-    return errorMsg;
+    return replacePlaceholder(errorMsg, Metadata.jsonEncode(formatString));
   }
 
   private void setFormat(String value)

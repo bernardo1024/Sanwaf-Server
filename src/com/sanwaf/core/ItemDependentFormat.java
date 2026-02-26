@@ -87,19 +87,14 @@ final class ItemDependentFormat extends Item
     {
       return "";
     }
-    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
-    if (i >= 0)
+    String elementValue = req.getParameter(dependentElementName);
+    ItemFormat format = getFormatForValue(elementValue);
+    String formatString = " --- ";
+    if (format != null)
     {
-      String elementValue = req.getParameter(dependentElementName);
-      ItemFormat format = getFormatForValue(elementValue);
-      String formatString = " --- ";
-      if (format != null)
-      {
-        formatString = format.formatString;
-      }
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
+      formatString = format.formatString;
     }
-    return errorMsg;
+    return replacePlaceholder(errorMsg, Metadata.jsonEncode(formatString));
   }
 
   private void parseFormats(ItemData id, String[] valueFormatPairs)

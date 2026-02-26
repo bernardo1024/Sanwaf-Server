@@ -131,12 +131,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg)
   {
-    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
-    if (i >= 0)
-    {
-      return errorMsg.substring(0, i) + moreCharsDisplay + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
-    }
-    return errorMsg;
+    return replacePlaceholder(errorMsg, moreCharsDisplay);
   }
 
   static String handleSpecialChars(char[] chars)

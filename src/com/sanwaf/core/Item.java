@@ -89,6 +89,16 @@ abstract class Item
     return errorMsg;
   }
 
+  static String replacePlaceholder(String errorMsg, String replacement)
+  {
+    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
+    if (i >= 0)
+    {
+      return errorMsg.substring(0, i) + replacement + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
+    }
+    return errorMsg;
+  }
+
   private void setUri(String uriString)
   {
     if (uriString != null && !uriString.isEmpty())

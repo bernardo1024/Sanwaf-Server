@@ -64,12 +64,7 @@ final class ItemNumericDelimited extends ItemNumeric
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg)
   {
-    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
-    if (i >= 0)
-    {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(delimiter) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
-    }
-    return errorMsg;
+    return replacePlaceholder(errorMsg, Metadata.jsonEncode(delimiter));
   }
 
   @Override
