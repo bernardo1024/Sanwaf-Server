@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -77,16 +78,13 @@ abstract class Item
     {
       return;
     }
-    List<String> list = (List<String>) req.getAttribute(att);
-    if (list == null)
+    Set<String> set = (Set<String>) req.getAttribute(att);
+    if (set == null)
     {
-      list = new ArrayList<>();
-      req.setAttribute(att, list);
+      set = new LinkedHashSet<>();
+      req.setAttribute(att, set);
     }
-    if (!list.contains(value))
-    {
-      list.add(value);
-    }
+    set.add(value);
   }
 
   // implemented by Types

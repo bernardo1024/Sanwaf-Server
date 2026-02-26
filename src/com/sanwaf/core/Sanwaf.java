@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -661,9 +662,9 @@ public final class Sanwaf
   @SuppressWarnings("unchecked")
   private static String formatAttributeList(Object o)
   {
-    if (o instanceof List)
+    if (o instanceof Collection)
     {
-      List<String> list = (List<String>) o;
+      Collection<String> list = (Collection<String>) o;
       if (list.isEmpty())
       {
         return null;
