@@ -1,7 +1,7 @@
 package com.sanwaf.core;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
@@ -11,18 +11,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class RelatedErrMsgThreadSafetyTest
 {
   static Sanwaf sanwaf;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass()
   {
     try
@@ -79,7 +79,7 @@ public class RelatedErrMsgThreadSafetyTest
       });
     }
     startLatch.countDown();
-    assertTrue("Timed out waiting for threads", doneLatch.await(10, TimeUnit.SECONDS));
+    assertTrue(doneLatch.await(10, TimeUnit.SECONDS), "Timed out waiting for threads");
     executor.shutdown();
     assertEquals(0, failures.get());
   }

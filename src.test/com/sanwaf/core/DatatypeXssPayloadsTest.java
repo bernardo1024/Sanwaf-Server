@@ -1,11 +1,11 @@
 package com.sanwaf.core;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class DatatypeXssPayloadsTest
 {
@@ -16,7 +16,7 @@ public class DatatypeXssPayloadsTest
   static final boolean doHex = true;
   static final boolean logErrors = true;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass()
   {
     try

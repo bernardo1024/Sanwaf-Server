@@ -1,29 +1,30 @@
 package com.sanwaf.core;
 
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.MethodOrderer;
 
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class XmlTest
 {
-  @Test(expected = IOException.class)
-  public void TestXmlInit() throws IOException
+  @Test
+  void TestXmlInit()
   {
-    new Xml((URL) null);
+    assertThrows(IOException.class, () -> new Xml((URL) null));
   }
 
-  @Test(expected = IOException.class)
-  public void TestXmlNullUrl() throws IOException
+  @Test
+  void TestXmlNullUrl()
   {
     //noinspection SpellCheckingInspection
-    new Xml(new URL("lakdfsj"));
+    assertThrows(IOException.class, () -> new Xml(new URL("lakdfsj")));
   }
 
   @Test
