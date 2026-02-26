@@ -865,6 +865,22 @@ public class DatatypeTest
 
     assertFalse(shield.threat(req, shield.parameters, "parmFormatWithDate3", String.valueOf(dd)));
     assertFalse(shield.threat(req, shield.parameters, "parmFormatWithDate4", String.valueOf(mm)));
+
+    // literal min, date max: #[1-dd]
+    assertFalse(shield.threat(req, shield.parameters, "parmFormatDateLiteralMin", String.valueOf(dd)));
+    assertTrue(shield.threat(req, shield.parameters, "parmFormatDateLiteralMin", "0"));
+
+    // date min, literal max: #[dd-31]
+    assertFalse(shield.threat(req, shield.parameters, "parmFormatDateLiteralMax", "31"));
+    assertTrue(shield.threat(req, shield.parameters, "parmFormatDateLiteralMax", "32"));
+
+    // mixed date types on each side: #[dd-yyyy]
+    assertFalse(shield.threat(req, shield.parameters, "parmFormatDateMixedTypes", String.valueOf(yyyy)));
+    assertTrue(shield.threat(req, shield.parameters, "parmFormatDateMixedTypes", String.valueOf(yyyy + 1)));
+
+    // negative resolved min: #[yy(-200)-yy]
+    assertFalse(shield.threat(req, shield.parameters, "parmFormatDateNegMin", String.valueOf(yy)));
+    assertTrue(shield.threat(req, shield.parameters, "parmFormatDateNegMin", String.valueOf(yy + 1)));
   }
 
   @Test

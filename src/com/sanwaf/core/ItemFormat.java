@@ -106,103 +106,6 @@ final class ItemFormat extends Item
     return false;
   }
 
-  private static String resolveDateVariables(String format, Calendar cal)
-  {
-    String newMdy = "";
-    String parsedValue = format;
-    String[] dateOrder = { "dd", "mm", "yyyy", "yy" };
-
-    for (String s : dateOrder)
-    {
-      int last;
-      while (true)
-      {
-        int startMdyReplacePos;
-        int endMdyReplacePos;
-        last = parsedValue.indexOf(s);
-        if (last < 0)
-        {
-          break;
-        }
-        startMdyReplacePos = last;
-        endMdyReplacePos = last + s.length();
-
-        switch (s)
-        {
-        case "yy":
-        {
-          int year = cal.get(Calendar.YEAR);
-          newMdy = String.valueOf(year).substring(2);
-          last += 2;
-          newMdy = adjustDate(parsedValue, last, newMdy);
-          break;
-        }
-        case "yyyy":
-        {
-          int year = cal.get(Calendar.YEAR);
-          newMdy = String.valueOf(year);
-          last += 4;
-          newMdy = adjustDate(parsedValue, last, newMdy);
-          break;
-        }
-        case "mm":
-          int month = cal.get(Calendar.MONTH);
-          newMdy = String.valueOf(month + 1);
-          last += 2;
-          newMdy = adjustDate(parsedValue, last, newMdy);
-          if (Integer.parseInt(newMdy) > 12)
-          {
-            newMdy = "12";
-          }
-          break;
-        case "dd":
-          int day = cal.get(Calendar.DAY_OF_MONTH);
-          newMdy = String.valueOf(day);
-          last += 2;
-          newMdy = adjustDate(parsedValue, last, newMdy);
-          if (Integer.parseInt(newMdy) > 31)
-          {
-            newMdy = "31";
-          }
-          break;
-        }
-
-        if (parsedValue.charAt(last) == '(')
-        {
-          int endOfNum = parsedValue.indexOf(')', last);
-          parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endOfNum + 1);
-        }
-        else
-        {
-          parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endMdyReplacePos);
-        }
-      }
-    }
-    return parsedValue;
-  }
-
-  private static String adjustDate(String parsedValue, int last, String newMdy)
-  {
-    int newValue = Integer.parseInt(newMdy);
-    if (parsedValue.charAt(last) == '(')
-    {
-      int endOfNum = parsedValue.indexOf(')', last);
-      String num = parsedValue.substring(last + 2, endOfNum);
-      int parsedNum = Integer.parseInt(num);
-      char operator = parsedValue.charAt(last + 1);
-      switch (operator)
-      {
-      case '+':
-        newValue += parsedNum;
-        break;
-      case '-':
-        newValue -= parsedNum;
-        break;
-      }
-    }
-    return String.valueOf(newValue);
-  }
-
   private static String escapeChars(String s)
   {
     char[] src = s.toCharArray();
@@ -474,6 +377,81 @@ final class ItemFormat extends Item
     return s.contains("dd") || s.contains("mm") || s.contains("yy");
   }
 
+  private static int numDigits(int n)
+  {
+    if (n < 0) n = -n;
+    if (n < 10) return 1;
+    if (n < 100) return 2;
+    if (n < 1000) return 3;
+    if (n < 10000) return 4;
+    return String.valueOf(n).length();
+  }
+
+  private static int findRangeSep(String inner)
+  {
+    int depth = 0;
+    for (int i = 0; i < inner.length(); i++)
+    {
+      char c = inner.charAt(i);
+      if (c == '(') depth++;
+      else if (c == ')') depth--;
+      else if (c == '-' && depth == 0) return i;
+    }
+    return -1;
+  }
+
+  private static DateVal parseDateVal(String s)
+  {
+    int kind;
+    int prefixLen;
+    if (s.startsWith("yyyy"))
+    {
+      kind = DateVal.YEAR4;
+      prefixLen = 4;
+    }
+    else if (s.startsWith("yy"))
+    {
+      kind = DateVal.YEAR2;
+      prefixLen = 2;
+    }
+    else if (s.startsWith("mm"))
+    {
+      kind = DateVal.MONTH;
+      prefixLen = 2;
+    }
+    else if (s.startsWith("dd"))
+    {
+      kind = DateVal.DAY;
+      prefixLen = 2;
+    }
+    else
+    {
+      try
+      {
+        return new DateVal(DateVal.LITERAL, Integer.parseInt(s));
+      }
+      catch (NumberFormatException e)
+      {
+        return null;
+      }
+    }
+    int adjust = 0;
+    if (prefixLen < s.length() && s.charAt(prefixLen) == '(')
+    {
+      int close = s.indexOf(')', prefixLen);
+      if (close < 0) return null;
+      try
+      {
+        adjust = Integer.parseInt(s.substring(prefixLen + 1, close));
+      }
+      catch (NumberFormatException e)
+      {
+        return null;
+      }
+    }
+    return new DateVal(kind, adjust);
+  }
+
   @Override
   String getProperties()
   {
@@ -596,54 +574,70 @@ final class ItemFormat extends Item
     }
   }
 
+  private static final class DateVal
+  {
+    static final int LITERAL = 0, DAY = 1, MONTH = 2, YEAR2 = 3, YEAR4 = 4;
+    final int kind;
+    final int adjust;
+
+    DateVal(int kind, int adjust)
+    {
+      this.kind = kind;
+      this.adjust = adjust;
+    }
+
+    int resolve(Calendar cal)
+    {
+      switch (kind)
+      {
+      case DAY:
+      {
+        int v = cal.get(Calendar.DAY_OF_MONTH) + adjust;
+        return v > 31 ? 31 : v;
+      }
+      case MONTH:
+      {
+        int v = cal.get(Calendar.MONTH) + 1 + adjust;
+        return v > 12 ? 12 : v;
+      }
+      case YEAR2:
+        return cal.get(Calendar.YEAR) % 100 + adjust;
+      case YEAR4:
+        return cal.get(Calendar.YEAR) + adjust;
+      default:
+        return adjust;
+      }
+    }
+  }
+
   private static final class DateRangeBlock extends FmtBlock
   {
-    final String rawBlock;
+    final DateVal min;
+    final DateVal max;
 
     DateRangeBlock(String rawBlock)
     {
-      this.rawBlock = rawBlock;
+      String inner = rawBlock.substring(2, rawBlock.length() - 1);
+      int sep = findRangeSep(inner);
+      if (sep < 0)
+      {
+        min = null;
+        max = null;
+        return;
+      }
+      min = parseDateVal(inner.substring(0, sep));
+      max = parseDateVal(inner.substring(sep + 1));
     }
 
     int match(String value, int pos, Calendar cal)
     {
-      String resolved = (cal != null) ? resolveDateVariables(rawBlock, cal) : rawBlock;
-      String inner = resolved.substring(2, resolved.length() - 1);
-
-      if (inner.contains(","))
-      {
-        char ch = value.charAt(pos);
-        for (String s : inner.split(","))
-        {
-          if (s.length() == 1 && s.charAt(0) == ch)
-          {
-            return 0;
-          }
-        }
-        return -1;
-      }
-
-      String[] parts = inner.split("-");
-      if (parts.length != 2)
+      if (min == null || max == null || cal == null)
       {
         return ACCEPT_VALUE;
       }
-
-      int minNum;
-      int maxNum;
-      int maxLenLocal;
-      try
-      {
-        minNum = Integer.parseInt(parts[0]);
-        maxNum = Integer.parseInt(parts[1]);
-        maxLenLocal = String.valueOf(maxNum).length();
-      }
-      catch (NumberFormatException e)
-      {
-        return ACCEPT_VALUE;
-      }
-
-      return matchRange(value, pos, minNum, maxNum, maxLenLocal);
+      int minVal = min.resolve(cal);
+      int maxVal = max.resolve(cal);
+      return matchRange(value, pos, minVal, maxVal, numDigits(maxVal));
     }
   }
 

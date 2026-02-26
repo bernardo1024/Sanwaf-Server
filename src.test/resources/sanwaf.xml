@@ -1636,6 +1636,23 @@
                         </item>
 
                         <item>
+                            <name>parmFormatDateLiteralMin</name>
+                            <type>f{#[1-dd]}</type>
+                        </item>
+                        <item>
+                            <name>parmFormatDateLiteralMax</name>
+                            <type>f{#[dd-31]}</type>
+                        </item>
+                        <item>
+                            <name>parmFormatDateMixedTypes</name>
+                            <type>f{#[dd-yyyy]}</type>
+                        </item>
+                        <item>
+                            <name>parmFormatDateNegMin</name>
+                            <type>f{#[yy(-200)-yy]}</type>
+                        </item>
+
+                        <item>
                             <name>parmFormatIP</name>
                             <type>f{#[0-255].#[0-255].#[0-255].#[0-255]}</type>
                         </item>
