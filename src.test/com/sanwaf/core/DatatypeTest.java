@@ -319,6 +319,15 @@ public class DatatypeTest
   }
 
   @Test
+  public void testRegexTypeNonExistentPattern()
+  {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "r{nonExistentPattern}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemRegex p = new ItemRegex(id);
+    assertFalse(p.inError(req, shield, "anyvalue", false, false));
+  }
+
+  @Test
   public void testConstantType()
   {
     MockHttpServletRequest req = new MockHttpServletRequest();

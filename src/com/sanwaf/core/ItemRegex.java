@@ -87,6 +87,14 @@ final class ItemRegex extends Item
         rule = shield.customRulePatternsDetect.get(patternName);
       }
     }
+    if (rule == null)
+    {
+      if (logger != null && logger.isWarnEnabled())
+      {
+        logger.warn("Pattern not found: " + patternName);
+      }
+      return false;
+    }
     if (rule.mode == Modes.DISABLED)
     {
       return false;
