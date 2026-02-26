@@ -5,7 +5,7 @@ import jakarta.servlet.ServletRequest;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemStrict extends Item
+class ItemStrict extends Item
 {
 
   ItemStrict(String s)
