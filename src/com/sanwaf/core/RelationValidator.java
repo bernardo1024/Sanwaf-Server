@@ -63,13 +63,35 @@ final class RelationValidator
         skipIteration = true;
       }
     }
-    String err = null;
     if (andTrueCount == andTotalCount && orFoundTrue && value.isEmpty())
     {
-      // TODO: add better message
-      err = " - Invalid relationship detected";
+      return buildRequiredMessage(related, meta);
     }
-    return err;
+    return null;
+  }
+
+  private static String buildRequiredMessage(String related, Metadata meta)
+  {
+    String raw = related;
+    int paren = raw.indexOf('(');
+    if (paren >= 0)
+    {
+      int end = raw.indexOf(')', paren);
+      if (end > paren)
+      {
+        raw = raw.substring(paren + 1, end);
+      }
+    }
+    int colon = raw.indexOf(':');
+    String parentName = (colon > 0) ? raw.substring(0, colon).trim() : raw.trim();
+
+    Item parentItem = meta.items.get(parentName);
+    String parentDisplay = (parentItem != null) ? parentItem.display : parentName;
+    if (related.contains("&&"))
+    {
+      return " - required based on related field conditions";
+    }
+    return " - required when \"" + parentDisplay + "\" has a value";
   }
 
   private static List<String> parseOrBlocksFromAndBlocks(List<String> andBlocks)
