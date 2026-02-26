@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,11 +50,11 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
-    List<Point> points = new ArrayList<>();
     if (value == null || !maskError.isEmpty())
     {
-      return points;
+      return Collections.emptyList();
     }
+    List<Point> points = new ArrayList<>();
     int start = -1;
     int len = value.length();
     for (int i = 0; i < len; i++)

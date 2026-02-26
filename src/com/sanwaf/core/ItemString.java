@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -25,11 +26,11 @@ final class ItemString extends Item
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
-    List<Point> points = new ArrayList<>();
     if (shield == null || !maskError.isEmpty())
     {
-      return points;
+      return Collections.emptyList();
     }
+    List<Point> points = new ArrayList<>();
     for (Map.Entry<String, Rule> r : shield.rulePatterns.entrySet())
     {
       if (r.getValue().pattern == null)

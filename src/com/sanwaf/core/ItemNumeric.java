@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class ItemNumeric extends Item
@@ -20,11 +21,11 @@ class ItemNumeric extends Item
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
-    List<Point> points = new ArrayList<>();
     if (!maskError.isEmpty())
     {
-      return points;
+      return Collections.emptyList();
     }
+    List<Point> points = new ArrayList<>();
     char[] chars = value.toCharArray();
     final int len = chars.length;
     int errStart = -1;

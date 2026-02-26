@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class ItemOpen extends Item
@@ -24,7 +25,7 @@ class ItemOpen extends Item
   {
     if (!maskError.isEmpty())
     {
-      return new ArrayList<>();
+      return Collections.emptyList();
     }
     List<Point> points = new ArrayList<>();
     points.add(new Point(0, value.length()));

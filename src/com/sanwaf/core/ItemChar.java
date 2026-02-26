@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 final class ItemChar extends Item
@@ -32,11 +33,11 @@ final class ItemChar extends Item
   @Override
   List<Point> getErrorPoints(Shield shield, String value)
   {
-    List<Point> points = new ArrayList<>();
     if (!maskError.isEmpty())
     {
-      return points;
+      return Collections.emptyList();
     }
+    List<Point> points = new ArrayList<>();
     points.add(new Point(0, value.length()));
     return points;
   }
