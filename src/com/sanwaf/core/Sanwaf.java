@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.LinkedHashMap;
 import java.util.function.Function;
 
 public final class Sanwaf
@@ -28,11 +28,11 @@ public final class Sanwaf
   static final String ATT_TRANS_ID = "~sanwaf-id";
 
   private static final int MAX_ITEM_CACHE_SIZE = 64;
-  private static final ConcurrentHashMap<String, Item> itemCache = new ConcurrentHashMap<>();
+  private static final Map<String, Item> itemCache = createLruCache(MAX_ITEM_CACHE_SIZE);
 
   private final String xmlFilename;
   final Logger logger;
-  private final ConcurrentHashMap<String, Item> instanceItemCache = new ConcurrentHashMap<>();
+  private final Map<String, Item> instanceItemCache = createLruCache(MAX_ITEM_CACHE_SIZE);
 
   volatile SanwafConfig config;
 
@@ -682,13 +682,22 @@ public final class Sanwaf
     return config.shieldMap.get(name);
   }
 
-  private static Item cachedParseItem(ConcurrentHashMap<String, Item> cache, String xml,
+  private static <K, V> Map<K, V> createLruCache(int maxSize)
+  {
+    return Collections.synchronizedMap(
+        new LinkedHashMap<K, V>(maxSize, 0.75f, true)
+        {
+          @Override
+          protected boolean removeEldestEntry(Map.Entry<K, V> eldest)
+          {
+            return size() > maxSize;
+          }
+        });
+  }
+
+  private static Item cachedParseItem(Map<String, Item> cache, String xml,
       Function<String, Item> parser)
   {
-    if (cache.size() >= MAX_ITEM_CACHE_SIZE)
-    {
-      cache.clear();
-    }
     return cache.computeIfAbsent(xml, parser);
   }
 

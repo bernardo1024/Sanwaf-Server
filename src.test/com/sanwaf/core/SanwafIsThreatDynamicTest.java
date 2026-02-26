@@ -253,5 +253,17 @@ public class SanwafIsThreatDynamicTest
     boolean result = sanwaf.isThreat("<script>alert(1)</script>", "INVALID", request, "<item><name>string</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertFalse(result);
   }
+
+  @Test
+  public void testCacheEvictionBeyondMaxSize()
+  {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    for (int i = 0; i < 100; i++)
+    {
+      String xml = "<item><name>n" + i + "</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>";
+      boolean result = sanwaf.isThreat("12345", "XSS", request, xml);
+      assertFalse(result);
+    }
+  }
 }
 
