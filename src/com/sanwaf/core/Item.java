@@ -63,12 +63,32 @@ abstract class Item
 
   static void handleStrictError(String value, ServletRequest req, Logger logger, boolean log)
   {
-    ItemStrict item = new ItemStrict(value);
+    String json = formatStrictErrorJson(value);
     if (log && logger.isErrorEnabled())
     {
-      logger.error(item.toJson(item.msg, Modes.BLOCK, null, true, null));
+      logger.error(json);
     }
-    appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true, null), req);
+    appendAttribute(Sanwaf.ATT_LOG_ERROR, json, req);
+  }
+
+  static String formatStrictErrorJson(String value)
+  {
+    StringBuilder sb = new StringBuilder(256);
+    sb.append("{\"item\":{\"name\":\"\"");
+    sb.append(",\"display\":\"\"");
+    sb.append(",\"mode\":\"BLOCK\"");
+    sb.append(",\"action\":\"BLOCK\"");
+    sb.append(",\"type\":\"STRICT\"");
+    if (value != null && !value.isEmpty())
+    {
+      sb.append(",\"value\":\"").append(Metadata.jsonEncode(value.length() < 100 ? value : (value.substring(0, 100) + "..."))).append("\"");
+    }
+    else
+    {
+      sb.append(",\"value\":\"").append(value).append("\"");
+    }
+    sb.append("}}");
+    return sb.toString();
   }
 
   @SuppressWarnings("unchecked")
