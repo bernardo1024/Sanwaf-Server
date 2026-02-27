@@ -6,6 +6,7 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.CommandLineOptions;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
@@ -35,6 +36,14 @@ public class SanwafJmhBenchmark
   // --- Test values ---
   private String cleanText;
   private String dirtyXss;
+  private String cleanTextShort;
+  private String cleanTextLong;
+  private String cleanUrl;
+  private String cleanHtmlEntities;
+  private String dirtyXssEncoded;
+  private String dirtyXssInText;
+  private String dirtyXssLong;
+  private String dirtyXssImg;
   private String cleanNumeric;
   private String dirtyNumeric;
   private String cleanInteger;
@@ -100,6 +109,34 @@ public class SanwafJmhBenchmark
     // String (instance API — runs all shield regex patterns)
     cleanText = "This is a perfectly normal string with no threats";
     dirtyXss = "<script>alert(1)</script>";
+
+    // Short clean string — regex still runs (regexMinLen=0 in config)
+    cleanTextShort = "ok";
+
+    // Long clean text — realistic textarea/comment body (~300 chars)
+    cleanTextLong = "Thank you for your prompt response regarding our order. "
+        + "We would like to confirm that the delivery address is 123 Main Street, "
+        + "Suite 400, Springfield IL 62701. Please ensure the package is marked fragile "
+        + "as it contains sensitive electronic equipment. Our reference number is PO-2024-78543. "
+        + "Contact us at support if there are any issues with fulfillment.";
+
+    // URL with special chars — no angle brackets
+    cleanUrl = "https://example.com/search?q=test+query&page=2&sort=desc";
+
+    // Contains < and > as text, not tags — tests regex backtracking
+    cleanHtmlEntities = "Price: $5 — 50% off &amp; free shipping! Use code <SAVE20>";
+
+    // URL-encoded XSS — tests encoded branch of regex
+    dirtyXssEncoded = "%3cscript%3ealert(1)%3c/script%3e";
+
+    // XSS buried at end of clean text — measures scan cost before match
+    dirtyXssInText = "Please review this document for issues <script>alert(1)</script>";
+
+    // Long clean text + XSS at end — worst case scan
+    dirtyXssLong = cleanTextLong + " <img src=x>";
+
+    // Different tag type, single tag
+    dirtyXssImg = "<img src=x onerror=alert(1)>";
 
     // Numeric
     cleanNumeric = "-123.456";
@@ -172,6 +209,30 @@ public class SanwafJmhBenchmark
   {
     return sanwaf.isThreat(dirtyXss);
   }
+
+  @Benchmark
+  public boolean stringCleanShort() { return sanwaf.isThreat(cleanTextShort); }
+
+  @Benchmark
+  public boolean stringCleanLong() { return sanwaf.isThreat(cleanTextLong); }
+
+  @Benchmark
+  public boolean stringCleanUrl() { return sanwaf.isThreat(cleanUrl); }
+
+  @Benchmark
+  public boolean stringCleanHtmlEntities() { return sanwaf.isThreat(cleanHtmlEntities); }
+
+  @Benchmark
+  public boolean stringDirtyXssEncoded() { return sanwaf.isThreat(dirtyXssEncoded); }
+
+  @Benchmark
+  public boolean stringDirtyXssInText() { return sanwaf.isThreat(dirtyXssInText); }
+
+  @Benchmark
+  public boolean stringDirtyXssLong() { return sanwaf.isThreat(dirtyXssLong); }
+
+  @Benchmark
+  public boolean stringDirtyXssImg() { return sanwaf.isThreat(dirtyXssImg); }
 
   // ==================== Numeric ====================
 
@@ -374,6 +435,10 @@ public class SanwafJmhBenchmark
       System.out.println();
       System.out.println("Benchmarks:");
       System.out.println("  stringClean/stringDirtyXss     Full pipeline (instance API)");
+      System.out.println("  stringCleanShort/Long/Url      Clean string variants");
+      System.out.println("  stringCleanHtmlEntities         Angle brackets, no tags");
+      System.out.println("  stringDirtyXssEncoded/InText   Encoded & embedded XSS");
+      System.out.println("  stringDirtyXssLong/Img         Long text & img-tag XSS");
       System.out.println("  numericClean/numericDirty       ItemNumeric");
       System.out.println("  integerClean/integerDirty       ItemNumeric (integer mode)");
       System.out.println("  numericDelimitedClean/Dirty     ItemNumericDelimited");
@@ -395,24 +460,27 @@ public class SanwafJmhBenchmark
       include = SanwafJmhBenchmark.class.getSimpleName() + "\\." + pattern;
     }
 
-    // Filter out empty args
+    // Filter out empty args (our flags were blanked above)
     int count = 0;
     for (String arg : args) { if (!arg.isEmpty()) count++; }
     String[] filtered = new String[count];
-    int i = 0;
-    for (String arg : args) { if (!arg.isEmpty()) filtered[i++] = arg; }
+    int fi = 0;
+    for (String arg : args) { if (!arg.isEmpty()) filtered[fi++] = arg; }
+
+    // Let JMH parse remaining args (forks, iterations, etc.)
+    CommandLineOptions cmdOpts = new CommandLineOptions(filtered);
 
     OptionsBuilder builder = new OptionsBuilder();
+    builder.parent(cmdOpts);
     builder.include(include);
     builder.addProfiler("gc");
 
     if (outputFile != null)
     {
-      builder.resultFormat(ResultFormatType.JSON)
-             .result(outputFile);
+      //noinspection JvmTaintAnalysis
+      builder.resultFormat(ResultFormatType.JSON).result(outputFile);
     }
 
-    // Let JMH parse remaining args (forks, iterations, etc.)
     Options opt = builder.build();
     Collection<RunResult> results = new Runner(opt).run();
 
