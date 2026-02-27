@@ -132,7 +132,7 @@ abstract class Item
     if (Modes.BLOCK == mode)
     {
       boolean doLog = logger != null && log && !doAllBlocks && (cfg == null || cfg.onErrorLogParmErrors) && logger.isErrorEnabled();
-      boolean doAttr = (cfg == null || cfg.onErrorAddParmErrors);
+      boolean doAttr = req != null && (cfg == null || cfg.onErrorAddParmErrors);
       if (doLog || doAttr)
       {
         String json = JsonFormatter.toJson(this, value, mode, req, true, relatedErrMsg);
@@ -151,7 +151,7 @@ abstract class Item
     {
       // DETECTS
       boolean doLog = logger != null && log && (cfg == null || cfg.onErrorLogParmDetections) && logger.isWarnEnabled();
-      boolean doAttr = (cfg == null || cfg.onErrorAddParmDetections);
+      boolean doAttr = req != null && (cfg == null || cfg.onErrorAddParmDetections);
       if (doLog || doAttr)
       {
         String json = JsonFormatter.toJson(this, value, mode, req, true, relatedErrMsg);
