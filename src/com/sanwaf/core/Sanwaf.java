@@ -28,21 +28,6 @@ public final class Sanwaf
   static final String ATT_LOG_DETECT = "~sanwaf-detects";
   static final String ATT_TRANS_ID = "~sanwaf-id";
 
-  private static final class LazyUUID
-  {
-    private String value;
-
-    @Override
-    public String toString()
-    {
-      if (value == null)
-      {
-        value = UUID.randomUUID().toString();
-      }
-      return value;
-    }
-  }
-
   private static final int MAX_ITEM_CACHE_SIZE = 64;
   private static final Map<String, Item> itemCache = createLruCache();
 
@@ -324,10 +309,6 @@ public final class Sanwaf
     {
       return false;
     }
-    if (cfg.onErrorAddTrackId)
-    {
-      req.setAttribute(ATT_TRANS_ID, new LazyUUID());
-    }
     boolean threat = false;
     Set<String> shieldSet = shieldList != null ? new HashSet<>(shieldList) : null;
     for (Shield sh : cfg.shields)
@@ -340,10 +321,6 @@ public final class Sanwaf
         }
         threat = true;
       }
-    }
-    if (!threat && cfg.onErrorAddTrackId)
-    {
-      req.removeAttribute(ATT_TRANS_ID);
     }
     return threat;
   }
@@ -412,17 +389,7 @@ public final class Sanwaf
    */
   public boolean isThreat(String value, String shieldName, ServletRequest req)
   {
-    SanwafConfig cfg = this.config;
-    if (req != null && cfg.onErrorAddTrackId)
-    {
-      req.setAttribute(ATT_TRANS_ID, new LazyUUID());
-    }
-    boolean result = checkValueForShieldThreats(value, shieldName, req);
-    if (!result && req != null && cfg.onErrorAddTrackId)
-    {
-      req.removeAttribute(ATT_TRANS_ID);
-    }
-    return result;
+    return checkValueForShieldThreats(value, shieldName, req);
   }
 
   /**
@@ -470,9 +437,9 @@ public final class Sanwaf
       return false;
     }
     boolean result = item.inError(req, sh, value, false, false);
-    if (result && req != null && cfg.onErrorAddTrackId)
+    if (result && req != null && cfg.onErrorAddTrackId && req.getAttribute(ATT_TRANS_ID) == null)
     {
-      req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
+      req.setAttribute(ATT_TRANS_ID, UUID.randomUUID().toString());
     }
     return result;
   }

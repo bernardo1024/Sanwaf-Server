@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 final class JsonFormatter
 {
@@ -74,7 +75,13 @@ final class JsonFormatter
     if (req != null)
     {
       HttpServletRequest hreq = (HttpServletRequest) req;
-      sb.append("\"transid\":\"").append(hreq.getAttribute(Sanwaf.ATT_TRANS_ID)).append("\"");
+      Object transId = hreq.getAttribute(Sanwaf.ATT_TRANS_ID);
+      if (transId == null)
+      {
+        transId = UUID.randomUUID().toString();
+        hreq.setAttribute(Sanwaf.ATT_TRANS_ID, transId);
+      }
+      sb.append("\"transid\":\"").append(transId).append("\"");
       sb.append(",\"ip\":\"").append(hreq.getRemoteAddr()).append("\"");
       sb.append(",\"referer\":\"").append(Metadata.jsonEncode(hreq.getHeader("referer"))).append("\",");
     }
