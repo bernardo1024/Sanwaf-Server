@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public final class Sanwaf
     final boolean onErrorLogParmErrorsVerbose;
     final boolean onErrorLogParmDetectionsVerbose;
     final String securedAppVersion;
-    final List<Shield> shields;
+    final Shield[] shields;
     final Map<String, Shield> shieldMap;
     final Map<String, String> globalErrorMessages;
 
@@ -73,7 +74,7 @@ public final class Sanwaf
       this.onErrorLogParmErrorsVerbose = onErrorLogParmErrorsVerbose;
       this.onErrorLogParmDetectionsVerbose = onErrorLogParmDetectionsVerbose;
       this.securedAppVersion = securedAppVersion;
-      this.shields = Collections.unmodifiableList(shields);
+      this.shields = shields.toArray(new Shield[0]);
       this.shieldMap = Collections.unmodifiableMap(shieldMap);
       this.globalErrorMessages = Collections.unmodifiableMap(globalErrorMessages);
     }
@@ -111,7 +112,7 @@ public final class Sanwaf
         this.onErrorLogParmErrorsVerbose = c.onErrorLogParmErrorsVerbose;
         this.onErrorLogParmDetectionsVerbose = c.onErrorLogParmDetectionsVerbose;
         this.securedAppVersion = c.securedAppVersion;
-        this.shields = c.shields;
+        this.shields = Arrays.asList(c.shields);
         this.shieldMap = c.shieldMap;
         this.globalErrorMessages = c.globalErrorMessages;
       }
@@ -308,8 +309,10 @@ public final class Sanwaf
       return false;
     }
     boolean threat = false;
-    for (Shield sh : cfg.shields)
+    Shield[] shields = cfg.shields;
+    for (int i = 0; i < shields.length; i++)
     {
+      Shield sh = shields[i];
       if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log))
       {
         if (!doAllBlocks)
@@ -485,8 +488,10 @@ public final class Sanwaf
   public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req, boolean log)
   {
     SanwafConfig cfg = this.config;
-    for (Shield sh : cfg.shields)
+    Shield[] shields = cfg.shields;
+    for (int i = 0; i < shields.length; i++)
     {
+      Shield sh = shields[i];
       if ((shieldName == null || shieldName.equals(sh.name)) && sh.threat(req, null, "", value, false, log))
       {
         return true;
@@ -522,8 +527,10 @@ public final class Sanwaf
   public String getAllowListedValue(String name, AllowListType type, HttpServletRequest req)
   {
     SanwafConfig cfg = this.config;
-    for (Shield sh : cfg.shields)
+    Shield[] shields = cfg.shields;
+    for (int i = 0; i < shields.length; i++)
     {
+      Shield sh = shields[i];
       String value = sh.getAllowListedValue(name, type, req);
       if (value != null)
       {
