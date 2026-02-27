@@ -371,7 +371,7 @@ class Metadata
       return null;
     }
 
-    StringBuilder sb = new StringBuilder(key.length());
+    StringBuilder sb = null;
     for (String s : list)
     {
       int last = 0;
@@ -388,7 +388,14 @@ class Metadata
         }
         int end = key.indexOf(s.charAt(1), start + 1);
         last = end + 1;
-        sb.setLength(0);
+        if (sb == null)
+        {
+          sb = new StringBuilder(key.length());
+        }
+        else
+        {
+          sb.setLength(0);
+        }
         sb.append(key, 0, start + 1);
         sb.append(key, end, key.length());
         key = sb.toString();
