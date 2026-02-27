@@ -214,6 +214,7 @@ class Metadata
         i--;
         continue;
       }
+      if (i + 1 == s.length()) return s;
       return s.substring(0, i + 1);
     }
     return s;
