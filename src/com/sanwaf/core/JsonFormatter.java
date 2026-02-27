@@ -42,7 +42,7 @@ final class JsonFormatter
       }
       else
       {
-        sb.append(Metadata.jsonEncode(value.substring(0, 100))).append("...");
+        sb.append(Metadata.jsonEncode(value, 100)).append("...");
       }
       sb.append("\"");
     }
@@ -131,7 +131,7 @@ final class JsonFormatter
       }
       else
       {
-        sb.append(Metadata.jsonEncode(mValue.substring(0, 100))).append("...");
+        sb.append(Metadata.jsonEncode(mValue, 100)).append("...");
       }
       sb.append("\"");
     }
@@ -142,18 +142,31 @@ final class JsonFormatter
 
     if (item.shield != null)
     {
-      String errMsg = getErrorMessage(item, req, item.shield);
-      if (item.required && value != null && value.isEmpty())
+      String baseErr = getErrorMessage(item, req, item.shield);
+      boolean needsRequired = item.required && value != null && value.isEmpty();
+      boolean needsLength = value != null && (value.length() < item.min || value.length() > item.max);
+      boolean needsRelated = relatedErrMsg != null && !relatedErrMsg.isEmpty();
+      String errMsg;
+      if (!needsRequired && !needsLength && !needsRelated)
       {
-        errMsg += getErrorMessage(item, req, item.shield, ItemFactory.XML_REQUIRED_MSG);
+        errMsg = baseErr;
       }
-      if (value != null && (value.length() < item.min || value.length() > item.max))
+      else
       {
-        errMsg += modifyInvalidLengthErrorMsg(getErrorMessage(item, req, item.shield, ItemFactory.XML_INVALID_LENGTH_MSG), item.min, item.max);
-      }
-      if (relatedErrMsg != null && !relatedErrMsg.isEmpty())
-      {
-        errMsg += relatedErrMsg;
+        StringBuilder errSb = new StringBuilder(baseErr);
+        if (needsRequired)
+        {
+          errSb.append(getErrorMessage(item, req, item.shield, ItemFactory.XML_REQUIRED_MSG));
+        }
+        if (needsLength)
+        {
+          errSb.append(modifyInvalidLengthErrorMsg(getErrorMessage(item, req, item.shield, ItemFactory.XML_INVALID_LENGTH_MSG), item.min, item.max));
+        }
+        if (needsRelated)
+        {
+          errSb.append(relatedErrMsg);
+        }
+        errMsg = errSb.toString();
       }
       sb.append(",\"error\":\"").append(Metadata.jsonEncode(errMsg)).append("\"");
     }
@@ -185,7 +198,24 @@ final class JsonFormatter
       sb.append("\"maxlength\":\"").append(item.max).append("\"");
       sb.append(",\"minlength\":\"").append(item.min).append("\"");
       sb.append(",\"msg\":\"").append(Metadata.jsonEncode(item.msg)).append("\"");
-      sb.append(",\"uri\":\"").append(Metadata.jsonEncode(String.valueOf(item.uriSet))).append("\"");
+      sb.append(",\"uri\":\"");
+      if (item.uriSet != null)
+      {
+        boolean first = true;
+        for (String u : item.uriSet)
+        {
+          if (!first)
+          {
+            sb.append(',');
+          }
+          else
+          {
+            first = false;
+          }
+          sb.append(Metadata.jsonEncode(u));
+        }
+      }
+      sb.append("\"");
       sb.append(",\"req\":\"").append(item.required).append("\"");
       sb.append(",\"maxvalue\":\"").append(item.maxValue).append("\"");
       sb.append(",\"minvalue\":\"").append(item.minValue).append("\"");

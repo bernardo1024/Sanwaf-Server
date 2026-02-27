@@ -239,9 +239,22 @@ class Metadata
     {
       return "";
     }
-    final int len = s.length();
+    return jsonEncodeRange(s, 0, s.length());
+  }
+
+  static String jsonEncode(String s, int maxLen)
+  {
+    if (s == null)
+    {
+      return "";
+    }
+    return jsonEncodeRange(s, 0, Math.min(s.length(), maxLen));
+  }
+
+  private static String jsonEncodeRange(String s, int from, int to)
+  {
     StringBuilder sb = null;
-    for (int i = 0; i < len; i++)
+    for (int i = from; i < to; i++)
     {
       char c = s.charAt(i);
       String esc;
@@ -278,8 +291,8 @@ class Metadata
       {
         if (sb == null)
         {
-          sb = new StringBuilder(len + 16);
-          sb.append(s, 0, i);
+          sb = new StringBuilder(to - from + 16);
+          sb.append(s, from, i);
         }
         sb.append(esc);
       }
@@ -288,7 +301,11 @@ class Metadata
         sb.append(c);
       }
     }
-    return sb != null ? sb.toString() : s;
+    if (sb != null)
+    {
+      return sb.toString();
+    }
+    return from == 0 && to == s.length() ? s : s.substring(from, to);
   }
 
   boolean isStrictError(ServletRequest req)
