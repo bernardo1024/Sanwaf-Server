@@ -16,6 +16,7 @@ final class ItemFormat extends Item
   private static final CharClassBlock UPPER = new CharClassBlock('A');
   private static final CharClassBlock LOWER = new CharClassBlock('a');
   private static final CharClassBlock LETTER = new CharClassBlock('c');
+  private static final ThreadLocal<Calendar> CACHED_CAL = ThreadLocal.withInitial(Calendar::getInstance);
   String formatString = null;
   private boolean hasDateVariables;
   final List<List<FmtBlock>> formatsBlocks = new ArrayList<>();
@@ -82,7 +83,8 @@ final class ItemFormat extends Item
     Calendar cal = null;
     if (hasDateVariables)
     {
-      cal = Calendar.getInstance();
+      cal = CACHED_CAL.get();
+      cal.setTimeInMillis(System.currentTimeMillis());
     }
 
     for (int i = 0; i < value.length(); i++)
