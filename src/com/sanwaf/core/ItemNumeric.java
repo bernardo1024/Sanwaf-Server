@@ -123,6 +123,19 @@ class ItemNumeric extends Item
     }
     try
     {
+      if (isInt)
+      {
+        int digitCount = value.length();
+        if (digitCount > 0 && value.charAt(0) == '-')
+        {
+          digitCount--;
+        }
+        if (digitCount <= 15)
+        {
+          long v = parseLongRange(value, 0, value.length());
+          return v > maxValue || v < minValue;
+        }
+      }
       double d = Double.parseDouble(value);
       if (d > maxValue || d < minValue)
       {
