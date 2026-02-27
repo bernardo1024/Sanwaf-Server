@@ -4,6 +4,7 @@ import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 final class ItemFormat extends Item
@@ -30,13 +31,11 @@ final class ItemFormat extends Item
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
-    List<Point> points = new ArrayList<>();
     if (value.isEmpty() || !maskError.isEmpty())
     {
-      return points;
+      return Collections.emptyList();
     }
-    points.add(new Point(0, value.length()));
-    return points;
+    return Collections.singletonList(new Point(0, value.length()));
   }
 
   @Override

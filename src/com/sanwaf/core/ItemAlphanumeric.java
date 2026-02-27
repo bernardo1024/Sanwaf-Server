@@ -22,7 +22,7 @@ class ItemAlphanumeric extends Item
     {
       return Collections.emptyList();
     }
-    List<Point> points = new ArrayList<>();
+    List<Point> points = null;
     int start = -1;
     int len = value.length();
     for (int i = 0; i < len; i++)
@@ -38,6 +38,10 @@ class ItemAlphanumeric extends Item
       {
         if (start >= 0)
         {
+          if (points == null)
+          {
+            points = new ArrayList<>();
+          }
           points.add(new Point(start, i));
           start = -1;
         }
@@ -45,9 +49,13 @@ class ItemAlphanumeric extends Item
     }
     if (start >= 0)
     {
+      if (points == null)
+      {
+        points = new ArrayList<>();
+      }
       points.add(new Point(start, len));
     }
-    return points;
+    return points != null ? points : Collections.emptyList();
   }
 
   @Override

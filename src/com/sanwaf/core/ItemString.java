@@ -29,7 +29,7 @@ final class ItemString extends Item
     {
       return Collections.emptyList();
     }
-    List<Point> points = new ArrayList<>();
+    List<Point> points = null;
     for (Map.Entry<String, Rule> r : shield.rulePatterns.entrySet())
     {
       if (r.getValue().pattern == null)
@@ -39,12 +39,14 @@ final class ItemString extends Item
       Matcher m = r.getValue().matcher(value);
       while (m.find())
       {
-        int start = m.start();
-        int end = m.end();
-        points.add(new Point(start, end));
+        if (points == null)
+        {
+          points = new ArrayList<>();
+        }
+        points.add(new Point(m.start(), m.end()));
       }
     }
-    return points;
+    return points != null ? points : Collections.emptyList();
   }
 
   @Override

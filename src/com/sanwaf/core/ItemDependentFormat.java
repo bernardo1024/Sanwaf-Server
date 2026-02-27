@@ -2,7 +2,6 @@ package com.sanwaf.core;
 
 import jakarta.servlet.ServletRequest;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -49,9 +48,7 @@ final class ItemDependentFormat extends Item
     {
       return Collections.emptyList();
     }
-    List<Point> points = new ArrayList<>();
-    points.add(new Point(0, value.length()));
-    return points;
+    return Collections.singletonList(new Point(0, value.length()));
   }
 
   @Override

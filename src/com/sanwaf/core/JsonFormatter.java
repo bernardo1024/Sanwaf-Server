@@ -35,7 +35,16 @@ final class JsonFormatter
     sb.append(",\"type\":\"STRICT\"");
     if (value != null && !value.isEmpty())
     {
-      sb.append(",\"value\":\"").append(Metadata.jsonEncode(value.length() < 100 ? value : (value.substring(0, 100) + "..."))).append("\"");
+      sb.append(",\"value\":\"");
+      if (value.length() < 100)
+      {
+        sb.append(Metadata.jsonEncode(value));
+      }
+      else
+      {
+        sb.append(Metadata.jsonEncode(value.substring(0, 100))).append("...");
+      }
+      sb.append("\"");
     }
     else
     {
@@ -116,7 +125,15 @@ final class JsonFormatter
       {
         mValue = item.maskError;
       }
-      sb.append(Metadata.jsonEncode(mValue.length() < 100 ? mValue : (mValue.substring(0, 100) + "..."))).append("\"");
+      if (mValue.length() < 100)
+      {
+        sb.append(Metadata.jsonEncode(mValue));
+      }
+      else
+      {
+        sb.append(Metadata.jsonEncode(mValue.substring(0, 100))).append("...");
+      }
+      sb.append("\"");
     }
     else
     {
@@ -125,22 +142,20 @@ final class JsonFormatter
 
     if (item.shield != null)
     {
-      StringBuilder errMsg = new StringBuilder();
-      errMsg.append(getErrorMessage(item, req, item.shield));
+      String errMsg = getErrorMessage(item, req, item.shield);
       if (item.required && value != null && value.isEmpty())
       {
-        errMsg.append(getErrorMessage(item, req, item.shield, ItemFactory.XML_REQUIRED_MSG));
+        errMsg += getErrorMessage(item, req, item.shield, ItemFactory.XML_REQUIRED_MSG);
       }
       if (value != null && (value.length() < item.min || value.length() > item.max))
       {
-        errMsg.append(modifyInvalidLengthErrorMsg(getErrorMessage(item, req, item.shield, ItemFactory.XML_INVALID_LENGTH_MSG), item.min, item.max));
+        errMsg += modifyInvalidLengthErrorMsg(getErrorMessage(item, req, item.shield, ItemFactory.XML_INVALID_LENGTH_MSG), item.min, item.max);
       }
-
       if (relatedErrMsg != null && !relatedErrMsg.isEmpty())
       {
-        errMsg.append(relatedErrMsg);
+        errMsg += relatedErrMsg;
       }
-      sb.append(",\"error\":\"").append(Metadata.jsonEncode(errMsg.toString())).append("\"");
+      sb.append(",\"error\":\"").append(Metadata.jsonEncode(errMsg)).append("\"");
     }
 
     if (value != null && item.shield != null && verbose)
@@ -227,14 +242,18 @@ final class JsonFormatter
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0)
     {
-      errorMsg = errorMsg.substring(0, i) + min
-          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length());
+      int pLen = ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length();
+      errorMsg = new StringBuilder(errorMsg.length())
+          .append(errorMsg, 0, i).append(min)
+          .append(errorMsg, i + pLen, errorMsg.length()).toString();
     }
     i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER2);
     if (i >= 0)
     {
-      errorMsg = errorMsg.substring(0, i) + max
-          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER2.length());
+      int pLen = ItemFactory.XML_ERROR_MSG_PLACEHOLDER2.length();
+      errorMsg = new StringBuilder(errorMsg.length())
+          .append(errorMsg, 0, i).append(max)
+          .append(errorMsg, i + pLen, errorMsg.length()).toString();
     }
     return errorMsg;
   }
