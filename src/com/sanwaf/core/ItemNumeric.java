@@ -25,19 +25,18 @@ class ItemNumeric extends Item
       return Collections.emptyList();
     }
     List<Point> points = new ArrayList<>();
-    char[] chars = value.toCharArray();
-    final int len = chars.length;
+    final int len = value.length();
     int errStart = -1;
     boolean foundDot = false;
     int start = 0;
-    if (len > 0 && chars[0] == '-')
+    if (len > 0 && value.charAt(0) == '-')
     {
       start = 1;
     }
 
     for (int i = start; i < len; i++)
     {
-      char c = chars[i];
+      char c = value.charAt(i);
       int d = c - '0';
       if (d < 0 || d > 9)
       {
