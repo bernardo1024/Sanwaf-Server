@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 final class ItemNumericDelimited extends ItemNumeric
@@ -20,27 +21,24 @@ final class ItemNumericDelimited extends ItemNumeric
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
-    List<Point> points = new ArrayList<>();
-    if (!maskError.isEmpty())
+    if (!maskError.isEmpty() || value == null || delimiter.isEmpty())
     {
-      return points;
+      return Collections.emptyList();
     }
-    if (value != null && !delimiter.isEmpty())
+    List<Point> points = new ArrayList<>();
+    int start = 0;
+    int pos;
+    while ((pos = value.indexOf(delimiter, start)) >= 0)
     {
-      int start = 0;
-      int pos;
-      while ((pos = value.indexOf(delimiter, start)) >= 0)
+      if (start < pos)
       {
-        if (start < pos)
-        {
-          super.getErrorPointsRange(value, start, pos, points);
-        }
-        start = pos + delimiter.length();
+        super.getErrorPointsRange(value, start, pos, points);
       }
-      if (start < value.length())
-      {
-        super.getErrorPointsRange(value, start, value.length(), points);
-      }
+      start = pos + delimiter.length();
+    }
+    if (start < value.length())
+    {
+      super.getErrorPointsRange(value, start, value.length(), points);
     }
     return points;
   }

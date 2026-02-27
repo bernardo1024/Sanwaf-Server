@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,10 +46,9 @@ final class ItemRegex extends Item
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
-    List<Point> points = new ArrayList<>();
     if (value == null || value.isEmpty() || !maskError.isEmpty())
     {
-      return points;
+      return Collections.emptyList();
     }
     if (rule == null)
     {
@@ -56,8 +56,9 @@ final class ItemRegex extends Item
     }
     if (rule == null || rule.pattern == null)
     {
-      return points;
+      return Collections.emptyList();
     }
+    List<Point> points = new ArrayList<>();
     Matcher m = rule.matcher(value);
     boolean found = m.find();
     if ((found && rule.failOnMatch) || (!found && !rule.failOnMatch))
