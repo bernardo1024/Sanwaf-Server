@@ -2,7 +2,6 @@ package com.sanwaf.core;
 
 import jakarta.servlet.ServletRequest;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -58,14 +57,13 @@ final class ItemRegex extends Item
     {
       return Collections.emptyList();
     }
-    List<Point> points = new ArrayList<>();
     Matcher m = rule.matcher(value);
     boolean found = m.find();
     if ((found && rule.failOnMatch) || (!found && !rule.failOnMatch))
     {
-      points.add(new Point(0, value.length()));
+      return Collections.singletonList(new Point(0, value.length()));
     }
-    return points;
+    return Collections.emptyList();
   }
 
   @Override

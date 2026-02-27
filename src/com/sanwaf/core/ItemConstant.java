@@ -12,11 +12,13 @@ final class ItemConstant extends Item
 {
   static final String INVALID_CONSTANT = "Invalid Constant: ";
   final Set<String> constants;
+  private final String constantsDisplay;
 
   ItemConstant(ItemData id)
   {
     super(id);
     this.constants = parseConstants(id.type);
+    this.constantsDisplay = Metadata.jsonEncode(constants.toString());
   }
 
   @Override
@@ -32,7 +34,7 @@ final class ItemConstant extends Item
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg)
   {
-    return replacePlaceholder(errorMsg, Metadata.jsonEncode(constants.toString()));
+    return replacePlaceholder(errorMsg, constantsDisplay);
   }
 
   @Override
@@ -66,7 +68,7 @@ final class ItemConstant extends Item
     sb.append("\"constant\":\"");
     for (String s : constants)
     {
-      sb.append(Metadata.jsonEncode(s + " "));
+      sb.append(Metadata.jsonEncode(s)).append(' ');
     }
     sb.append("\"");
     return sb.toString();
