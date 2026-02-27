@@ -91,11 +91,11 @@ final class ItemString extends Item
           if (r.mode == Modes.BLOCK)
           {
             inError = true;
-            handleMode(true, value, req, ruleMode, true, doAllBlocks, null);
+            handleMode(value, req, ruleMode, true, doAllBlocks, null);
           }
           else
           {
-            handleMode(true, value, req, ruleMode, true, null);
+            handleMode(value, req, ruleMode, true);
           }
           if (doAllBlocks || (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL))
           {

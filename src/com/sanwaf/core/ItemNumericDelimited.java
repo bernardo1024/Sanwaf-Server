@@ -56,7 +56,7 @@ final class ItemNumericDelimited extends ItemNumeric
     {
       return super.inError(req, shield, value, doAllBlocks, log);
     }
-    if (!isUriValid(req))
+    if (isUriInvalid(req))
     {
       return true;
     }

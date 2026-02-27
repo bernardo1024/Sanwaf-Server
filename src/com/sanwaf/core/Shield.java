@@ -224,26 +224,21 @@ final class Shield
 
   boolean threat(String v, boolean log)
   {
-    return threat(null, null, "", v, false, false, false, log);
+    return threat(null, null, "", v, false, false, log);
   }
 
   // Convenience overload: assumes isEndpoint=false and log=false
   boolean threat(ServletRequest req, Metadata meta, String key, String value)
   {
-    return threat(req, meta, key, value, false, false, false, false);
+    return threat(req, meta, key, value, false, false, false);
   }
 
   boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean log)
   {
-    return threat(req, meta, key, value, isEndpoint, false, false, log);
+    return threat(req, meta, key, value, isEndpoint, false, log);
   }
 
   boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean doAllBlocks, boolean log)
-  {
-    return threat(req, meta, key, value, isEndpoint, false, doAllBlocks, log);
-  }
-
-  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean forceStringPatterns, boolean doAllBlocks, boolean log)
   {
     if (value == null)
     {
@@ -260,14 +255,7 @@ final class Shield
       item = getItemFromMetaOrIndex(meta, key);
       if (item == null)
       {
-        if (forceStringPatterns)
-        {
-          item = ItemString.DEFAULT_INSTANCE;
-        }
-        else
-        {
-          return false;
-        }
+        return false;
       }
     }
     else
@@ -277,18 +265,18 @@ final class Shield
 
     if (item.required && value.isEmpty())
     {
-      return item.handleMode(true, value, req, item.mode, log, doAllBlocks, null);
+      return item.handleMode(value, req, item.mode, log, doAllBlocks, null);
     }
 
     String relmsg = item.isRelateValid(value, req, meta);
     if (relmsg != null)
     {
-      return item.handleMode(true, value, req, item.mode, log, doAllBlocks, relmsg);
+      return item.handleMode(value, req, item.mode, log, doAllBlocks, relmsg);
     }
 
     if (item.inError(req, this, value, doAllBlocks, log))
     {
-      return item.handleMode(true, value, req, item.mode, log, doAllBlocks, null);
+      return item.handleMode(value, req, item.mode, log, doAllBlocks, null);
     }
     return false;
   }

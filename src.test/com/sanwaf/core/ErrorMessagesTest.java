@@ -52,8 +52,6 @@ public class ErrorMessagesTest
   @Test
   public void modifyInvalidLengthErrorMsgTest()
   {
-    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "s", "error msg1", null, Integer.MAX_VALUE, 0);
-    Item item = new ItemString(id);
     String result = JsonFormatter.modifyInvalidLengthErrorMsg("between {0} and {1} chars", 5, 100);
     assertEquals("between 5 and 100 chars", result);
   }

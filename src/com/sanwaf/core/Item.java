@@ -62,17 +62,17 @@ abstract class Item
 
   boolean shouldSkipValidation(ServletRequest req, String value)
   {
-    return mode == Modes.DISABLED || !isUriValid(req) || isSizeError(value);
+    return mode == Modes.DISABLED || isUriInvalid(req) || isSizeError(value);
   }
 
-  boolean isUriValid(ServletRequest req)
+  boolean isUriInvalid(ServletRequest req)
   {
     if (uriSet == null || req == null)
     {
-      return true;
+      return false;
     }
     String reqUri = ((HttpServletRequest) req).getRequestURI();
-    return uriSet.contains(reqUri);
+    return !uriSet.contains(reqUri);
   }
 
   boolean isSizeError(String value)
@@ -113,14 +113,14 @@ abstract class Item
     }
   }
 
-  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, String relatedErrMsg)
+  void handleMode(String value, ServletRequest req, Modes action, boolean log)
   {
-    return handleMode(err, value, req, action, log, false, relatedErrMsg);
+    handleMode(value, req, action, log, false, null);
   }
 
-  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks, String relatedErrMsg)
+  boolean handleMode(String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks, String relatedErrMsg)
   {
-    if (!err || Modes.DISABLED == action)
+    if (Modes.DISABLED == action)
     {
       return false;
     }
@@ -145,7 +145,7 @@ abstract class Item
     }
     else
     {
-      // DO DETECTS
+      // DETECTS
       boolean doLog = logger != null && log && (cfg == null || cfg.onErrorLogParmDetections) && logger.isWarnEnabled();
       boolean doAttr = (cfg == null || cfg.onErrorAddParmDetections);
       if (doLog || doAttr)

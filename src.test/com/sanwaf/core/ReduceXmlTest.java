@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class ReduceXmlTest
 {
   static Sanwaf sanwaf;
-  static Shield shield;
 
   @BeforeAll
   public static void setUpClass()
@@ -21,7 +20,6 @@ public class ReduceXmlTest
     try
     {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-reduced.xml");
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     }
     catch (IOException ioe)
     {
