@@ -372,7 +372,8 @@ class Metadata
       return null;
     }
 
-    StringBuilder sb = null;
+    char[] buf = null;
+    int bufLen = 0;
     for (String s : list)
     {
       int last = 0;
@@ -380,29 +381,62 @@ class Metadata
       {
         if (s.length() != 2)
         {
+          if (buf != null)
+          {
+            key = new String(buf, 0, bufLen);
+          }
           return resolveStarAtEndOfWord(key, list);
         }
-        int start = key.indexOf(s.charAt(0), last);
-        if (start <= 0)
+        char c0 = s.charAt(0);
+        char c1 = s.charAt(1);
+        int start;
+        int end;
+        if (buf == null)
         {
-          break;
-        }
-        int end = key.indexOf(s.charAt(1), start + 1);
-        last = end + 1;
-        if (sb == null)
-        {
-          sb = new StringBuilder(key.length());
+          start = key.indexOf(c0, last);
+          if (start <= 0)
+          {
+            break;
+          }
+          end = key.indexOf(c1, start + 1);
         }
         else
         {
-          sb.setLength(0);
+          start = indexOfChar(buf, bufLen, c0, last);
+          if (start <= 0)
+          {
+            break;
+          }
+          end = indexOfChar(buf, bufLen, c1, start + 1);
         }
-        sb.append(key, 0, start + 1);
-        sb.append(key, end, key.length());
-        key = sb.toString();
+        if (buf == null)
+        {
+          buf = key.toCharArray();
+          bufLen = buf.length;
+        }
+        int removeCount = end - start - 1;
+        System.arraycopy(buf, end, buf, start + 1, bufLen - end);
+        bufLen -= removeCount;
+        last = end + 1;
       }
     }
+    if (buf != null)
+    {
+      return new String(buf, 0, bufLen);
+    }
     return key;
+  }
+
+  private static int indexOfChar(char[] buf, int len, char c, int from)
+  {
+    for (int i = from; i < len; i++)
+    {
+      if (buf[i] == c)
+      {
+        return i;
+      }
+    }
+    return -1;
   }
 
   private String resolveStarAtEndOfWord(String key, Set<String> list)
