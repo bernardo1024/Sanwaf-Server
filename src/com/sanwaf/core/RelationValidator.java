@@ -4,12 +4,9 @@ import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 final class RelationValidator
 {
-  private static final Pattern COLON_PATTERN = Pattern.compile(":");
-  private static final Pattern DOUBLE_PIPE_PATTERN = Pattern.compile("\\|\\|");
 
   private RelationValidator()
   {
@@ -68,9 +65,10 @@ final class RelationValidator
         nextIsAnd = false;
         continue;
       }
-      String[] keyValue = COLON_PATTERN.split(entry, 2);
-      String[] orValues = (keyValue.length > 1) ? DOUBLE_PIPE_PATTERN.split(keyValue[1]) : null;
-      result.add(new Block(keyValue[0], orValues, nextIsAnd));
+      int colon = entry.indexOf(':');
+      String paramName = (colon >= 0) ? entry.substring(0, colon) : entry;
+      String[] orValues = (colon >= 0) ? splitOnDoublePipe(entry, colon + 1) : null;
+      result.add(new Block(paramName, orValues, nextIsAnd));
       nextIsAnd = false;
     }
     return result.toArray(new Block[0]);
@@ -164,14 +162,35 @@ final class RelationValidator
 
   private static String isRelatedEqual(String related, String value, ServletRequest req, Metadata meta)
   {
-    String[] tagKeyValuePair = COLON_PATTERN.split(related);
-    String parentValue = req.getParameter(tagKeyValuePair[0]);
+    int colon = related.indexOf(':');
+    String parentName = related.substring(0, colon);
+    String parentValue = req.getParameter(parentName);
     if (value.equals(parentValue))
     {
       return null;
     }
-    Item parentItem = meta.items.get(tagKeyValuePair[0]);
+    Item parentItem = meta.items.get(parentName);
     return parentItem == null ? null : " - does not match \"" + parentItem.display + "\"";
+  }
+
+  private static String[] splitOnDoublePipe(String s, int from)
+  {
+    int count = 1;
+    for (int p = s.indexOf("||", from); p >= 0; p = s.indexOf("||", p + 2))
+    {
+      count++;
+    }
+    String[] parts = new String[count];
+    int i = 0;
+    int start = from;
+    int pos;
+    while ((pos = s.indexOf("||", start)) >= 0)
+    {
+      parts[i++] = s.substring(start, pos);
+      start = pos + 2;
+    }
+    parts[i] = s.substring(start);
+    return parts;
   }
 
   private static List<String> parseBlocks(String s, int start, String andOr, String match, String reverseMatch,
