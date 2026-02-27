@@ -33,13 +33,13 @@ final class ItemNumericDelimited extends ItemNumeric
       {
         if (start < pos)
         {
-          points.addAll(super.getErrorPoints(shield, value.substring(start, pos)));
+          super.getErrorPointsRange(value, start, pos, points);
         }
         start = pos + delimiter.length();
       }
       if (start < value.length())
       {
-        points.addAll(super.getErrorPoints(shield, value.substring(start)));
+        super.getErrorPointsRange(value, start, value.length(), points);
       }
     }
     return points;

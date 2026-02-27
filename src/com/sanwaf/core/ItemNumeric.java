@@ -72,6 +72,41 @@ class ItemNumeric extends Item
     return errStart;
   }
 
+  void getErrorPointsRange(final String value, int from, int to, List<Point> points)
+  {
+    int errStart = -1;
+    boolean foundDot = false;
+    int start = from;
+    if (from < to && value.charAt(from) == '-')
+    {
+      start = from + 1;
+    }
+    for (int i = start; i < to; i++)
+    {
+      char c = value.charAt(i);
+      int d = c - '0';
+      if (d < 0 || d > 9)
+      {
+        if (!isInt && !foundDot && c == '.')
+        {
+          foundDot = true;
+        }
+        else
+        {
+          errStart = checkErrStart(errStart, i);
+        }
+      }
+      else
+      {
+        errStart = checkToAddPoint(points, errStart, i);
+      }
+    }
+    if (errStart >= 0)
+    {
+      points.add(new Point(errStart, to));
+    }
+  }
+
   private int checkErrStart(int errStart, int i)
   {
     if (errStart < 0)
