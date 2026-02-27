@@ -478,6 +478,10 @@ final class Shield
         }
         String msg = itemBlockXml.get(ItemFactory.XML_ITEM_MSG);
         Rule r = new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE), match, msg);
+        if (r.mode == Modes.DISABLED || r.pattern == null)
+        {
+          continue;
+        }
         if (r.mode == Modes.BLOCK)
         {
           patterns.put(key, r);

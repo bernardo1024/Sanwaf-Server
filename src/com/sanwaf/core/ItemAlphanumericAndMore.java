@@ -3,10 +3,9 @@ package com.sanwaf.core;
 import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 final class ItemAlphanumericAndMore extends ItemAlphanumeric
 {
@@ -23,7 +22,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   final char[] moreChars;
   private final String moreCharsDisplay;
   private final boolean[] asciiLookup;
-  private final Set<Character> nonAsciiSet;
+  private final char[] nonAsciiChars;
 
   ItemAlphanumericAndMore(ItemData id)
   {
@@ -32,7 +31,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     int end = id.type.lastIndexOf(ItemFactory.SEP_END);
     this.moreChars = getMoreCharArray(id.type.substring(start + ItemFactory.SEP_START.length(), end));
     this.asciiLookup = new boolean[128];
-    this.nonAsciiSet = new HashSet<>();
+    int nonAsciiCount = 0;
     for (char c : moreChars)
     {
       if (c < 128)
@@ -41,9 +40,20 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
       }
       else
       {
-        nonAsciiSet.add(c);
+        nonAsciiCount++;
       }
     }
+    char[] nac = new char[nonAsciiCount];
+    int idx = 0;
+    for (char c : moreChars)
+    {
+      if (c >= 128)
+      {
+        nac[idx++] = c;
+      }
+    }
+    Arrays.sort(nac);
+    this.nonAsciiChars = nac;
     this.moreCharsDisplay = Metadata.jsonEncode(handleSpecialChars(moreChars));
   }
 
@@ -54,7 +64,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     {
       return Collections.emptyList();
     }
-    List<Point> points = new ArrayList<>();
+    List<Point> points = null;
     int start = -1;
     int len = value.length();
     for (int i = 0; i < len; i++)
@@ -62,12 +72,34 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
       char c = value.charAt(i);
       if (isNotAlphanumeric(c))
       {
-        start = processNotAlphanumeric(points, start, i, c);
+        if (notInMoreChars(c))
+        {
+          if (start < 0)
+          {
+            start = i;
+          }
+        }
+        else
+        {
+          if (start >= 0)
+          {
+            if (points == null)
+            {
+              points = new ArrayList<>();
+            }
+            points.add(new Point(start, i));
+            start = -1;
+          }
+        }
       }
       else
       {
         if (start >= 0)
         {
+          if (points == null)
+          {
+            points = new ArrayList<>();
+          }
           points.add(new Point(start, i));
           start = -1;
         }
@@ -75,30 +107,13 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     }
     if (start >= 0)
     {
+      if (points == null)
+      {
+        points = new ArrayList<>();
+      }
       points.add(new Point(start, len));
     }
-    return points;
-  }
-
-  private int processNotAlphanumeric(List<Point> points, int start, int i, char c)
-  {
-    if (notInMoreChars(c))
-    {
-      if (start < 0)
-      {
-        start = i;
-      }
-
-    }
-    else
-    {
-      if (start >= 0)
-      {
-        points.add(new Point(start, i));
-        start = -1;
-      }
-    }
-    return start;
+    return points != null ? points : Collections.emptyList();
   }
 
   @Override
@@ -125,7 +140,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     {
       return !asciiLookup[c];
     }
-    return !nonAsciiSet.contains(c);
+    return Arrays.binarySearch(nonAsciiChars, c) < 0;
   }
 
   @Override

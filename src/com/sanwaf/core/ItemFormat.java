@@ -88,7 +88,7 @@ final class ItemFormat extends Item
 
     for (int i = 0; i < value.length(); i++)
     {
-      if (i >= formatBlocks.size())
+      if (i >= formatLen)
       {
         return true;
       }

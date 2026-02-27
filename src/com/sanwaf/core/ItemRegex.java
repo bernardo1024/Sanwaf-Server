@@ -49,17 +49,19 @@ final class ItemRegex extends Item
     {
       return Collections.emptyList();
     }
-    if (rule == null)
+    Rule r = this.rule;
+    if (r == null)
     {
-      rule = shield.customRulePatterns.get(patternName);
+      r = shield.customRulePatterns.get(patternName);
+      this.rule = r;
     }
-    if (rule == null || rule.pattern == null)
+    if (r == null || r.pattern == null)
     {
       return Collections.emptyList();
     }
-    Matcher m = rule.matcher(value);
+    Matcher m = r.matcher(value);
     boolean found = m.find();
-    if ((found && rule.failOnMatch) || (!found && !rule.failOnMatch))
+    if ((found && r.failOnMatch) || (!found && !r.failOnMatch))
     {
       return Collections.singletonList(new Point(0, value.length()));
     }
@@ -73,19 +75,21 @@ final class ItemRegex extends Item
     {
       return true;
     }
-    if (rule == null)
+    Rule r = this.rule;
+    if (r == null)
     {
       if (shield == null)
       {
         return false;
       }
-      rule = shield.customRulePatterns.get(patternName);
-      if (rule == null)
+      r = shield.customRulePatterns.get(patternName);
+      if (r == null)
       {
-        rule = shield.customRulePatternsDetect.get(patternName);
+        r = shield.customRulePatternsDetect.get(patternName);
       }
+      this.rule = r;
     }
-    if (rule == null)
+    if (r == null)
     {
       if (logger != null && logger.isWarnEnabled())
       {
@@ -93,7 +97,7 @@ final class ItemRegex extends Item
       }
       return false;
     }
-    if (rule.mode == Modes.DISABLED)
+    if (r.mode == Modes.DISABLED)
     {
       return false;
     }
@@ -101,15 +105,15 @@ final class ItemRegex extends Item
     {
       return false;
     }
-    if (rule.pattern == null)
+    if (r.pattern == null)
     {
       return false;
     }
-    boolean match = rule.matcher(value).find();
-    if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match))
+    boolean match = r.matcher(value).find();
+    if ((r.failOnMatch && match) || (!r.failOnMatch && !match))
     {
-      handleMode(value, req, rule.mode, log);
-      return rule.mode == Modes.BLOCK && mode == Modes.BLOCK;
+      handleMode(value, req, r.mode, log);
+      return r.mode == Modes.BLOCK && mode == Modes.BLOCK;
     }
     return false;
   }

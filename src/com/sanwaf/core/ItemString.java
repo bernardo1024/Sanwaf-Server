@@ -30,13 +30,13 @@ final class ItemString extends Item
       return Collections.emptyList();
     }
     List<Point> points = null;
-    for (Map.Entry<String, Rule> r : shield.rulePatterns.entrySet())
+    for (Rule r : shield.rulePatterns.values())
     {
-      if (r.getValue().pattern == null)
+      if (r.pattern == null)
       {
         continue;
       }
-      Matcher m = r.getValue().matcher(value);
+      Matcher m = r.matcher(value);
       while (m.find())
       {
         if (points == null)
@@ -59,6 +59,10 @@ final class ItemString extends Item
     boolean inError = false;
     if (shield != null)
     {
+      if (value.length() < shield.regexMinLen)
+      {
+        return false;
+      }
       //first process the detects & detect all - ignore the return value for detect
       if (!shield.rulePatternsDetect.isEmpty())
       {
@@ -77,9 +81,8 @@ final class ItemString extends Item
   private boolean isInErrorForPatterns(final ServletRequest req, Map<String, Rule> patterns, final String value, boolean doAllBlocks)
   {
     boolean inError = false;
-    for (Map.Entry<String, Rule> rule : patterns.entrySet())
+    for (Rule r : patterns.values())
     {
-      Rule r = rule.getValue();
       Modes ruleMode = r.mode;
       if (ruleMode != Modes.DISABLED)
       {

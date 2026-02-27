@@ -24,7 +24,7 @@ class ItemNumeric extends Item
     {
       return Collections.emptyList();
     }
-    List<Point> points = new ArrayList<>();
+    List<Point> points = null;
     final int len = value.length();
     int errStart = -1;
     boolean foundDot = false;
@@ -51,24 +51,26 @@ class ItemNumeric extends Item
       }
       else
       {
-        errStart = checkToAddPoint(points, errStart, i);
+        if (errStart >= 0)
+        {
+          if (points == null)
+          {
+            points = new ArrayList<>();
+          }
+          points.add(new Point(errStart, i));
+          errStart = -1;
+        }
       }
     }
     if (errStart >= 0)
     {
+      if (points == null)
+      {
+        points = new ArrayList<>();
+      }
       points.add(new Point(errStart, len));
     }
-    return points;
-  }
-
-  private int checkToAddPoint(List<Point> points, int errStart, int i)
-  {
-    if (errStart >= 0)
-    {
-      points.add(new Point(errStart, i));
-      errStart = -1;
-    }
-    return errStart;
+    return points != null ? points : Collections.emptyList();
   }
 
   void getErrorPointsRange(final String value, int from, int to, List<Point> points)
@@ -97,7 +99,11 @@ class ItemNumeric extends Item
       }
       else
       {
-        errStart = checkToAddPoint(points, errStart, i);
+        if (errStart >= 0)
+        {
+          points.add(new Point(errStart, i));
+          errStart = -1;
+        }
       }
     }
     if (errStart >= 0)
@@ -117,6 +123,10 @@ class ItemNumeric extends Item
 
   private boolean isMaxMinValueError(String value)
   {
+    if (maxValue >= Integer.MAX_VALUE && minValue <= Integer.MIN_VALUE)
+    {
+      return false;
+    }
     if (value.isEmpty() && !required)
     {
       return false;
@@ -216,6 +226,10 @@ class ItemNumeric extends Item
 
   private boolean isMaxMinValueErrorRange(String value, int from, int to)
   {
+    if (maxValue >= Integer.MAX_VALUE && minValue <= Integer.MIN_VALUE)
+    {
+      return false;
+    }
     if ((to - from) == 0 && !required)
     {
       return false;
