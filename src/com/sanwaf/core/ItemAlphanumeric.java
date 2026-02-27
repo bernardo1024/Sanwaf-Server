@@ -24,11 +24,10 @@ class ItemAlphanumeric extends Item
     }
     List<Point> points = new ArrayList<>();
     int start = -1;
-    char[] chars = value.toCharArray();
-    int len = chars.length;
+    int len = value.length();
     for (int i = 0; i < len; i++)
     {
-      if (isNotAlphanumeric(chars[i]))
+      if (isNotAlphanumeric(value.charAt(i)))
       {
         if (start < 0)
         {
@@ -58,10 +57,9 @@ class ItemAlphanumeric extends Item
     {
       return true;
     }
-    char[] chars = value.toCharArray();
-    for (char aChar : chars)
+    for (int i = 0; i < value.length(); i++)
     {
-      if (isNotAlphanumeric(aChar))
+      if (isNotAlphanumeric(value.charAt(i)))
       {
         return true;
       }
