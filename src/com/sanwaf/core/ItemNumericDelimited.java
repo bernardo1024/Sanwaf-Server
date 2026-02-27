@@ -4,12 +4,10 @@ import jakarta.servlet.ServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 final class ItemNumericDelimited extends ItemNumeric
 {
   final String delimiter;
-  final Pattern delimiterPattern;
 
   ItemNumericDelimited(ItemData id, boolean isInt)
   {
@@ -17,7 +15,6 @@ final class ItemNumericDelimited extends ItemNumeric
     int start = id.type.indexOf(ItemFactory.SEP_START);
     int end = id.type.lastIndexOf(ItemFactory.SEP_END);
     this.delimiter = id.type.substring(start + ItemFactory.SEP_START.length(), end);
-    this.delimiterPattern = Pattern.compile(delimiter);
   }
 
   @Override
@@ -28,16 +25,21 @@ final class ItemNumericDelimited extends ItemNumeric
     {
       return points;
     }
-
-    if (value != null)
+    if (value != null && !delimiter.isEmpty())
     {
-      String[] ns = delimiterPattern.split(value, -1);
-      for (String n : ns)
+      int start = 0;
+      int pos;
+      while ((pos = value.indexOf(delimiter, start)) >= 0)
       {
-        if (!n.isEmpty())
+        if (start < pos)
         {
-          points.addAll(super.getErrorPoints(shield, n));
+          points.addAll(super.getErrorPoints(shield, value.substring(start, pos)));
         }
+        start = pos + delimiter.length();
+      }
+      if (start < value.length())
+      {
+        points.addAll(super.getErrorPoints(shield, value.substring(start)));
       }
     }
     return points;
@@ -50,13 +52,23 @@ final class ItemNumericDelimited extends ItemNumeric
     {
       return false;
     }
-    String[] ns = delimiterPattern.split(value);
-    for (String n : ns)
+    if (delimiter.isEmpty())
     {
-      if (super.inError(req, shield, n, doAllBlocks, log))
+      return super.inError(req, shield, value, doAllBlocks, log);
+    }
+    int start = 0;
+    int pos;
+    while ((pos = value.indexOf(delimiter, start)) >= 0)
+    {
+      if (start < pos && super.inError(req, shield, value.substring(start, pos), doAllBlocks, log))
       {
         return true;
       }
+      start = pos + delimiter.length();
+    }
+    if (start < value.length())
+    {
+      return super.inError(req, shield, value.substring(start), doAllBlocks, log);
     }
     return false;
   }
