@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 final class Shield
@@ -155,16 +154,16 @@ final class Shield
     return threat;
   }
 
-  private boolean detectThreats(ServletRequest req, Metadata meta, Enumeration<?> names,
-      Function<String, String[]> valuesForName, boolean doAllBlocks, boolean log)
+  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
   {
     boolean threat = false;
+    Enumeration<?> names = req.getParameterNames();
     while (names.hasMoreElements())
     {
       String name = (String) names.nextElement();
-      for (String value : valuesForName.apply(name))
+      for (String value : req.getParameterValues(name))
       {
-        if (threat(req, meta, name, value, false, doAllBlocks, log))
+        if (threat(req, parameters, name, value, false, doAllBlocks, log))
         {
           if (!doAllBlocks)
           {
@@ -175,11 +174,6 @@ final class Shield
       }
     }
     return threat;
-  }
-
-  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
-  {
-    return detectThreats(req, parameters, req.getParameterNames(), req::getParameterValues, doAllBlocks, log);
   }
 
   private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
