@@ -23,6 +23,7 @@ abstract class Item
   Modes mode = Modes.BLOCK;
   boolean required = false;
   String related;
+  RelationValidator.Block[] relatedBlocks;
   String maskError = "";
 
   Item()
@@ -166,7 +167,7 @@ abstract class Item
 
   String isRelateValid(String value, ServletRequest req, Metadata meta)
   {
-    return RelationValidator.validate(related, value, req, meta);
+    return RelationValidator.validate(relatedBlocks, related, value, req, meta);
   }
 
   String getDefaultErrorMessage()

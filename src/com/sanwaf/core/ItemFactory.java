@@ -1,5 +1,7 @@
 package com.sanwaf.core;
 
+import com.sanwaf.log.Logger;
+
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -45,12 +47,12 @@ public final class ItemFactory
     // no instances allowed
   }
 
-  static Item parseItem(Shield shield, Xml xml, com.sanwaf.log.Logger logger)
+  static Item parseItem(Xml xml, Logger logger)
   {
-    return parseItem(shield, xml, false, logger);
+    return parseItem(null, xml, false, logger);
   }
 
-  static Item parseItem(Shield shield, Xml xml, boolean includeEnpointAttributes, com.sanwaf.log.Logger logger)
+  static Item parseItem(Shield shield, Xml xml, boolean includeEndpointAttributes, com.sanwaf.log.Logger logger)
   {
     String name = xml.get(XML_ITEM_NAME);
     Modes mode = Modes.getMode(xml.get(XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
@@ -111,9 +113,10 @@ public final class ItemFactory
 
     item.maskError = xml.get(XML_ITEM_MASK_ERROR);
 
-    if (includeEnpointAttributes)
+    if (includeEndpointAttributes)
     {
       item.related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
+      item.relatedBlocks = RelationValidator.parseRelation(item.related);
     }
     if (item instanceof ItemDependentFormat)
     {

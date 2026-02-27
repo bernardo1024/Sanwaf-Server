@@ -15,7 +15,68 @@ final class RelationValidator
   {
   }
 
-  static String validate(String related, String value, ServletRequest req, Metadata meta)
+  static final class Block
+  {
+    final String paramName;
+    final String[] orValues;
+    final boolean isAnd;
+
+    Block(String paramName, String[] orValues, boolean isAnd)
+    {
+      this.paramName = paramName;
+      this.orValues = orValues;
+      this.isAnd = isAnd;
+    }
+
+    boolean evaluate(ServletRequest req, String value)
+    {
+      String parentValue = req.getParameter(paramName);
+      if (orValues != null)
+      {
+        for (String or : orValues)
+        {
+          if (or.equals(parentValue))
+          {
+            return true;
+          }
+        }
+        return false;
+      }
+      return parentValue != null && !parentValue.isEmpty() && value.isEmpty();
+    }
+  }
+
+  static Block[] parseRelation(String related)
+  {
+    if (related == null || related.isEmpty() || related.endsWith(":="))
+    {
+      return null;
+    }
+    List<String> andBlocks = parseBlocks(related, 0, "AND", ")&&(", "(", ")");
+    List<String> andOrBlocks = parseOrBlocksFromAndBlocks(andBlocks);
+    List<Block> result = new ArrayList<>();
+    boolean nextIsAnd = false;
+    for (String entry : andOrBlocks)
+    {
+      if ("AND".equals(entry))
+      {
+        nextIsAnd = true;
+        continue;
+      }
+      if ("OR".equals(entry))
+      {
+        nextIsAnd = false;
+        continue;
+      }
+      String[] keyValue = COLON_PATTERN.split(entry, 2);
+      String[] orValues = (keyValue.length > 1) ? DOUBLE_PIPE_PATTERN.split(keyValue[1]) : null;
+      result.add(new Block(keyValue[0], orValues, nextIsAnd));
+      nextIsAnd = false;
+    }
+    return result.toArray(new Block[0]);
+  }
+
+  static String validate(Block[] blocks, String related, String value, ServletRequest req, Metadata meta)
   {
     if (related == null || related.isEmpty())
     {
@@ -26,22 +87,13 @@ final class RelationValidator
       return isRelatedEqual(related, value, req, meta);
     }
 
-    List<String> andBlocks = parseBlocks(related, 0, "AND", ")&&(", "(", ")");
-    List<String> andOrBlocks = parseOrBlocksFromAndBlocks(andBlocks);
     int andTrueCount = 0;
     int andTotalCount = 0;
     boolean orFoundTrue = false;
-    boolean nextIsAnd = false;
-    boolean skipIteration = false;
-    for (int i = 0; i < andOrBlocks.size(); i++)
+    for (Block block : blocks)
     {
-      if (skipIteration)
-      {
-        skipIteration = false;
-        continue;
-      }
-      boolean condResult = isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req);
-      if (nextIsAnd)
+      boolean condResult = block.evaluate(req, value);
+      if (block.isAnd)
       {
         andTotalCount++;
         if (condResult)
@@ -52,15 +104,6 @@ final class RelationValidator
       else if (condResult)
       {
         orFoundTrue = true;
-      }
-      nextIsAnd = false;
-      if (andOrBlocks.size() > i + 1)
-      {
-        if (andOrBlocks.get(i + 1).equals("AND"))
-        {
-          nextIsAnd = true;
-        }
-        skipIteration = true;
       }
     }
     if (andTrueCount == andTotalCount && orFoundTrue && value.isEmpty())
@@ -117,33 +160,6 @@ final class RelationValidator
       andOrBlocks.addAll(blocks);
     }
     return andOrBlocks;
-  }
-
-  private static boolean isRelatedBlockMakingChildRequired(String block, String value, ServletRequest req)
-  {
-    String[] tagKeyValuePair = COLON_PATTERN.split(block);
-    String parentValue = req.getParameter(tagKeyValuePair[0]);
-
-    int parentLen = 0;
-    if (parentValue != null)
-    {
-      parentLen = parentValue.length();
-    }
-
-    if (tagKeyValuePair.length > 1)
-    {
-      String[] ors = DOUBLE_PIPE_PATTERN.split(tagKeyValuePair[1]);
-      for (String or : ors)
-      {
-        if (or.equals(parentValue))
-        {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    return parentLen > 0 && value.isEmpty();
   }
 
   private static String isRelatedEqual(String related, String value, ServletRequest req, Metadata meta)

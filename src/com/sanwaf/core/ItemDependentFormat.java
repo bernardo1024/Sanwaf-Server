@@ -119,6 +119,7 @@ final class ItemDependentFormat extends Item
       item.maxValue = maxValue;
       item.minValue = minValue;
       item.related = related;
+      item.relatedBlocks = relatedBlocks;
     }
   }
 

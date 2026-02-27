@@ -423,7 +423,7 @@ public final class Sanwaf
   {
     SanwafConfig cfg = this.config;
     Item item = cachedParseItem(instanceItemCache, xml,
-        x -> ItemFactory.parseItem(null, new Xml(x), logger));
+        x -> ItemFactory.parseItem(new Xml(x), logger));
     Shield sh = (shieldName != null) ? cfg.shieldMap.get(shieldName) : null;
     if (sh == null)
     {
