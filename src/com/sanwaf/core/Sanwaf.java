@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.LinkedHashMap;
@@ -310,10 +308,9 @@ public final class Sanwaf
       return false;
     }
     boolean threat = false;
-    Set<String> shieldSet = shieldList != null ? new HashSet<>(shieldList) : null;
     for (Shield sh : cfg.shields)
     {
-      if ((shieldSet == null || shieldSet.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log))
+      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log))
       {
         if (!doAllBlocks)
         {
