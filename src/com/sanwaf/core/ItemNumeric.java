@@ -133,6 +133,87 @@ class ItemNumeric extends Item
     return isMaxMinValueError(value);
   }
 
+  boolean inErrorRange(final String value, int from, int to)
+  {
+    int segLen = to - from;
+    if (!required && segLen == 0)
+    {
+      return false;
+    }
+    if (segLen < min || segLen > max)
+    {
+      return true;
+    }
+    boolean foundDot = false;
+    for (int i = from; i < to; i++)
+    {
+      char c = value.charAt(i);
+      int d = c - '0';
+      if (d < 0 || d > 9)
+      {
+        if (!(i == from && c == '-' && segLen > 1))
+        {
+          if (!isInt && c == '.' && !foundDot)
+          {
+            foundDot = true;
+          }
+          else
+          {
+            return true;
+          }
+        }
+      }
+    }
+    return isMaxMinValueErrorRange(value, from, to);
+  }
+
+  private boolean isMaxMinValueErrorRange(String value, int from, int to)
+  {
+    if ((to - from) == 0 && !required)
+    {
+      return false;
+    }
+    try
+    {
+      if (isInt)
+      {
+        int digitCount = to - from;
+        if (from < to && value.charAt(from) == '-')
+        {
+          digitCount--;
+        }
+        if (digitCount <= 15)
+        {
+          long v = parseLongRange(value, from, to);
+          return v > maxValue || v < minValue;
+        }
+      }
+      double d = Double.parseDouble(value.substring(from, to));
+      return d > maxValue || d < minValue;
+    }
+    catch (NumberFormatException nfe)
+    {
+      return true;
+    }
+  }
+
+  private static long parseLongRange(String s, int from, int to)
+  {
+    int i = from;
+    boolean negative = false;
+    if (s.charAt(i) == '-')
+    {
+      negative = true;
+      i++;
+    }
+    long result = 0;
+    for (; i < to; i++)
+    {
+      result = result * 10 + (s.charAt(i) - '0');
+    }
+    return negative ? -result : result;
+  }
+
   @Override
   String getDefaultErrorMessage()
   {

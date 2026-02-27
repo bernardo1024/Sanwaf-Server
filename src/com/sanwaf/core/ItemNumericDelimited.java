@@ -56,11 +56,15 @@ final class ItemNumericDelimited extends ItemNumeric
     {
       return super.inError(req, shield, value, doAllBlocks, log);
     }
+    if (!isUriValid(req))
+    {
+      return true;
+    }
     int start = 0;
     int pos;
     while ((pos = value.indexOf(delimiter, start)) >= 0)
     {
-      if (start < pos && super.inError(req, shield, value.substring(start, pos), doAllBlocks, log))
+      if (start < pos && super.inErrorRange(value, start, pos))
       {
         return true;
       }
@@ -68,7 +72,7 @@ final class ItemNumericDelimited extends ItemNumeric
     }
     if (start < value.length())
     {
-      return super.inError(req, shield, value.substring(start), doAllBlocks, log);
+      return super.inErrorRange(value, start, value.length());
     }
     return false;
   }
