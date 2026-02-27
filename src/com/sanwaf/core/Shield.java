@@ -185,8 +185,25 @@ final class Shield
   private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
   {
     HttpServletRequest hreq = (HttpServletRequest) req;
-    return detectThreats(req, headers, hreq.getHeaderNames(),
-        name -> Collections.list(hreq.getHeaders(name)).toArray(new String[0]), doAllBlocks, log);
+    boolean threat = false;
+    Enumeration<String> names = hreq.getHeaderNames();
+    while (names.hasMoreElements())
+    {
+      String name = names.nextElement();
+      Enumeration<String> values = hreq.getHeaders(name);
+      while (values.hasMoreElements())
+      {
+        if (threat(req, headers, name, values.nextElement(), false, doAllBlocks, log))
+        {
+          if (!doAllBlocks)
+          {
+            return true;
+          }
+          threat = true;
+        }
+      }
+    }
+    return threat;
   }
 
   private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
