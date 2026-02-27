@@ -9,8 +9,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -195,8 +196,10 @@ public class MultiDimentionalyParmsTest
     assertNotNull(sh);
     Metadata meta = new Metadata(shield, new Xml(""), "", sw.logger);
     UnitTestUtil.setField(meta, "enabled", true);
-    Map<String, List<String>> mutableIndex = new HashMap<>();
-    mutableIndex.put("f", Collections.singletonList(Metadata.INDEX_PARM_MARKER + "foo"));
+    Map<String, Set<String>> mutableIndex = new HashMap<>();
+    Set<String> fooSet = new LinkedHashSet<>();
+    fooSet.add(Metadata.INDEX_PARM_MARKER + "foo");
+    mutableIndex.put("f", fooSet);
     UnitTestUtil.setField(meta, "index", Collections.unmodifiableMap(mutableIndex));
     UnitTestUtil.setField(sh, "parameters", meta);
 

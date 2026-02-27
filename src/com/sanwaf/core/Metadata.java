@@ -2,12 +2,12 @@ package com.sanwaf.core;
 
 import jakarta.servlet.ServletRequest;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 class Metadata
@@ -51,7 +51,7 @@ class Metadata
   final boolean endpointIsStrictAllowLess;
   final Modes endpointMode;
   final Map<String, Item> items;
-  final Map<String, List<String>> index;
+  final Map<String, Set<String>> index;
 
   Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger)
   {
@@ -63,7 +63,7 @@ class Metadata
     this.endpointIsStrictAllowLess = false;
     this.endpointMode = Modes.BLOCK;
     Map<String, Item> mutableItems = parsed.caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    Map<String, List<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
+    Map<String, Set<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
     loadItems(shield, parsed, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
     this.index = Collections.unmodifiableMap(mutableIndex);
@@ -93,7 +93,7 @@ class Metadata
       this.endpointIsStrictAllowLess = false;
     }
     Map<String, Item> mutableItems = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    Map<String, List<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
+    Map<String, Set<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
     loadEndpointItems(shield, itemsString, includeEndpointAttributes, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
     this.index = Collections.unmodifiableMap(mutableIndex);
@@ -114,7 +114,7 @@ class Metadata
   }
 
   private void loadItems(Shield shield, ParsedMetadataXml parsed,
-      Map<String, Item> items, Map<String, List<String>> index)
+      Map<String, Item> items, Map<String, Set<String>> index)
   {
     String[] xmlItems = parsed.subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
@@ -124,7 +124,7 @@ class Metadata
   }
 
   private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes,
-      Map<String, Item> items, Map<String, List<String>> index)
+      Map<String, Item> items, Map<String, Set<String>> index)
   {
     Xml xml = new Xml(itemString);
     Item item = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
@@ -156,7 +156,7 @@ class Metadata
   }
 
   private void loadEndpointItems(Shield shield, String itemsString, boolean includeEndpointAttributes,
-      Map<String, Item> items, Map<String, List<String>> index)
+      Map<String, Item> items, Map<String, Set<String>> index)
   {
     Xml itemsXml = new Xml(itemsString);
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
@@ -166,7 +166,7 @@ class Metadata
     }
   }
 
-  static String refineName(String name, Map<String, List<String>> map)
+  static String refineName(String name, Map<String, Set<String>> map)
   {
     int last = 0;
     while (true)
@@ -196,11 +196,8 @@ class Metadata
         }
       }
       String firstCharOfKey = charString(name.charAt(0));
-      List<String> chars = map.computeIfAbsent(firstCharOfKey, k -> new ArrayList<>());
-      if (!chars.contains(markerChars))
-      {
-        chars.add(markerChars);
-      }
+      Set<String> chars = map.computeIfAbsent(firstCharOfKey, k -> new LinkedHashSet<>());
+      chars.add(markerChars);
       name = name.substring(0, starPos) + name.substring(starPos + 1);
     }
   }
@@ -368,7 +365,7 @@ class Metadata
     {
       return null;
     }
-    List<String> list = index.get(charString(key.charAt(0)));
+    Set<String> list = index.get(charString(key.charAt(0)));
     if (list == null)
     {
       return null;
@@ -400,7 +397,7 @@ class Metadata
     return key;
   }
 
-  private String resolveStarAtEndOfWord(String key, List<String> list)
+  private String resolveStarAtEndOfWord(String key, Set<String> list)
   {
     String k2 = stripEosNumbers(key);
     if (list.contains(INDEX_PARM_MARKER + k2))
