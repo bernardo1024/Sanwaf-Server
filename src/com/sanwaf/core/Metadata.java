@@ -407,9 +407,14 @@ class Metadata
   private String resolveStarAtEndOfWord(String key, Set<String> list)
   {
     String k2 = stripEosNumbers(key);
-    if (list.contains(INDEX_PARM_MARKER + k2))
+    int markerLen = INDEX_PARM_MARKER.length();
+    int expected = markerLen + k2.length();
+    for (String s : list)
     {
-      return k2;
+      if (s.length() == expected && s.regionMatches(markerLen, k2, 0, k2.length()))
+      {
+        return k2;
+      }
     }
     return null;
   }
