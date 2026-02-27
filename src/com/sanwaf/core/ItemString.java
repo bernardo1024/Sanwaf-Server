@@ -36,7 +36,7 @@ final class ItemString extends Item
       {
         continue;
       }
-      Matcher m = r.getValue().pattern.matcher(value);
+      Matcher m = r.getValue().matcher(value);
       while (m.find())
       {
         int start = m.start();
@@ -85,7 +85,7 @@ final class ItemString extends Item
         {
           continue;
         }
-        boolean match = r.pattern.matcher(value).find();
+        boolean match = r.matcher(value).find();
         if ((r.failOnMatch && match) || (!r.failOnMatch && !match))
         {
           if (r.mode == Modes.BLOCK)

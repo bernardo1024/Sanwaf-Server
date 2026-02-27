@@ -58,7 +58,7 @@ final class ItemRegex extends Item
     {
       return points;
     }
-    Matcher m = rule.pattern.matcher(value);
+    Matcher m = rule.matcher(value);
     boolean found = m.find();
     if ((found && rule.failOnMatch) || (!found && !rule.failOnMatch))
     {
@@ -106,7 +106,7 @@ final class ItemRegex extends Item
     {
       return false;
     }
-    boolean match = rule.pattern.matcher(value).find();
+    boolean match = rule.matcher(value).find();
     if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match))
     {
       handleMode(true, value, req, rule.mode, log, null);
