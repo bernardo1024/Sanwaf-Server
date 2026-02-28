@@ -40,7 +40,7 @@ final class ItemNumericDelimited extends ItemNumeric
     {
       super.getErrorPointsRange(value, start, value.length(), points);
     }
-    return points;
+    return points.isEmpty() ? Collections.emptyList() : points;
   }
 
   @Override

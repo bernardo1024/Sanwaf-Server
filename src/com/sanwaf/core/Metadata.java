@@ -222,10 +222,9 @@ class Metadata
 
   static boolean isNotAlphanumeric(String s)
   {
-    char[] chars = s.toCharArray();
-    for (char c : chars)
+    for (int i = 0; i < s.length(); i++)
     {
-      if (!ItemAlphanumeric.isNotAlphanumeric(c))
+      if (!ItemAlphanumeric.isNotAlphanumeric(s.charAt(i)))
       {
         return false;
       }

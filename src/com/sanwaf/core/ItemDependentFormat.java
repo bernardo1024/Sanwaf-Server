@@ -124,21 +124,13 @@ final class ItemDependentFormat extends Item
   String getProperties()
   {
     StringBuilder sb = new StringBuilder();
-    boolean isFirst = true;
     sb.append("\"formats\":{");
     String sep = "";
     for (Map.Entry<String, ItemFormat> entry : formats.entrySet())
     {
-      if (!isFirst)
-      {
-        sep = ",";
-      }
-      else
-      {
-        isFirst = false;
-      }
       sb.append(sep).append("\"key\":\"").append(entry.getKey()).append("\"");
       sb.append(",\"value\":\"").append(entry.getValue().formatString).append("\"");
+      sep = ",";
     }
     sb.append("}");
     return sb.toString();
