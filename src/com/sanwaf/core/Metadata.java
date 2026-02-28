@@ -74,7 +74,7 @@ class Metadata
   }
 
   //used for endpoints
-  Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes,
+  Metadata(Shield shield, String itemsString, boolean caseSensitive,
       String endpointIsStrict, com.sanwaf.log.Logger logger, Modes endpointMode)
   {
     this.logger = logger;
@@ -98,7 +98,7 @@ class Metadata
     }
     Map<String, Item> mutableItems = new HashMap<>();
     Map<String, Set<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
-    loadEndpointItems(shield, itemsString, includeEndpointAttributes, mutableItems, mutableIndex);
+    loadEndpointItems(shield, itemsString, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
     this.index = Collections.unmodifiableMap(mutableIndex);
   }
@@ -127,11 +127,11 @@ class Metadata
     }
   }
 
-  private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes,
+  private void loadItem(Shield shield, String itemString, boolean includeEndpointAttributes,
       Map<String, Item> items, Map<String, Set<String>> index)
   {
     Xml xml = new Xml(itemString);
-    Item item = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
+    Item item = ItemFactory.parseItem(shield, xml, includeEndpointAttributes, logger);
     String namesString = xml.get(ItemFactory.XML_ITEM_NAME);
 
     if (namesString.contains(Shield.SEPARATOR))
@@ -159,14 +159,14 @@ class Metadata
     }
   }
 
-  private void loadEndpointItems(Shield shield, String itemsString, boolean includeEndpointAttributes,
+  private void loadEndpointItems(Shield shield, String itemsString,
       Map<String, Item> items, Map<String, Set<String>> index)
   {
     Xml itemsXml = new Xml(itemsString);
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems)
     {
-      loadItem(shield, itemString, includeEndpointAttributes, items, index);
+      loadItem(shield, itemString, true, items, index);
     }
   }
 
@@ -358,7 +358,7 @@ class Metadata
       Modes mode = Modes.getMode(mx.get(ItemFactory.XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
       String items = endpointXml.get(ItemFactory.XML_ITEMS);
 
-      Metadata metadata = new Metadata(shield, items, caseSensitive, true, strict, logger, mode);
+      Metadata metadata = new Metadata(shield, items, caseSensitive, strict, logger, mode);
       for (String uri : uris)
       {
         endpoints.put(uri, metadata);
