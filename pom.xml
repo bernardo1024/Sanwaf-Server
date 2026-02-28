@@ -7,7 +7,7 @@
     <artifactId>sanwaf</artifactId>
     <packaging>jar</packaging>
     <name>Sanwaf-Server</name>
-    <version>0.2.16</version>
+    <version>0.2.17</version>
 
     <prerequisites>
         <maven>3.0</maven>
