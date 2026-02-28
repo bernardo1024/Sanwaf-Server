@@ -42,7 +42,7 @@ final class JsonFormatter
       }
       else
       {
-        sb.append(Metadata.jsonEncode(value, 100)).append("...");
+        sb.append(Metadata.jsonEncodeTruncated(value)).append("...");
       }
       sb.append("\"");
     }
@@ -131,7 +131,7 @@ final class JsonFormatter
       }
       else
       {
-        sb.append(Metadata.jsonEncode(mValue, 100)).append("...");
+        sb.append(Metadata.jsonEncodeTruncated(mValue)).append("...");
       }
       sb.append("\"");
     }
