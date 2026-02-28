@@ -26,6 +26,7 @@ public class AttributesTest
     }
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   @Test
   public void testAttributesAllOn()
   {
@@ -40,6 +41,7 @@ public class AttributesTest
     resetSanwafAttributes();
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   @Test
   public void testAttributesAllOff()
   {

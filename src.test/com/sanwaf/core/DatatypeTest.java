@@ -1018,6 +1018,40 @@ public class DatatypeTest
   }
 
   @Test
+  public void testItemStrictInErrorAlwaysFalse()
+  {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    ItemStrict item = new ItemStrict("strict msg");
+    assertFalse(item.inError(req, shield, "anything", false, false));
+    assertFalse(item.inError(req, shield, "", false, false));
+    assertFalse(item.inError(req, shield, null, false, false));
+    assertFalse(item.inError(req, shield, "<script>alert(1)</script>", true, true));
+  }
+
+  @Test
+  public void testItemStrictMsgStoredCorrectly()
+  {
+    ItemStrict item = new ItemStrict("custom error");
+    assertEquals("custom error", item.msg);
+
+    ItemStrict empty = new ItemStrict("");
+    assertEquals("", empty.msg);
+
+    ItemStrict nullMsg = new ItemStrict(null);
+    assertNull(nullMsg.msg);
+  }
+
+  @Test
+  public void testItemStrictGetErrorPointsWithEdgeCases()
+  {
+    ItemStrict item = new ItemStrict("msg");
+    assertTrue(item.getErrorPoints(shield, null).isEmpty());
+    assertTrue(item.getErrorPoints(shield, "").isEmpty());
+    assertTrue(item.getErrorPoints(null, "value").isEmpty());
+    assertTrue(item.getErrorPoints(null, null).isEmpty());
+  }
+
+  @Test
   public void testReplaceStringMultipleOccurrences()
   {
     assertEquals("a b ", ItemAlphanumericAndMore.replaceString("a\\sb\\s", "\\s", " "));

@@ -14,6 +14,7 @@ public class CustomPropertiesFooTest
   static Sanwaf sanwaf;
   static Shield shield;
 
+  @SuppressWarnings("SpellCheckingInspection")
   @Test
   public void fooXmlResourceTest()
   {

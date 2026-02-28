@@ -30,5 +30,4 @@ class ItemStrict extends Item
   {
     return Types.STRICT;
   }
-
 }

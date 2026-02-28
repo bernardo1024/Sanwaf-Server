@@ -40,6 +40,5 @@ public class AaSimpleTest
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_DETECT_ALL\""));
     assertEquals(1, GetAllErrorsTest.getItemCount(s, "\"item\":{\"name\":\""));
   }
-
 }
 
