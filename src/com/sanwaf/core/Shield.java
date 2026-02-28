@@ -620,7 +620,7 @@ final class Shield
         appendPItemMapToSB(cookies.items, sb, "\tCookies");
         appendPItemMapToSB(parameters.items, sb, "\tParameters");
         sb.append("\tEndpoints\n");
-        appendEndpoints(endpointParameters, sb, "\t");
+        appendEndpoints(endpointParameters, sb);
       }
     }
     logger.info(sb.toString());
@@ -704,16 +704,16 @@ final class Shield
     }
   }
 
-  static void appendEndpoints(Map<String, Metadata> endpointParameters, StringBuilder sb, String label)
+  static void appendEndpoints(Map<String, Metadata> endpointParameters, StringBuilder sb)
   {
-    appendItemToSb(sb, label, endpointParameters);
+    appendItemToSb(sb, endpointParameters);
   }
 
-  private static void appendItemToSb(StringBuilder sb, String label, Map<String, Metadata> map)
+  private static void appendItemToSb(StringBuilder sb, Map<String, Metadata> map)
   {
     for (Map.Entry<String, Metadata> pair : map.entrySet())
     {
-      appendPItemMapToSB(pair.getValue().items, sb, label, pair.getKey());
+      appendPItemMapToSB(pair.getValue().items, sb, "\t", pair.getKey()); // "\t" = log indentation prefix
     }
   }
 
