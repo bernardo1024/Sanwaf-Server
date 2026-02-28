@@ -53,7 +53,7 @@ The following section details the compatibility of SanWaf
 
 **JAVA**
 
-	- tested with JDK 1.6, 1.7, 1.8, 1.11, 1.17+
+	- tested with JDK 8, 11, 17+
 
 **Javax / Jakarta Version Considerations**
 
@@ -103,9 +103,9 @@ Create an authentication filter to validate all the incoming request objects.
 
 	  //isThreat methods
 	  public boolean isThreat(String value)
-	  public boolean isThreat(String value, String shieldName)
-	  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req)
-	  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml)
+	  public static boolean isThreat(String value, String sXml)
+	  public boolean isThreat(String value, String shieldName, ServletRequest req)
+	  public boolean isThreat(String value, String shieldName, ServletRequest req, String xml)
 
 	  //For example, to test a parameter if it is safe using the configured XML...
 	  if(sanwaf.isThreat(request.getParameter("parameter_name")){
@@ -119,13 +119,13 @@ Create an authentication filter to validate all the incoming request objects.
 
 When/If an error is detected, you pull the error info with these methods:
 
-	String sanwafTrackId = sanwaf.getTrackId(request);
+	String sanwafTrackId = Sanwaf.getTrackingId(request);
 	String parmsInErrorJson = sanwaf.getErrors(request); //for BLOCK mode
-	String parmsInDetectJson = sanwawf.getDetects(request); //for DETECT & DETECT_APP modes
+	String parmsInDetectJson = Sanwaf.getDetects(request); //for DETECT & DETECT_APP modes
 
 To use Sanwaf to read allowlisted headers/cookies/parameters:
 
-	String value = sanwaf.getAllowListedValue("[Header Cookie Parameter]", Sanwaf.AllowListType.[HEADER COOKIE PARAMETER], request);
+	String value = sanwaf.getAllowListedValue("name", Sanwaf.AllowListType.[HEADER COOKIE PARAMETER], httpRequest);
 
 ## Sanwaf Quick Guide
 
@@ -449,7 +449,7 @@ Sanwaf Attributes**
 
 ## Sample code
 
-#### For the sample app, go to https://github.com/bernardo1024/SanwafSample
+#### For the sample app, go to https://github.com/bernardo1024/Sanwaf-Sample
 
 The following code is used for demonstration purposes. Not all imports or code is provided.  
 Add Sanwaf as a dependency to your code:
@@ -457,7 +457,7 @@ Add Sanwaf as a dependency to your code:
 	<dependency>
 		<groupId>com.sanwaf</groupId>
 		<artifactId>sanwaf</artifactId>
-		<version>0.1.9</version>
+		<version>0.2.16</version>
 		<scope>compile</scope>
 	</dependency>
 
@@ -476,14 +476,14 @@ Sample Filter Code:
 	
 	public class SampleAuthenticationFilter implements Filter {
 		// instantiate Sanwaf (if you dont specify an xml file, sanwaf.xml will be used if in your classpath)
-		static SanWaf sanwaf = new SanWaf(new SimpleLogger(), "/your-sanwaf-config-file.xml");
+		static Sanwaf sanwaf = new Sanwaf(new SimpleLogger(), "/your-sanwaf-config-file.xml");
 	
 		public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws SecurityException{
 			// call Sanwaf to check if requests are valid or not
 			if (sanwaf.isThreatDetected(req)) {
 				// Up to you how you want to handle this the error condition.
 				// Here we are throwing a SecurityException, passing the tracking ID and errors in json format  
-				throw new SecurityException(Sanwaf.getTrackId(request) + ", " + Sanwaf.getErrors(request));
+				throw new SecurityException(Sanwaf.getTrackingId((HttpServletRequest) req) + ", " + Sanwaf.getErrors((HttpServletRequest) req));
 			}
 			filterChain.doFilter(req, resp);
 		}
@@ -498,34 +498,33 @@ Here is a simple example of creating a custom logger.
 
 	//add the dependency to your pom
 	<dependency>
-		<groupId>log4j</groupId>
-		<artifactId>log4j</artifactId>
-		<version>1.2.17</version>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-api</artifactId>
+		<version>2.24.3</version>
 	</dependency>
 
 	//implement the code
-	import org.apache.log4j.Logger;
+	import org.apache.logging.log4j.LogManager;
+	import org.apache.logging.log4j.Logger;
 
-	public class TestLogger implements com.sanwaf.log.Logger {
-		static Logger log = Logger.getLogger(TestLogger.class);
+	public class Log4j2Logger implements com.sanwaf.log.Logger {
+		static Logger log = LogManager.getLogger(Log4j2Logger.class);
 
 		@Override
 		public void error(String msg) {
 			log.error(msg);
 		}
 		@Override
-		public void warn(String s) {
-			log.warm(java.util.logging.Level.WARNING, "Sanwaf-warn:\t{0}", s);
+		public void warn(String msg) {
+			log.warn(msg);
 		}
 		@Override
 		public void info(String msg) {
-			if(log.isInfoEnabled()) {
-				log.info(msg);
-			}
+			log.info(msg);
 		}
 	}
 
-The log4j.properties is not specified in this readme, so consult the documentation https://logging.apache.org/log4j/2.x/
+See the Log4j2 documentation for configuration details: https://logging.apache.org/log4j/2.x/
 
 ## License
 
