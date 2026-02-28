@@ -490,7 +490,7 @@ public final class Sanwaf
     Shield[] shields = cfg.shields;
     for (Shield sh : shields)
     {
-      if ((shieldName == null || shieldName.equals(sh.name)) && sh.threat(req, null, "", value, false, log))
+      if ((shieldName == null || shieldName.equals(sh.name)) && sh.threat(req, value, log))
       {
         return true;
       }

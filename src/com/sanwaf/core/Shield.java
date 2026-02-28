@@ -269,9 +269,9 @@ final class Shield
     return threat(req, meta, key, value, false, false, false);
   }
 
-  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean log)
+  boolean threat(ServletRequest req, String value, boolean log)
   {
-    return threat(req, meta, key, value, isEndpoint, false, log);
+    return threat(req, null, "", value, false, false, log);
   }
 
   boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean doAllBlocks, boolean log)
