@@ -7,6 +7,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -147,6 +148,6 @@ public class DefaultErrorMessageTest
     ItemChar item = new ItemChar(id);
     String err = JsonFormatter.getErrorMessage(item, req, shield);
     assertTrue(err.contains("Char"));
-    assertTrue(!err.contains("Constant"));
+    assertFalse(err.contains("Constant"));
   }
 }
