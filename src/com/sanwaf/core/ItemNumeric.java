@@ -17,6 +17,23 @@ class ItemNumeric extends Item
     this.isInt = isInt;
   }
 
+  // Returns true if c is not a valid numeric character (excluding leading sign).
+  // foundDot tracks whether a decimal dot has already been seen; it is set to
+  // true when this method consumes a dot.
+  boolean isNotNumericChar(char c, boolean[] foundDot)
+  {
+    if (c >= '0' && c <= '9')
+    {
+      return false;
+    }
+    if (!isInt && c == '.' && !foundDot[0])
+    {
+      foundDot[0] = true;
+      return false;
+    }
+    return true;
+  }
+
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
@@ -27,7 +44,7 @@ class ItemNumeric extends Item
     List<Point> points = null;
     final int len = value.length();
     int errStart = -1;
-    boolean foundDot = false;
+    boolean[] foundDot = {false};
     int start = 0;
     if (len > 0 && value.charAt(0) == '-')
     {
@@ -36,18 +53,9 @@ class ItemNumeric extends Item
 
     for (int i = start; i < len; i++)
     {
-      char c = value.charAt(i);
-      int d = c - '0';
-      if (d < 0 || d > 9)
+      if (isNotNumericChar(value.charAt(i), foundDot))
       {
-        if (!isInt && !foundDot && c == '.')
-        {
-          foundDot = true;
-        }
-        else
-        {
-          errStart = checkErrStart(errStart, i);
-        }
+        errStart = checkErrStart(errStart, i);
       }
       else
       {
@@ -76,7 +84,7 @@ class ItemNumeric extends Item
   void getErrorPointsRange(final String value, int from, int to, List<Point> points)
   {
     int errStart = -1;
-    boolean foundDot = false;
+    boolean[] foundDot = {false};
     int start = from;
     if (from < to && value.charAt(from) == '-')
     {
@@ -84,18 +92,9 @@ class ItemNumeric extends Item
     }
     for (int i = start; i < to; i++)
     {
-      char c = value.charAt(i);
-      int d = c - '0';
-      if (d < 0 || d > 9)
+      if (isNotNumericChar(value.charAt(i), foundDot))
       {
-        if (!isInt && !foundDot && c == '.')
-        {
-          foundDot = true;
-        }
-        else
-        {
-          errStart = checkErrStart(errStart, i);
-        }
+        errStart = checkErrStart(errStart, i);
       }
       else
       {
@@ -166,25 +165,18 @@ class ItemNumeric extends Item
     {
       return true;
     }
-    boolean foundDot = false;
+    boolean[] foundDot = {false};
     final int len = value.length();
     for (int i = 0; i < len; i++)
     {
       char c = value.charAt(i);
-      int d = c - '0';
-      if (d < 0 || d > 9)
+      if (i == 0 && c == '-' && len > 1)
       {
-        if (!(i == 0 && c == '-' && len > 1))
-        {
-          if (!isInt && c == '.' && !foundDot)
-          {
-            foundDot = true;
-          }
-          else
-          {
-            return true;
-          }
-        }
+        continue;
+      }
+      if (isNotNumericChar(c, foundDot))
+      {
+        return true;
       }
     }
     return isMaxMinValueError(value);
@@ -201,24 +193,17 @@ class ItemNumeric extends Item
     {
       return true;
     }
-    boolean foundDot = false;
+    boolean[] foundDot = {false};
     for (int i = from; i < to; i++)
     {
       char c = value.charAt(i);
-      int d = c - '0';
-      if (d < 0 || d > 9)
+      if (i == from && c == '-' && segLen > 1)
       {
-        if (!(i == from && c == '-' && segLen > 1))
-        {
-          if (!isInt && c == '.' && !foundDot)
-          {
-            foundDot = true;
-          }
-          else
-          {
-            return true;
-          }
-        }
+        continue;
+      }
+      if (isNotNumericChar(c, foundDot))
+      {
+        return true;
       }
     }
     return isMaxMinValueErrorRange(value, from, to);

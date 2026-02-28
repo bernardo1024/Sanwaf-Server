@@ -57,8 +57,6 @@ public class OtherClassesTest
     SimpleLogger logger = new SimpleLogger();
     logger.error("foobar-error");
     logger.info("foobar-info");
-
-    assertTrue(true);
   }
 
   @Test

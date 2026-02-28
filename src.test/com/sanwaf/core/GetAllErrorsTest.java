@@ -126,7 +126,6 @@ public class GetAllErrorsTest
     assertTrue(sanwaf.isThreatDetected(request, true));
     String s = sanwaf.getAllErrors(request);
     assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
-    assertTrue(true);
     s = Sanwaf.getDetects(request);
     assertNotNull(s);
   }

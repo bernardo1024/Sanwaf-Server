@@ -17,7 +17,7 @@
         <!-- only 1 dependency used directly by sanwaf -->
         <jakarta.version>6.0.0</jakarta.version>
 
-        <maven.version>3.5</maven.version>
+        <maven.version>3.15.0</maven.version>
         <compiler.source>1.8</compiler.source>
         <!-- set your target jdk version here.
              note: tests will fail unless using JDK 17 (spring 6)

@@ -12,6 +12,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -157,15 +158,7 @@ public class SanwafTest
   @Test
   public void testSanWafInvalidXML()
   {
-    try
-    {
-      new Sanwaf(new UnitTestLogger(), "invalidXmlFilename.foobar");
-      fail("Error, Sanwaf instantiated with invalid xml file");
-    }
-    catch (IOException ioe)
-    {
-      assertTrue(true);
-    }
+    assertThrows(IOException.class, () -> new Sanwaf(new UnitTestLogger(), "invalidXmlFilename.foobar"));
   }
 
   @Test

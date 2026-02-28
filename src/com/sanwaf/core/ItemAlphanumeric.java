@@ -15,10 +15,15 @@ class ItemAlphanumeric extends Item
     super(id);
   }
 
+  boolean isInvalidChar(char c)
+  {
+    return isNotAlphanumeric(c);
+  }
+
   @Override
   List<Point> getErrorPoints(Shield shield, final String value)
   {
-    if (!maskError.isEmpty())
+    if (value == null || !maskError.isEmpty())
     {
       return Collections.emptyList();
     }
@@ -27,7 +32,7 @@ class ItemAlphanumeric extends Item
     int len = value.length();
     for (int i = 0; i < len; i++)
     {
-      if (isNotAlphanumeric(value.charAt(i)))
+      if (isInvalidChar(value.charAt(i)))
       {
         if (start < 0)
         {
@@ -67,7 +72,7 @@ class ItemAlphanumeric extends Item
     }
     for (int i = 0; i < value.length(); i++)
     {
-      if (isNotAlphanumeric(value.charAt(i)))
+      if (isInvalidChar(value.charAt(i)))
       {
         return true;
       }

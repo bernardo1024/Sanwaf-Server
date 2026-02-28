@@ -2,10 +2,7 @@ package com.sanwaf.core;
 
 import jakarta.servlet.ServletRequest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 final class ItemAlphanumericAndMore extends ItemAlphanumeric
 {
@@ -58,80 +55,9 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   }
 
   @Override
-  List<Point> getErrorPoints(final Shield shield, final String value)
+  boolean isInvalidChar(char c)
   {
-    if (value == null || !maskError.isEmpty())
-    {
-      return Collections.emptyList();
-    }
-    List<Point> points = null;
-    int start = -1;
-    int len = value.length();
-    for (int i = 0; i < len; i++)
-    {
-      char c = value.charAt(i);
-      if (isNotAlphanumeric(c))
-      {
-        if (notInMoreChars(c))
-        {
-          if (start < 0)
-          {
-            start = i;
-          }
-        }
-        else
-        {
-          if (start >= 0)
-          {
-            if (points == null)
-            {
-              points = new ArrayList<>();
-            }
-            points.add(new Point(start, i));
-            start = -1;
-          }
-        }
-      }
-      else
-      {
-        if (start >= 0)
-        {
-          if (points == null)
-          {
-            points = new ArrayList<>();
-          }
-          points.add(new Point(start, i));
-          start = -1;
-        }
-      }
-    }
-    if (start >= 0)
-    {
-      if (points == null)
-      {
-        points = new ArrayList<>();
-      }
-      points.add(new Point(start, len));
-    }
-    return points != null ? points : Collections.emptyList();
-  }
-
-  @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
-  {
-    if (shouldSkipValidation(req, value))
-    {
-      return true;
-    }
-    for (int i = 0; i < value.length(); i++)
-    {
-      char c = value.charAt(i);
-      if (isNotAlphanumeric(c) && notInMoreChars(c))
-      {
-        return true;
-      }
-    }
-    return false;
+    return isNotAlphanumeric(c) && notInMoreChars(c);
   }
 
   private boolean notInMoreChars(char c)
