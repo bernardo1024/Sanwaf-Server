@@ -33,7 +33,6 @@
                 <name>MultiDimTest</name>
                 <minLen>4</minLen>
                 <maxLen>9999</maxLen>
-                <child/>
             </shield-settings>
             <regex-config>
                 <minLen>5</minLen>
@@ -72,100 +71,60 @@
                         <item>
                             <name>*</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>invalid[1*]</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>invalid((*)</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>*:::invalid[1*]:::invalid((*)</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <!-- end invalid format -->
 
                         <item>
                             <name>foo*</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>a['*'].b['*']</name>
                             <type>n{,}</type>
                             <max>10</max>
                             <min>10</min>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>b[*].c[*]</name>
                             <type>n</type>
                             <max>10</max>
                             <min>6</min>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>c('*').d('*')</name>
                             <type>a{,}</type>
                             <max>10</max>
                             <min>10</min>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>d(*).e(*)</name>
                             <type>a</type>
                             <max>10</max>
                             <min>6</min>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>e[*].f[*]g(*)-h(*)</name>
                             <type>c</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>notDefinedArrayHolder[*]</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>notDefinedNoBrackets*</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                     </parameters>
                 </secured>

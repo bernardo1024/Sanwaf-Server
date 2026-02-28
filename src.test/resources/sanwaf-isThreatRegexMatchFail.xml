@@ -38,7 +38,6 @@
                 <name>XSS</name>
                 <minLen>3</minLen>
                 <maxLen>9999</maxLen>
-                <child/>
             </shield-settings>
             <regex-config>
                 <minLen>0</minLen>
@@ -80,9 +79,6 @@
                     <cookies>true</cookies>
                 </caseSensitive>
                 <secured>
-                    <parameters/>
-                    <headers/>
-                    <cookies/>
                 </secured>
             </metadata>
         </shield>
@@ -116,8 +112,6 @@
                 <secured>
                     <parameters>
                     </parameters>
-                    <headers/>
-                    <cookies/>
                 </secured>
             </metadata>
         </shield>

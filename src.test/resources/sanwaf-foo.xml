@@ -34,7 +34,6 @@
                 <name>XSS</name>
                 <minLen>4</minLen>
                 <maxLen>9999</maxLen>
-                <child/>
             </shield-settings>
             <regex-config>
                 <minLen>5</minLen>
@@ -86,154 +85,79 @@
                         <item>
                             <name>::::::fooaFoo:::foobFoo:::foocFoo:::foodFoo:::fooeFoo:::foofFoo:::</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Numeric</name>
                             <type>n</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>NumericDelimited</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Alphanumeric</name>
                             <type>a</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMore</name>
                             <type>a{? :}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Char</name>
                             <type>c</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>String</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>CustomRegexSSN</name>
                             <type>r{ssn}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>CustomTel</name>
                             <type>r{telephone}</type>
                             <max>12</max>
                             <min>12</min>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>CustomDate</name>
                             <type>r{date}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>XssVariable[*].key:::foounitTestString</name>
-                            <type/>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Char[*].key</name>
                             <type>c</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Numeric[*].key</name>
                             <type>n</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>NumericDelimited[*].key</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Alphanumeric[*].key</name>
                             <type>a</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMore[*].key</name>
                             <type>a{? :}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>String[*].key</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>foogA*</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>*foo</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <!-NOT VALID-->
                     </parameters>
@@ -255,8 +179,6 @@
                 <forceStringPatterns>
                     <enabled>false</enabled>
                 </forceStringPatterns>
-                <stringPatterns/>
-                <customPatterns/>
             </regex-config>
             <metadata>
                 <enabled>
@@ -274,10 +196,6 @@
                         <item>
                             <name>::::::fooaFoo:::foobFoo:::foocFoo:::foodFoo:::fooeFoo:::foofFoo:::</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                     </parameters>
                     <headers>

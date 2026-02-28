@@ -40,7 +40,6 @@
                 <name>XSS</name>
                 <minLen>2</minLen>
                 <maxLen>9999</maxLen>
-                <child/>
             </shield-settings>
             <regex-config>
                 <minLen>5</minLen>
@@ -136,91 +135,51 @@
                                     <mode>detect</mode>
                                     <name>modeeParameter-DETECT</name>
                                     <type>n{,}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                                 <item>
                                     <mode>detect_all</mode>
                                     <name>modeeParameterString-DETECT</name>
                                     <type>s</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                                 <item>
                                     <mode>detect</mode>
                                     <name>modeeParameterRegex-DETECT</name>
                                     <type>r{date-DETECT}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                                 <item>
                                     <mode>block</mode>
                                     <name>modeeParameter-BLOCK</name>
                                     <type>n{,}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                                 <item>
                                     <mode>disabled</mode>
                                     <name>modeeParameter-DISABLED</name>
                                     <type>n{,}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                                 <item>
                                     <name>modeeParameter-NO-MODE</name>
                                     <type>n{,}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
 
                                 <item>
                                     <mode>detect</mode>
                                     <name>modeeParameterRegex-DETECT-BLOCK</name>
                                     <type>r{date-BLOCK}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                                 <item>
                                     <mode>detect</mode>
                                     <name>modeeParameterRegex-DETECT-DISABLED</name>
                                     <type>r{date-DISABLED}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                                 <item>
                                     <mode>block</mode>
                                     <name>modeeParameterRegex-BLOCK-BLOCK</name>
                                     <type>r{date-BLOCK}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                                 <item>
                                     <mode>block</mode>
                                     <name>modeeParameterRegex-BLOCK-DISABLED</name>
                                     <type>r{date-DISABLED}</type>
-                                    <max/>
-                                    <min/>
-                                    <msg/>
-                                    <uri/>
                                 </item>
                             </items>
                         </endpoint>
@@ -230,269 +189,130 @@
                             <mode>detect</mode>
                             <name>modeParameter-DETECT</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>modeParameter-DETECT2</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>detect-all</mode>
                             <name>modeParameterString-DETECT</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>modeParameterRegex-DETECT</name>
                             <type>r{date-DETECT}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>block</mode>
                             <name>modeParameter-BLOCK</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>disabled</mode>
                             <name>modeParameter-DISABLED</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>modeParameter-NO-MODE</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
 
                         <item>
                             <mode>detect</mode>
                             <name>modeParameterRegex-DETECT-BLOCK</name>
                             <type>r{date-BLOCK}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>modeParameterRegex-DETECT-DISABLED</name>
                             <type>r{date-DISABLED}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>block</mode>
                             <name>modeParameterRegex-BLOCK-BLOCK</name>
                             <type>r{date-BLOCK}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>block</mode>
                             <name>modeParameterRegex-BLOCK-DISABLED</name>
                             <type>r{date-DISABLED}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
 
                         <item>
                             <mode>detect</mode>
                             <name>char</name>
                             <type>c</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>numeric</name>
                             <type>n</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>open</name>
                             <type>o</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>numericdelimited</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>alphanumeric</name>
                             <type>a</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>alphanumericandmore</name>
                             <type>a{'\s!}</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>constant</name>
                             <type>k{y,n}</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>regex</name>
                             <type>r{date-DETECT-ALL}</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
                             <msg>Must be a proper email address</msg>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>max-min-value</name>
                             <type>n</type>
-                            <max/>
-                            <min/>
                             <max-value>100</max-value>
                             <min-value>10</min-value>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>format</name>
                             <type>f{(###) ###-#### aaa AAA}</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>dependentparent</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <mode>detect</mode>
                             <name>dependentformat</name>
                             <type>d{dependentparent:123=####}</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
 
                         <item>
                             <mode>detect</mode>
                             <name>endpointRegex</name>
                             <type>x{DETECT}</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                         <item>
                             <name>regexParmNoModeWithRegexDetectMode</name>
                             <type>r{date-DETECT-ALL}</type>
-                            <max/>
-                            <min/>
-                            <max-value/>
-                            <min-value/>
-                            <msg/>
-                            <req/>
-                            <related/>
                         </item>
                     </parameters>
                     <headers>
@@ -500,54 +320,30 @@
                             <mode>detect</mode>
                             <name>modeHeader-DETECT</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>detectall</mode>
                             <name>modeHeader-DETECT_ALL</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>block</mode>
                             <name>modeHeader-BLOCK</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>disabled</mode>
                             <name>modeHeader-DISABLED</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>modeHeader-NO-MODE</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>modeHeader-DETECT2</name>
                             <mode>detect</mode>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                     </headers>
                     <cookies>
@@ -555,45 +351,25 @@
                             <mode>detect</mode>
                             <name>modeCookie-DETECT</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>detect_all</mode>
                             <name>modeCookie-DETECT_ALL</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>block</mode>
                             <name>modeCookie-BLOCK</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <mode>disabled</mode>
                             <name>modeCookie-DISABLED</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>modeCookie-NO-MODE</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                     </cookies>
                 </secured>

@@ -54,7 +54,6 @@
                 <minLen>5</minLen>
                 <forceStringPatterns>
                     <enabled>false</enabled>
-                    <exclusions/>
                 </forceStringPatterns>
                 <stringPatterns>
                     <item>
@@ -89,90 +88,46 @@
                         <item>
                             <name>Numeric</name>
                             <type>n</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>NumericDelimited</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Alphanumeric</name>
                             <type>a</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMore</name>
                             <type>a{? :}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreSpecialChars</name>
                             <type>a{\s\t\n\r}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>String</name>
                             <type>s</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Char</name>
                             <type>c</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Constant</name>
                             <type>k{foo,bar,far}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Regex</name>
                             <type>r{date}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Java</name>
                             <type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Format</name>
                             <type>f{###-###-####}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                     </parameters>
                     <headers>
@@ -205,7 +160,6 @@
                 <minLen>5</minLen>
                 <forceStringPatterns>
                     <enabled>false</enabled>
-                    <exclusions/>
                 </forceStringPatterns>
                 <stringPatterns>
                     <item>
@@ -232,18 +186,10 @@
                         <item>
                             <name>NumericDelimitedBadPlaceholder</name>
                             <type>n{,}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>AlphanumericAndMoreBadPlaceholder</name>
                             <type>a{? :}</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                     </parameters>
                 </secured>

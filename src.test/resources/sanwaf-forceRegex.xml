@@ -47,35 +47,14 @@
                                 <item>
                                     <name>parm1</name>
                                     <type>s</type>
-                                    <max/>
-                                    <min/>
-                                    <max-value/>
-                                    <min-value/>
-                                    <msg/>
-                                    <req/>
-                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm2</name>
                                     <type>s</type>
-                                    <max/>
-                                    <min/>
-                                    <max-value/>
-                                    <min-value/>
-                                    <msg/>
-                                    <req/>
-                                    <related/>
                                 </item>
                                 <item>
                                     <name>parm3</name>
                                     <type>s</type>
-                                    <max/>
-                                    <min/>
-                                    <max-value/>
-                                    <min-value/>
-                                    <msg/>
-                                    <req/>
-                                    <related/>
                                 </item>
                             </items>
                         </endpoint>
@@ -84,18 +63,10 @@
                         <item>
                             <name>Numeric</name>
                             <type>n</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                         <item>
                             <name>Alphanumeric</name>
                             <type>a</type>
-                            <max/>
-                            <min/>
-                            <msg/>
-                            <uri/>
                         </item>
                     </parameters>
                 </secured>
