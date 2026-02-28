@@ -33,6 +33,7 @@ public class AaSimpleTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/sanwaf-AaSimpleTest.xml");
+    //noinspection SpellCheckingInspection
     request.addParameter("estring_DETECT_ALL", "sDETECTALL");
     assertFalse(sanwaf.isThreatDetected(request, true, true));
     String s = Sanwaf.getDetects(request);

@@ -131,15 +131,6 @@ final class Xml
     return getAll(rawXml, rawXmlLower, "<" + key + ">", "</" + key + ">");
   }
 
-  String[] getAll(String xml, String key)
-  {
-    if (xml == null || xml.isEmpty())
-    {
-      return new String[0];
-    }
-    return getAll(xml, xml.toLowerCase(), "<" + key + ">", "</" + key + ">");
-  }
-
   private String[] getAll(String xml, String xmlLc, String key, String endKey)
   {
     List<String> hits = new ArrayList<>();

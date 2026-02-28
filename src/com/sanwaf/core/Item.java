@@ -100,9 +100,7 @@ abstract class Item
     if (i >= 0)
     {
       int pLen = ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length();
-      return new StringBuilder(errorMsg.length() + replacement.length())
-          .append(errorMsg, 0, i).append(replacement)
-          .append(errorMsg, i + pLen, errorMsg.length()).toString();
+      return errorMsg.substring(0, i) + replacement + errorMsg.substring(i + pLen);
     }
     return errorMsg;
   }

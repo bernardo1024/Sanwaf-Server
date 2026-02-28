@@ -595,12 +595,12 @@ final class ItemFormat extends Item
       case DAY:
       {
         int v = cal.get(Calendar.DAY_OF_MONTH) + adjust;
-        return v > 31 ? 31 : v;
+        return Math.min(v, 31);
       }
       case MONTH:
       {
         int v = cal.get(Calendar.MONTH) + 1 + adjust;
-        return v > 12 ? 12 : v;
+        return Math.min(v, 12);
       }
       case YEAR2:
         return cal.get(Calendar.YEAR) % 100 + adjust;

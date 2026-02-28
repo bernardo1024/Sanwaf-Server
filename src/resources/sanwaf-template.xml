@@ -209,7 +209,7 @@
 						               "file="     - marker indicating to pull regex from a file
 						               "filename"  - relative path to a file containing the regex
 						               "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
-        FORMAT:       r{CustomRegexName}  - for example: r{telephone} - where "telephone" is defined in the customPatterns xml section
+        FORMAT:       r{CustomRegexName}  - for example: r{telephone} - where "telephone" is defined in the customPatterns XML section
   
   (Inline Regex)
     x{} DESCRIPTION:  Inline Regex Expression in this file (not for reuse, specified in the type)

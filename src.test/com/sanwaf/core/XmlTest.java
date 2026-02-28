@@ -49,7 +49,7 @@ public class XmlTest
     assertEquals("", xml.get(data, "foo"));
     assertEquals(data, xml.toString());
     assertEquals("", xml.get("<sanwaf></foo>foo<foo></sanwaf>", "foo"));
-    assertEquals(0, xml.getAll("<sanwaf></foo>foo<foo></sanwaf>", "foo").length);
+    assertEquals(0, new Xml("<sanwaf></foo>foo<foo></sanwaf>").getAll("foo").length);
   }
 }
 

@@ -148,7 +148,8 @@ public class GetAllErrorsTest
     // multi_test is defined twice in XML (detect then block), but with combined
     // metadata the block item overwrites the detect item (same key).
     // Single-pass: blocks on first bad value.
-    request.addParameter("multi_test", new String[] { "sBLOCKval1", "sBLOCKval2" });
+    //noinspection SpellCheckingInspection
+    request.addParameter("multi_test", "sBLOCKval1", "sBLOCKval2");
     assertTrue(sanwaf.isThreatDetected(request));
     String errors = Sanwaf.getErrors(request);
     assertNotNull(errors);

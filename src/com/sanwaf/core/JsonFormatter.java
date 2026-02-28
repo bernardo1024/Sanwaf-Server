@@ -273,17 +273,13 @@ final class JsonFormatter
     if (i >= 0)
     {
       int pLen = ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length();
-      errorMsg = new StringBuilder(errorMsg.length())
-          .append(errorMsg, 0, i).append(min)
-          .append(errorMsg, i + pLen, errorMsg.length()).toString();
+      errorMsg = errorMsg.substring(0, i) + min + errorMsg.substring(i + pLen);
     }
     i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER2);
     if (i >= 0)
     {
       int pLen = ItemFactory.XML_ERROR_MSG_PLACEHOLDER2.length();
-      errorMsg = new StringBuilder(errorMsg.length())
-          .append(errorMsg, 0, i).append(max)
-          .append(errorMsg, i + pLen, errorMsg.length()).toString();
+      errorMsg = errorMsg.substring(0, i) + max + errorMsg.substring(i + pLen);
     }
     return errorMsg;
   }
