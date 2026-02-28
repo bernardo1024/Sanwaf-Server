@@ -59,7 +59,6 @@ public class ModeDetectLoggingTest
   public void testDatatypeDetect()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.addParameter("numericdelimited", "abc");
     sanwaf.isThreatDetected(request, true);
     String s = outContent.toString();
@@ -93,19 +92,18 @@ public class ModeDetectLoggingTest
     request.addParameter("max-min-value", "abclkajdflkjasdklfjaskldfjaskldfjlkasjflkasjflkasdjfklasjfklasdjflkasdjfk");
     sanwaf.isThreatDetected(request, true);
     s = outContent.toString();
-    assertTrue(true);
+    assertTrue(s.contains("\"type\":\"NUMERIC\""));
 
     request = new MockHttpServletRequest();
     request.addParameter("format", "abc@#$#$#$");
     sanwaf.isThreatDetected(request, true);
     s = outContent.toString();
-    assertTrue(true);
+    assertTrue(s.contains("\"format\":\"(###) ###-#### aaa AAA\""));
 
+    // undefined param with forceStringPatterns=false; just verify no exception
     request = new MockHttpServletRequest();
     request.addParameter("related-simple-required-parent-child", "<script>abc23@!##");
     sanwaf.isThreatDetected(request, true);
-    s = outContent.toString();
-    assertTrue(true);
 
     request = new MockHttpServletRequest();
     request.addParameter("dependentparent", "123");
@@ -113,7 +111,6 @@ public class ModeDetectLoggingTest
     sanwaf.isThreatDetected(request, true, true);
     s = outContent.toString();
     assertTrue(s.contains("\"formats\":{\"key\":\"123\""));
-    System.out.println(s);
   }
 }
 

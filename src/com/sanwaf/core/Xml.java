@@ -143,24 +143,21 @@ final class Xml
   private String[] getAll(String xml, String xmlLc, String key, String endKey)
   {
     List<String> hits = new ArrayList<>();
-    int old = 0;
-    String keyLc = key.toLowerCase();
-    String endKeyLc = endKey.toLowerCase();
-    int start = 0;
-    int end = 0;
+    int keyLen = key.length();
+    int endKeyLen = endKey.length();
+    int pos = 0;
+    int start;
+    int end;
 
-    while ((start = xmlLc.indexOf(keyLc, old)) >= 0)
+    while ((start = xmlLc.indexOf(key, pos)) >= 0)
     {
-      end = xmlLc.indexOf(endKeyLc, start);
-      if (end > start + keyLc.length())
-      {
-        hits.add(xml.substring(start + key.length(), end));
-        old = end + endKey.length();
-      }
-      else
+      end = xmlLc.indexOf(endKey, start + keyLen);
+      if (end < 0)
       {
         break;
       }
+      hits.add(xml.substring(start + keyLen, end));
+      pos = end + endKeyLen;
     }
     return hits.toArray(new String[0]);
   }

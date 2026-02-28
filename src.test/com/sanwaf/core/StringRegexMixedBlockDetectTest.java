@@ -52,7 +52,6 @@ public class StringRegexMixedBlockDetectTest
   public void testAllStringDetectsRun()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.addParameter("string", "DETECT_ALL DETECT DETECT_ALL DETECT BLOCK");
     assertTrue(sanwaf.isThreatDetected(request));
 
@@ -62,7 +61,6 @@ public class StringRegexMixedBlockDetectTest
   public void testAllStringDetectsRun2()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.addParameter("string", "DETECT_ALL DETECT DETECT_ALL DETECT");
     assertFalse(sanwaf.isThreatDetected(request));
 

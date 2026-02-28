@@ -99,7 +99,7 @@ public class OtherClassesTest
 
     // clean string passthrough (no allocation)
     String clean = "hello world 123";
-    assertTrue(clean == Metadata.jsonEncode(clean));
+    assertEquals(clean, Metadata.jsonEncode(clean));
 
     // mixed content
     assertEquals("a\\nb\\\\c", Metadata.jsonEncode("a\nb\\c"));

@@ -134,16 +134,8 @@ public class GetAllErrorsTest
   static int getItemCount(String s, String match)
   {
     int count = 0;
-    int start = 0;
-    int end = 0;
-    while (true)
+    for (int i = s.indexOf(match); i >= 0; i = s.indexOf(match, i + match.length()))
     {
-      start = s.indexOf(match, end);
-      if (start < 0)
-      {
-        break;
-      }
-      end = start + match.length();
       count++;
     }
     return count;
