@@ -310,9 +310,8 @@ public final class Sanwaf
     }
     boolean threat = false;
     Shield[] shields = cfg.shields;
-    for (int i = 0; i < shields.length; i++)
+    for (Shield sh : shields)
     {
-      Shield sh = shields[i];
       if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log))
       {
         if (!doAllBlocks)
@@ -489,9 +488,8 @@ public final class Sanwaf
   {
     SanwafConfig cfg = this.config;
     Shield[] shields = cfg.shields;
-    for (int i = 0; i < shields.length; i++)
+    for (Shield sh : shields)
     {
-      Shield sh = shields[i];
       if ((shieldName == null || shieldName.equals(sh.name)) && sh.threat(req, null, "", value, false, log))
       {
         return true;
@@ -528,9 +526,8 @@ public final class Sanwaf
   {
     SanwafConfig cfg = this.config;
     Shield[] shields = cfg.shields;
-    for (int i = 0; i < shields.length; i++)
+    for (Shield sh : shields)
     {
-      Shield sh = shields[i];
       String value = sh.getAllowListedValue(name, type, req);
       if (value != null)
       {

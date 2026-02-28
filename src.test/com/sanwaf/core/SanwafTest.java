@@ -7,7 +7,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -57,7 +57,6 @@ public class SanwafTest
   public void testTrackIdAndGetErrorsNumbersDelimited()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
     boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
@@ -76,7 +75,6 @@ public class SanwafTest
   public void testTrackIdAndGetErrorsAlphanumericAndMore()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.addParameter("AlphanumericAndMore", "Some Bad! data;----?? ");
     boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
@@ -92,7 +90,6 @@ public class SanwafTest
   public void testTrackIdDisabled()
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
     boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
@@ -130,7 +127,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testSanwafInstatiateLoggerOnly()
+  public void testSanwafInstantiateLoggerOnly()
   {
     try
     {
@@ -163,7 +160,7 @@ public class SanwafTest
     try
     {
       new Sanwaf(new UnitTestLogger(), "invalidXmlFilename.foobar");
-      fail("Error, Sanwaf instanciated with invalid xml file");
+      fail("Error, Sanwaf instantiated with invalid xml file");
     }
     catch (IOException ioe)
     {
@@ -194,7 +191,7 @@ public class SanwafTest
     assertFalse(b);
 
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
+    //noinspection SpellCheckingInspection
     request.addParameter("foobarTHISisNOTmappedXssError", "<script>alert(1)</script>");
     boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
@@ -207,11 +204,11 @@ public class SanwafTest
   {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1)</script>");
-    assertTrue(sanwaf.isThreatDetected(request, Arrays.asList("XSS"), false));
+    assertTrue(sanwaf.isThreatDetected(request, Collections.singletonList("XSS"), false));
 
     request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1)</script>");
-    assertFalse(sanwaf.isThreatDetected(request, Arrays.asList("ParmLength"), false));
+    assertFalse(sanwaf.isThreatDetected(request, Collections.singletonList("ParmLength"), false));
 
     request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1)</script>");

@@ -56,8 +56,6 @@ public class ShieldTest
     boolean b = shield.threat(req, shield.parameters, null, "<script>alert(1)</script>");
     assertFalse(b);
     shield.threat(req, shield.parameters, "String", null);
-    b = false;
-    assertFalse(false);
   }
 
   @Test

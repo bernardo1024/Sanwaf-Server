@@ -1,5 +1,6 @@
 package com.sanwaf.core;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ public class SanwafChildShieldTest
   public void testHasChildShield()
   {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss");
+    Assertions.assertNotNull(shield.childShield);
     assertEquals("XSS-CHILD", shield.childShield.name);
   }
 

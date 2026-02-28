@@ -5,7 +5,6 @@ import jakarta.servlet.ServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 final class ItemString extends Item
@@ -30,7 +29,8 @@ final class ItemString extends Item
       return Collections.emptyList();
     }
     List<Point> points = null;
-    for (Rule r : shield.rulePatterns.values())
+    Rule[] rules = shield.rulePatternsArray;
+    for (Rule r : rules)
     {
       if (r.pattern == null)
       {
@@ -63,13 +63,17 @@ final class ItemString extends Item
       {
         return false;
       }
-      //first process the detects & detect all - ignore the return value for detect
-      if (!shield.rulePatternsDetect.isEmpty())
+      if (shield.canSkipByCharScan && Shield.containsNoXssRelevantChar(value))
       {
-        isInErrorForPatterns(req, shield.rulePatternsDetect, value, doAllBlocks);
+        return false;
+      }
+      //first process the detects & detect all - ignore the return value for detect
+      if (shield.rulePatternsDetectArray.length > 0)
+      {
+        isInErrorForPatterns(req, shield.rulePatternsDetectArray, value, doAllBlocks);
       }
       //then do the blocks
-      inError = isInErrorForPatterns(req, shield.rulePatterns, value, doAllBlocks);
+      inError = isInErrorForPatterns(req, shield.rulePatternsArray, value, doAllBlocks);
     }
     if (mode == Modes.DETECT || mode == Modes.DETECT_ALL)
     {
@@ -78,10 +82,10 @@ final class ItemString extends Item
     return inError;
   }
 
-  private boolean isInErrorForPatterns(final ServletRequest req, Map<String, Rule> patterns, final String value, boolean doAllBlocks)
+  private boolean isInErrorForPatterns(final ServletRequest req, Rule[] rules, final String value, boolean doAllBlocks)
   {
     boolean inError = false;
-    for (Rule r : patterns.values())
+    for (Rule r : rules)
     {
       Modes ruleMode = r.mode;
       if (ruleMode != Modes.DISABLED)

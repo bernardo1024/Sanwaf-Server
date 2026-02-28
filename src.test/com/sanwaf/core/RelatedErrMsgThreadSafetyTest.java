@@ -100,7 +100,7 @@ public class RelatedErrMsgThreadSafetyTest
     req2.addParameter("related-equals-child", "same");
     req2.addParameter("related-equals-parent", "same");
     assertFalse(sanwaf.isThreatDetected(req2));
-    assertNull(req2.getAttribute(Sanwaf.ATT_LOG_ERROR));
+    assertNull(Sanwaf.getErrors(req2));
   }
 
   @Test

@@ -38,6 +38,9 @@ final class Shield
   final Map<String, Rule> customRulePatterns;
   final Map<String, Rule> rulePatternsDetect;
   final Map<String, Rule> customRulePatternsDetect;
+  final Rule[] rulePatternsArray;
+  final Rule[] rulePatternsDetectArray;
+  final boolean canSkipByCharScan;
   final Metadata parameters;
   final Metadata cookies;
   final Metadata headers;
@@ -77,6 +80,39 @@ final class Shield
     this.customRulePatterns = Collections.unmodifiableMap(crp);
     this.rulePatternsDetect = Collections.unmodifiableMap(rpd);
     this.customRulePatternsDetect = Collections.unmodifiableMap(crpd);
+    this.rulePatternsArray = rp.values().toArray(new Rule[0]);
+    this.rulePatternsDetectArray = rpd.values().toArray(new Rule[0]);
+
+    boolean allFailOnMatch = true;
+    for (Rule r : rulePatternsArray)
+      if (!r.failOnMatch) { allFailOnMatch = false; break; }
+    if (allFailOnMatch)
+      for (Rule r : rulePatternsDetectArray)
+        if (!r.failOnMatch) { allFailOnMatch = false; break; }
+
+    boolean canSkip = allFailOnMatch
+        && (rulePatternsArray.length > 0 || rulePatternsDetectArray.length > 0);
+    if (canSkip)
+    {
+      for (Rule r : rulePatternsArray)
+      {
+        if (r.pattern != null && patternLacksXssChar(r.pattern))
+        {
+          canSkip = false; break;
+        }
+      }
+    }
+    if (canSkip)
+    {
+      for (Rule r : rulePatternsDetectArray)
+      {
+        if (r.pattern != null && patternLacksXssChar(r.pattern))
+        {
+          canSkip = false; break;
+        }
+      }
+    }
+    this.canSkipByCharScan = canSkip;
 
     int parsedRegexMinLen = parseInt(regexBlockXml.get(XML_MIN_LEN), 0);
     this.regexMinLen = (parsedRegexMinLen == -1) ? Integer.MAX_VALUE : parsedRegexMinLen;
@@ -385,7 +421,7 @@ final class Shield
 
   Item getItem(Metadata meta, String key)
   {
-    return meta.items.get(key);
+    return meta.getItem(key);
   }
 
   // XML LOAD CODE
@@ -596,6 +632,52 @@ final class Shield
     {
       sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
     }
+  }
+
+  /**
+   * Returns true if the pattern's source contains NO XSS-significant literal
+   * character. Always-literal chars ({@code % ; ' " / &}) are checked
+   * unconditionally. {@code <} and {@code :} are counted only when the two
+   * preceding chars are NOT {@code (?}, which distinguishes literal use from
+   * group syntax ({@code (?:...)}, {@code (?<name>...)}, {@code (?<=...)}).
+   * Used at load time to decide if char-scan can safely skip this pattern.
+   */
+  private static boolean patternLacksXssChar(Pattern p)
+  {
+    String src = p.pattern();
+    for (int i = 0, len = src.length(); i < len; i++)
+    {
+      switch (src.charAt(i))
+      {
+        case '%': case ';': case '\'': case '"': case '/': case '&':
+          return false;
+        case '<': case ':':
+          if (i < 2 || src.charAt(i - 2) != '(' || src.charAt(i - 1) != '?')
+            return false;
+          break;
+        default:
+          break;
+      }
+    }
+    return true;
+  }
+
+  static boolean containsNoXssRelevantChar(String value)
+  {
+    for (int i = 0; i < value.length(); i++)
+    {
+      switch (value.charAt(i))
+      {
+        case '<': case '>': case '%': case '(': case ')':
+        case ':': case ';': case '\'': case '"': case '/':
+        case '\\': case '&': case '=': case '{': case '}':
+        case 0:
+          return false;
+        default:
+          break;
+      }
+    }
+    return true;
   }
 
   static int parseInt(String s, int d)

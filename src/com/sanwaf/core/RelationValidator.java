@@ -126,7 +126,7 @@ final class RelationValidator
     int colon = raw.indexOf(':');
     String parentName = (colon > 0) ? raw.substring(0, colon).trim() : raw.trim();
 
-    Item parentItem = meta.items.get(parentName);
+    Item parentItem = meta.getItem(parentName);
     String parentDisplay = (parentItem != null) ? parentItem.display : parentName;
     if (related.contains("&&"))
     {
@@ -169,7 +169,7 @@ final class RelationValidator
     {
       return null;
     }
-    Item parentItem = meta.items.get(parentName);
+    Item parentItem = meta.getItem(parentName);
     return parentItem == null ? null : " - does not match \"" + parentItem.display + "\"";
   }
 

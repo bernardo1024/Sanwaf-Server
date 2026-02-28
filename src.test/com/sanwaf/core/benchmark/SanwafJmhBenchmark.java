@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * JMH benchmarks for all Sanwaf validation Item types.
- *
+ * <p>
  * Run all:    bash src.test/com/sanwaf/core/benchmark/run-benchmarks.sh
  * Run one:    bash run-benchmarks.sh -p ".*numericClean"
  * Compare:    bash run-benchmarks.sh --compare baseline.json

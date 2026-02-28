@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 class Metadata
 {
@@ -53,6 +52,11 @@ class Metadata
   final Map<String, Item> items;
   final Map<String, Set<String>> index;
 
+  Item getItem(String key)
+  {
+    return items.get(caseSensitive ? key : key.toLowerCase());
+  }
+
   Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger)
   {
     this.logger = logger;
@@ -62,7 +66,7 @@ class Metadata
     this.endpointIsStrict = false;
     this.endpointIsStrictAllowLess = false;
     this.endpointMode = Modes.BLOCK;
-    Map<String, Item> mutableItems = parsed.caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<String, Item> mutableItems = new HashMap<>();
     Map<String, Set<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
     loadItems(shield, parsed, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
@@ -92,7 +96,7 @@ class Metadata
       this.endpointIsStrict = false;
       this.endpointIsStrictAllowLess = false;
     }
-    Map<String, Item> mutableItems = caseSensitive ? new HashMap<>() : new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<String, Item> mutableItems = new HashMap<>();
     Map<String, Set<String>> mutableIndex = new HashMap<>(36); // 26 A-Z keys; (26/0.75)+1 avoids resize
     loadEndpointItems(shield, itemsString, includeEndpointAttributes, mutableItems, mutableIndex);
     this.items = Collections.unmodifiableMap(mutableItems);
@@ -142,7 +146,7 @@ class Metadata
         }
         item.name = name;
         item.display = name;
-        items.put(name, item);
+        items.put(caseSensitive ? name : name.toLowerCase(), item);
       }
     }
     else
@@ -150,7 +154,7 @@ class Metadata
       item.name = refineName(item.name, index);
       if (item.name != null)
       {
-        items.put(item.name, item);
+        items.put(caseSensitive ? item.name : item.name.toLowerCase(), item);
       }
     }
   }
@@ -315,9 +319,9 @@ class Metadata
     }
     if (!endpointIsStrictAllowLess)
     {
-      for (String name : items.keySet())
+      for (Item item : items.values())
       {
-        String s = req.getParameter(name);
+        String s = req.getParameter(item.name);
         if (s == null)
         {
           return true;
@@ -328,7 +332,7 @@ class Metadata
     while (names.hasMoreElements())
     {
       String k = (String) names.nextElement();
-      if (items.get(k) == null)
+      if (getItem(k) == null)
       {
         return true;
       }
