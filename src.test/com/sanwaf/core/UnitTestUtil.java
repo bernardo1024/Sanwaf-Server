@@ -5,9 +5,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -227,35 +224,6 @@ public class UnitTestUtil
       safeClose(fis);
     }
     return "";
-  }
-
-  public static void writeFile(String data, String s)
-  {
-    try
-    {
-      String dir = s;
-      int i_pos = s.lastIndexOf(File.separator);
-      if (i_pos > 0)
-      {
-        dir = dir.substring(0, i_pos);
-        if (!dir.trim().isEmpty() && !dir.equals("."))
-        {
-          File f = new File(dir);
-          if (!f.exists())
-          {
-            f.mkdirs();
-          }
-          f = null;
-        }
-      }
-      OutputStream os = Files.newOutputStream(Paths.get(s));
-      os.write(data.getBytes());
-      os.close();
-    }
-    catch (Exception e)
-    {
-      System.err.println("Failed to write file: " + s);
-    }
   }
 
   public static void safeClose(FileInputStream fis)
