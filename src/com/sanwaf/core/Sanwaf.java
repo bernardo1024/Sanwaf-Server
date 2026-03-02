@@ -212,28 +212,17 @@ public final class Sanwaf
    */
   public boolean isThreatDetected(ServletRequest req)
   {
-    return isThreatDetected(req, false);
+    return isThreatDetected(req, false, false);
   }
 
   /**
-   * Test if a threat is detected in a given request
-   *
-   * <pre>
-   * Threats detected are derived from all shields configurations
-   * If an error is detected, attributes will be added to request for processing latter.  
-   *  Attributes added are dependent on the properties settings of:
-   *        <provideTrackId>true/false</provideTrackId>
-   *        <provideErrors>true/false</provideErrors>
-   * Use the following methods in this class to retrieve the values:
-   *  public static String getTrackingId(HttpServletRequest req)
-   *  public static String getErrors(HttpServletRequest req)
-   * </pre>
-   *
-   * @param req
-   *          ServletRequest the ServletRequest object you want to scan for
-   *          threats
-   * @return boolean true/false if a threat was detected
+   * @deprecated Ambiguous boolean parameter — the {@code log} parameter is easily
+   *             mistaken for {@code doAllBlocks}. A call like
+   *             {@code isThreatDetected(req, true)} sets {@code log=true, doAllBlocks=false},
+   *             which is the opposite of the likely intent.
+   *             Use {@link #isThreatDetected(ServletRequest, boolean, boolean)} instead.
    */
+  @Deprecated
   public boolean isThreatDetected(ServletRequest req, boolean log)
   {
     return isThreatDetected(req, null, false, log);

@@ -123,7 +123,7 @@ public class GetAllErrorsTest
     request.addParameter("custom_BLOCK", "--------");
     request.addParameter("custom_DISABLED", "--------");
     request.addParameter("custom_NO_MODE", "--------");
-    assertTrue(sanwaf.isThreatDetected(request, true));
+    assertTrue(sanwaf.isThreatDetected(request, false, true));
     String s = sanwaf.getAllErrors(request);
     assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
     s = Sanwaf.getDetects(request);
