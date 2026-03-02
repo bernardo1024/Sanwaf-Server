@@ -590,12 +590,11 @@ public final class Sanwaf
   }
 
   /**
-   * Get All Sanwaf Errors
+   * Re-scan and Get All Errors
    *
    * <pre>
-   *  Returns all threats found for a give request object in JSON format
-   *  used to display errors to the user.
-   *  This method returns all errors detected.
+   *  Clears any existing error attribute, re-runs isThreatDetected on every
+   *  parameter/header/cookie, and returns all threats found in JSON format.
    * </pre>
    *
    * @param req
@@ -603,7 +602,7 @@ public final class Sanwaf
    *          Sanwaf.isThreatDetected() returned true.
    * @return String Returns all threats found in JSON format
    */
-  public String getAllErrors(HttpServletRequest req)
+  public String rescanAndGetAllErrors(HttpServletRequest req)
   {
     if (req == null)
     {
@@ -618,6 +617,17 @@ public final class Sanwaf
     //call all blocks, don't worry about the detects as they will have already been processed.
     isThreatDetected(req, null, true);
     return formatAttributeList(req.getAttribute(ATT_LOG_ERROR));
+  }
+
+  /**
+   * @deprecated Renamed to {@link #rescanAndGetAllErrors(HttpServletRequest)}.
+   *             This method re-scans the entire request (hidden side-effect);
+   *             the new name makes that explicit.
+   */
+  @Deprecated
+  public String getAllErrors(HttpServletRequest req)
+  {
+    return rescanAndGetAllErrors(req);
   }
 
   /**
