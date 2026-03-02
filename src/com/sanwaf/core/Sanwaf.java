@@ -339,16 +339,27 @@ public final class Sanwaf
    * </pre>
    *
    * @param value
-   *          the shields name that you want to execute the stringPatterns from
+   *          the string you want to scan for threats
    * @param sXml
    *          item XML to be used to validate with
    * @return boolean true/false if a threat was detected
    */
-  public static boolean isThreat(String value, String sXml)
+  public static boolean isThreatByXml(String value, String sXml)
   {
     Item item = cachedParseItem(itemCache, sXml,
         xml -> ItemFactory.parseItem(null, new Xml(xml), false, null));
     return item.inError(null, null, value, false, false);
+  }
+
+  /**
+   * @deprecated Ambiguous overload — a caller writing {@code sanwaf.isThreat(value, someString)}
+   *             hits this static method (no shield context) instead of the instance overloads.
+   *             Use {@link #isThreatByXml(String, String)} instead.
+   */
+  @Deprecated
+  public static boolean isThreat(String value, String sXml)
+  {
+    return isThreatByXml(value, sXml);
   }
 
   /**

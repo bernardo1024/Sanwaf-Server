@@ -183,17 +183,17 @@ public class SanwafJmhBenchmark
     dirtyFormat = "notAPhone!!!";
 
     // Prime static item caches so benchmarks measure steady-state
-    Sanwaf.isThreat(cleanNumeric, NUMERIC_XML);
-    Sanwaf.isThreat(cleanInteger, INTEGER_XML);
-    Sanwaf.isThreat(cleanNumericDelimited, NUMERIC_DELIMITED_XML);
-    Sanwaf.isThreat(cleanIntegerDelimited, INTEGER_DELIMITED_XML);
-    Sanwaf.isThreat(cleanAlphanumeric, ALPHANUMERIC_XML);
-    Sanwaf.isThreat(cleanAlphanumericMore, AN_MORE_XML);
-    Sanwaf.isThreat(cleanChar, CHAR_XML);
-    Sanwaf.isThreat(cleanConstant, CONSTANT_XML);
-    Sanwaf.isThreat(cleanRegex, REGEX_XML);
-    Sanwaf.isThreat(cleanInlineRegex, INLINE_REGEX_XML);
-    Sanwaf.isThreat(cleanFormat, FORMAT_XML);
+    Sanwaf.isThreatByXml(cleanNumeric, NUMERIC_XML);
+    Sanwaf.isThreatByXml(cleanInteger, INTEGER_XML);
+    Sanwaf.isThreatByXml(cleanNumericDelimited, NUMERIC_DELIMITED_XML);
+    Sanwaf.isThreatByXml(cleanIntegerDelimited, INTEGER_DELIMITED_XML);
+    Sanwaf.isThreatByXml(cleanAlphanumeric, ALPHANUMERIC_XML);
+    Sanwaf.isThreatByXml(cleanAlphanumericMore, AN_MORE_XML);
+    Sanwaf.isThreatByXml(cleanChar, CHAR_XML);
+    Sanwaf.isThreatByXml(cleanConstant, CONSTANT_XML);
+    Sanwaf.isThreatByXml(cleanRegex, REGEX_XML);
+    Sanwaf.isThreatByXml(cleanInlineRegex, INLINE_REGEX_XML);
+    Sanwaf.isThreatByXml(cleanFormat, FORMAT_XML);
   }
 
   // ==================== String (instance API — full pipeline) ====================
@@ -239,13 +239,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean numericClean()
   {
-    return Sanwaf.isThreat(cleanNumeric, NUMERIC_XML);
+    return Sanwaf.isThreatByXml(cleanNumeric, NUMERIC_XML);
   }
 
   @Benchmark
   public boolean numericDirty()
   {
-    return Sanwaf.isThreat(dirtyNumeric, NUMERIC_XML);
+    return Sanwaf.isThreatByXml(dirtyNumeric, NUMERIC_XML);
   }
 
   // ==================== Integer ====================
@@ -253,13 +253,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean integerClean()
   {
-    return Sanwaf.isThreat(cleanInteger, INTEGER_XML);
+    return Sanwaf.isThreatByXml(cleanInteger, INTEGER_XML);
   }
 
   @Benchmark
   public boolean integerDirty()
   {
-    return Sanwaf.isThreat(dirtyInteger, INTEGER_XML);
+    return Sanwaf.isThreatByXml(dirtyInteger, INTEGER_XML);
   }
 
   // ==================== Numeric Delimited ====================
@@ -267,13 +267,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean numericDelimitedClean()
   {
-    return Sanwaf.isThreat(cleanNumericDelimited, NUMERIC_DELIMITED_XML);
+    return Sanwaf.isThreatByXml(cleanNumericDelimited, NUMERIC_DELIMITED_XML);
   }
 
   @Benchmark
   public boolean numericDelimitedDirty()
   {
-    return Sanwaf.isThreat(dirtyNumericDelimited, NUMERIC_DELIMITED_XML);
+    return Sanwaf.isThreatByXml(dirtyNumericDelimited, NUMERIC_DELIMITED_XML);
   }
 
   // ==================== Integer Delimited ====================
@@ -281,13 +281,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean integerDelimitedClean()
   {
-    return Sanwaf.isThreat(cleanIntegerDelimited, INTEGER_DELIMITED_XML);
+    return Sanwaf.isThreatByXml(cleanIntegerDelimited, INTEGER_DELIMITED_XML);
   }
 
   @Benchmark
   public boolean integerDelimitedDirty()
   {
-    return Sanwaf.isThreat(dirtyIntegerDelimited, INTEGER_DELIMITED_XML);
+    return Sanwaf.isThreatByXml(dirtyIntegerDelimited, INTEGER_DELIMITED_XML);
   }
 
   // ==================== Alphanumeric ====================
@@ -295,13 +295,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean alphanumericClean()
   {
-    return Sanwaf.isThreat(cleanAlphanumeric, ALPHANUMERIC_XML);
+    return Sanwaf.isThreatByXml(cleanAlphanumeric, ALPHANUMERIC_XML);
   }
 
   @Benchmark
   public boolean alphanumericDirty()
   {
-    return Sanwaf.isThreat(dirtyAlphanumeric, ALPHANUMERIC_XML);
+    return Sanwaf.isThreatByXml(dirtyAlphanumeric, ALPHANUMERIC_XML);
   }
 
   // ==================== Alphanumeric And More ====================
@@ -309,13 +309,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean alphanumericMoreClean()
   {
-    return Sanwaf.isThreat(cleanAlphanumericMore, AN_MORE_XML);
+    return Sanwaf.isThreatByXml(cleanAlphanumericMore, AN_MORE_XML);
   }
 
   @Benchmark
   public boolean alphanumericMoreDirty()
   {
-    return Sanwaf.isThreat(dirtyAlphanumericMore, AN_MORE_XML);
+    return Sanwaf.isThreatByXml(dirtyAlphanumericMore, AN_MORE_XML);
   }
 
   // ==================== Char ====================
@@ -323,13 +323,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean charClean()
   {
-    return Sanwaf.isThreat(cleanChar, CHAR_XML);
+    return Sanwaf.isThreatByXml(cleanChar, CHAR_XML);
   }
 
   @Benchmark
   public boolean charDirty()
   {
-    return Sanwaf.isThreat(dirtyChar, CHAR_XML);
+    return Sanwaf.isThreatByXml(dirtyChar, CHAR_XML);
   }
 
   // ==================== Constant ====================
@@ -337,13 +337,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean constantClean()
   {
-    return Sanwaf.isThreat(cleanConstant, CONSTANT_XML);
+    return Sanwaf.isThreatByXml(cleanConstant, CONSTANT_XML);
   }
 
   @Benchmark
   public boolean constantDirty()
   {
-    return Sanwaf.isThreat(dirtyConstant, CONSTANT_XML);
+    return Sanwaf.isThreatByXml(dirtyConstant, CONSTANT_XML);
   }
 
   // ==================== Regex (named pattern) ====================
@@ -351,13 +351,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean regexClean()
   {
-    return Sanwaf.isThreat(cleanRegex, REGEX_XML);
+    return Sanwaf.isThreatByXml(cleanRegex, REGEX_XML);
   }
 
   @Benchmark
   public boolean regexDirty()
   {
-    return Sanwaf.isThreat(dirtyRegex, REGEX_XML);
+    return Sanwaf.isThreatByXml(dirtyRegex, REGEX_XML);
   }
 
   // ==================== Inline Regex ====================
@@ -365,13 +365,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean inlineRegexClean()
   {
-    return Sanwaf.isThreat(cleanInlineRegex, INLINE_REGEX_XML);
+    return Sanwaf.isThreatByXml(cleanInlineRegex, INLINE_REGEX_XML);
   }
 
   @Benchmark
   public boolean inlineRegexDirty()
   {
-    return Sanwaf.isThreat(dirtyInlineRegex, INLINE_REGEX_XML);
+    return Sanwaf.isThreatByXml(dirtyInlineRegex, INLINE_REGEX_XML);
   }
 
   // ==================== Format ====================
@@ -379,13 +379,13 @@ public class SanwafJmhBenchmark
   @Benchmark
   public boolean formatClean()
   {
-    return Sanwaf.isThreat(cleanFormat, FORMAT_XML);
+    return Sanwaf.isThreatByXml(cleanFormat, FORMAT_XML);
   }
 
   @Benchmark
   public boolean formatDirty()
   {
-    return Sanwaf.isThreat(dirtyFormat, FORMAT_XML);
+    return Sanwaf.isThreatByXml(dirtyFormat, FORMAT_XML);
   }
 
   // ==================== Main ====================
