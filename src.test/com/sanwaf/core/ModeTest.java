@@ -304,5 +304,25 @@ public class ModeTest
     assertFalse(sanwaf.isThreatDetected(request));
   }
 
+  @Test
+  public void testColonedParametersReportCorrectName()
+  {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addParameter("p1", "foo<body onload='alert(1)'>bar");
+    assertTrue(sanwaf.isThreatDetected(request, true, false));
+    String errors = sanwaf.getAllErrors(request);
+    assertNotNull(errors);
+    assertTrue(errors.contains("\"name\":\"p1\""), "expected p1 in errors: " + errors);
+    assertFalse(errors.contains("\"name\":\"p3\""), "p3 should not appear for a p1 error: " + errors);
+
+    request = new MockHttpServletRequest();
+    request.addParameter("p3", "foo<body onload='alert(1)'>bar");
+    assertTrue(sanwaf.isThreatDetected(request, true, false));
+    errors = sanwaf.getAllErrors(request);
+    assertNotNull(errors);
+    assertTrue(errors.contains("\"name\":\"p3\""), "expected p3 in errors: " + errors);
+    assertFalse(errors.contains("\"name\":\"p1\""), "p1 should not appear for a p3 error: " + errors);
+  }
+
 }
 

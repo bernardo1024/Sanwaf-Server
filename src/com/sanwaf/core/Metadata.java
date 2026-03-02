@@ -131,7 +131,6 @@ class Metadata
       Map<String, Item> items, Map<String, Set<String>> index)
   {
     Xml xml = new Xml(itemString);
-    Item item = ItemFactory.parseItem(shield, xml, includeEndpointAttributes, logger);
     String namesString = xml.get(ItemFactory.XML_ITEM_NAME);
 
     if (namesString.contains(Shield.SEPARATOR))
@@ -144,6 +143,7 @@ class Metadata
         {
           continue;
         }
+        Item item = ItemFactory.parseItem(shield, xml, includeEndpointAttributes, logger);
         item.name = name;
         item.display = name;
         items.put(caseSensitive ? name : name.toLowerCase(), item);
@@ -151,6 +151,7 @@ class Metadata
     }
     else
     {
+      Item item = ItemFactory.parseItem(shield, xml, includeEndpointAttributes, logger);
       item.name = refineName(item.name, index);
       if (item.name != null)
       {
