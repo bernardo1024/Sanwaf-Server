@@ -761,10 +761,39 @@ public final class Sanwaf
         onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
         onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
         shields, shieldMap, globalErrorMessages);
+    warnOnSuspiciousDefaults(this.config, settingsBlock, errorBlock);
 
     if (logger.isInfoEnabled())
     {
       logger.info("Started in: " + (System.currentTimeMillis() - start) + " ms.");
+    }
+  }
+
+  private void warnOnSuspiciousDefaults(SanwafConfig cfg, String settingsBlock, String errorBlock)
+  {
+    if (!logger.isWarnEnabled())
+    {
+      return;
+    }
+    if (!cfg.enabled)
+    {
+      logger.warn("Sanwaf is DISABLED (enabled=false). If unintentional, check <global-settings><enabled>");
+    }
+    if (settingsBlock.isEmpty())
+    {
+      logger.warn("<global-settings> block is missing from config");
+    }
+    if (errorBlock.isEmpty())
+    {
+      logger.warn("<errorHandling> block is missing from config");
+    }
+    if (cfg.shields.length == 0)
+    {
+      logger.warn("No shields configured — nothing will be validated");
+    }
+    if (!cfg.onErrorAddParmErrors && !cfg.onErrorLogParmErrors)
+    {
+      logger.warn("Error reporting is disabled (provideErrors=false, logErrors=false) — blocked threats will be silent");
     }
   }
 
