@@ -75,32 +75,32 @@ public class OtherClassesTest
   @Test
   public void jsonEncodeTest()
   {
-    assertEquals("", Metadata.jsonEncode(null));
+    assertEquals("", JsonFormatter.jsonEncode(null));
 
     // named escapes
-    assertEquals("\\\\", Metadata.jsonEncode("\\"));
-    assertEquals("\\\"", Metadata.jsonEncode("\""));
-    assertEquals("\\/",  Metadata.jsonEncode("/"));
-    assertEquals("\\n", Metadata.jsonEncode("\n"));
-    assertEquals("\\r", Metadata.jsonEncode("\r"));
-    assertEquals("\\t", Metadata.jsonEncode("\t"));
-    assertEquals("\\b", Metadata.jsonEncode("\b"));
-    assertEquals("\\f", Metadata.jsonEncode("\f"));
+    assertEquals("\\\\", JsonFormatter.jsonEncode("\\"));
+    assertEquals("\\\"", JsonFormatter.jsonEncode("\""));
+    assertEquals("\\/",  JsonFormatter.jsonEncode("/"));
+    assertEquals("\\n", JsonFormatter.jsonEncode("\n"));
+    assertEquals("\\r", JsonFormatter.jsonEncode("\r"));
+    assertEquals("\\t", JsonFormatter.jsonEncode("\t"));
+    assertEquals("\\b", JsonFormatter.jsonEncode("\b"));
+    assertEquals("\\f", JsonFormatter.jsonEncode("\f"));
 
     // control chars via unicode escape
-    assertEquals("\\" + "u0000", Metadata.jsonEncode("\u0000"));
-    assertEquals("\\" + "u001f", Metadata.jsonEncode("\u001f"));
+    assertEquals("\\" + "u0000", JsonFormatter.jsonEncode("\u0000"));
+    assertEquals("\\" + "u001f", JsonFormatter.jsonEncode("\u001f"));
 
     // Unicode line/paragraph separators
-    assertEquals("\\" + "u2028", Metadata.jsonEncode("\u2028"));
-    assertEquals("\\" + "u2029", Metadata.jsonEncode("\u2029"));
+    assertEquals("\\" + "u2028", JsonFormatter.jsonEncode("\u2028"));
+    assertEquals("\\" + "u2029", JsonFormatter.jsonEncode("\u2029"));
 
     // clean string passthrough (no allocation)
     String clean = "hello world 123";
-    assertEquals(clean, Metadata.jsonEncode(clean));
+    assertEquals(clean, JsonFormatter.jsonEncode(clean));
 
     // mixed content
-    assertEquals("a\\nb\\\\c", Metadata.jsonEncode("a\nb\\c"));
+    assertEquals("a\\nb\\\\c", JsonFormatter.jsonEncode("a\nb\\c"));
   }
 
   @Test

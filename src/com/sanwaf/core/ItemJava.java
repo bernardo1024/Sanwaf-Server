@@ -120,7 +120,7 @@ final class ItemJava extends Item
   @Override
   String getProperties()
   {
-    return "\"typespecific\":\"" + Metadata.jsonEncode(sClazzAndMethod) + "\"";
+    return "\"typespecific\":\"" + JsonFormatter.jsonEncode(sClazzAndMethod) + "\"";
   }
 
   @Override

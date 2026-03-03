@@ -11,6 +11,17 @@ import java.util.UUID;
 
 final class JsonFormatter
 {
+  private static final String[] CTRL_UNICODE_ESCAPES = new String[0x20];
+
+  static
+  {
+    char[] hex = "0123456789abcdef".toCharArray();
+    for (int i = 0; i < 0x20; i++)
+    {
+      CTRL_UNICODE_ESCAPES[i] = "\\u00" + hex[i >> 4] + hex[i & 0xF];
+    }
+  }
+
   private JsonFormatter()
   {
   }
@@ -38,11 +49,11 @@ final class JsonFormatter
       sb.append(",\"value\":\"");
       if (value.length() < 100)
       {
-        sb.append(Metadata.jsonEncode(value));
+        sb.append(jsonEncode(value));
       }
       else
       {
-        sb.append(Metadata.jsonEncodeTruncated(value)).append("...");
+        sb.append(jsonEncodeTruncated(value)).append("...");
       }
       sb.append("\"");
     }
@@ -92,7 +103,7 @@ final class JsonFormatter
       }
       sb.append("\"transid\":\"").append(transId).append("\"");
       sb.append(",\"ip\":\"").append(hreq.getRemoteAddr()).append("\"");
-      sb.append(",\"referer\":\"").append(Metadata.jsonEncode(hreq.getHeader("referer"))).append("\",");
+      sb.append(",\"referer\":\"").append(jsonEncode(hreq.getHeader("referer"))).append("\",");
     }
 
     if (item.shield != null && verbose)
@@ -104,8 +115,8 @@ final class JsonFormatter
       sb.append("},");
     }
 
-    sb.append("\"item\":{\"name\":\"").append(Metadata.jsonEncode(item.name)).append("\"");
-    sb.append(",\"display\":\"").append(Metadata.jsonEncode(item.display)).append("\"");
+    sb.append("\"item\":{\"name\":\"").append(jsonEncode(item.name)).append("\"");
+    sb.append(",\"display\":\"").append(jsonEncode(item.display)).append("\"");
     sb.append(",\"mode\":\"").append(item.mode).append("\"");
     if (thisMode != null)
     {
@@ -127,11 +138,11 @@ final class JsonFormatter
       }
       if (mValue.length() < 100)
       {
-        sb.append(Metadata.jsonEncode(mValue));
+        sb.append(jsonEncode(mValue));
       }
       else
       {
-        sb.append(Metadata.jsonEncodeTruncated(mValue)).append("...");
+        sb.append(jsonEncodeTruncated(mValue)).append("...");
       }
       sb.append("\"");
     }
@@ -168,7 +179,7 @@ final class JsonFormatter
         }
         errMsg = errSb.toString();
       }
-      sb.append(",\"error\":\"").append(Metadata.jsonEncode(errMsg)).append("\"");
+      sb.append(",\"error\":\"").append(jsonEncode(errMsg)).append("\"");
     }
 
     if (value != null && item.shield != null && verbose)
@@ -197,7 +208,7 @@ final class JsonFormatter
       sb.append(",\"properties\": {");
       sb.append("\"maxlength\":\"").append(item.max).append("\"");
       sb.append(",\"minlength\":\"").append(item.min).append("\"");
-      sb.append(",\"msg\":\"").append(Metadata.jsonEncode(item.msg)).append("\"");
+      sb.append(",\"msg\":\"").append(jsonEncode(item.msg)).append("\"");
       sb.append(",\"uri\":\"");
       if (item.uriSet != null)
       {
@@ -212,15 +223,15 @@ final class JsonFormatter
           {
             first = false;
           }
-          sb.append(Metadata.jsonEncode(u));
+          sb.append(jsonEncode(u));
         }
       }
       sb.append("\"");
       sb.append(",\"req\":\"").append(item.required).append("\"");
       sb.append(",\"maxvalue\":\"").append(item.maxValue).append("\"");
       sb.append(",\"minvalue\":\"").append(item.minValue).append("\"");
-      sb.append(",\"maskerr\":\"").append(Metadata.jsonEncode(item.maskError)).append("\"");
-      sb.append(",\"related\":\"").append(Metadata.jsonEncode(item.related)).append("\"");
+      sb.append(",\"maskerr\":\"").append(jsonEncode(item.maskError)).append("\"");
+      sb.append(",\"related\":\"").append(jsonEncode(item.related)).append("\"");
       String s = item.getProperties();
       if (s != null && !s.isEmpty())
       {
@@ -282,5 +293,81 @@ final class JsonFormatter
       errorMsg = errorMsg.substring(0, i) + max + errorMsg.substring(i + pLen);
     }
     return errorMsg;
+  }
+
+  static String jsonEncode(String s)
+  {
+    if (s == null)
+    {
+      return "";
+    }
+    return jsonEncodeLen(s, s.length());
+  }
+
+  /** JSON-encodes {@code s}, truncated to 100 chars to avoid logging excessive user input. */
+  static String jsonEncodeTruncated(String s)
+  {
+    if (s == null)
+    {
+      return "";
+    }
+    return jsonEncodeLen(s, Math.min(s.length(), 100));
+  }
+
+  private static String jsonEncodeLen(String s, int len)
+  {
+    StringBuilder sb = null;
+    for (int i = 0; i < len; i++)
+    {
+      char c = s.charAt(i);
+      String esc;
+      switch (c)
+      {
+      case '\\': esc = "\\\\"; break;
+      case '"':  esc = "\\\""; break;
+      case '/':  esc = "\\/";  break;
+      case '\n': esc = "\\n";  break;
+      case '\r': esc = "\\r";  break;
+      case '\t': esc = "\\t";  break;
+      case '\b': esc = "\\b";  break;
+      case '\f': esc = "\\f";  break;
+      default:
+        if (c < 0x20)
+        {
+          esc = CTRL_UNICODE_ESCAPES[c];
+        }
+        else if (c == '\u2028')
+        {
+          esc = "\\u2028";
+        }
+        else if (c == '\u2029')
+        {
+          esc = "\\u2029";
+        }
+        else
+        {
+          esc = null;
+        }
+        break;
+      }
+      if (esc != null)
+      {
+        if (sb == null)
+        {
+          sb = new StringBuilder(len + 16);
+          sb.append(s, 0, i);
+        }
+        sb.append(esc);
+      }
+      else if (sb != null)
+      {
+        sb.append(c);
+      }
+    }
+    if (sb != null)
+    {
+      return sb.toString();
+    }
+    return len == s.length() ? s : s.substring(0, len);
   }
 }

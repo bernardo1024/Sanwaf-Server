@@ -51,7 +51,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     }
     Arrays.sort(nac);
     this.nonAsciiChars = nac;
-    this.moreCharsDisplay = Metadata.jsonEncode(handleSpecialChars(moreChars));
+    this.moreCharsDisplay = JsonFormatter.jsonEncode(handleSpecialChars(moreChars));
   }
 
   @Override
@@ -102,7 +102,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   @Override
   String getProperties()
   {
-    return "\"morechars\":\"" + Metadata.jsonEncode(new String(moreChars)) + "\"";
+    return "\"morechars\":\"" + JsonFormatter.jsonEncode(new String(moreChars)) + "\"";
   }
 
   @Override

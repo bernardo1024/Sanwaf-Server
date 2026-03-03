@@ -18,7 +18,7 @@ final class ItemConstant extends Item
   {
     super(id);
     this.constants = parseConstants(id.type);
-    this.constantsDisplay = Metadata.jsonEncode(constants.toString());
+    this.constantsDisplay = JsonFormatter.jsonEncode(constants.toString());
   }
 
   @Override
@@ -68,7 +68,7 @@ final class ItemConstant extends Item
     sb.append("\"constant\":\"");
     for (String s : constants)
     {
-      sb.append(Metadata.jsonEncode(s)).append(' ');
+      sb.append(JsonFormatter.jsonEncode(s)).append(' ');
     }
     sb.append("\"");
     return sb.toString();

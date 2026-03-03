@@ -91,7 +91,7 @@ final class ItemDependentFormat extends Item
     {
       formatString = format.formatString;
     }
-    return replacePlaceholder(errorMsg, Metadata.jsonEncode(formatString));
+    return replacePlaceholder(errorMsg, JsonFormatter.jsonEncode(formatString));
   }
 
   private void parseFormats(ItemData id, String[] valueFormatPairs)

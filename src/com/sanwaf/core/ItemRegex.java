@@ -129,11 +129,11 @@ final class ItemRegex extends Item
   {
     if (rule != null && rule.pattern != null)
     {
-      return "\"regex\":\"" + Metadata.jsonEncode(rule.pattern.toString()) + "\"";
+      return "\"regex\":\"" + JsonFormatter.jsonEncode(rule.pattern.toString()) + "\"";
     }
     else
     {
-      return "\"regex\":\"" + Metadata.jsonEncode(patternString) + "\"";
+      return "\"regex\":\"" + JsonFormatter.jsonEncode(patternString) + "\"";
     }
   }
 

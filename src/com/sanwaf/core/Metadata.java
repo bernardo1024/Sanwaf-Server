@@ -23,18 +23,12 @@ class Metadata
   static final String STAR = "*";
 
   private static final String[] CHAR_STRINGS = new String[128];
-  private static final String[] CTRL_UNICODE_ESCAPES = new String[0x20];
 
   static
   {
     for (int i = 0; i < 128; i++)
     {
       CHAR_STRINGS[i] = String.valueOf((char) i);
-    }
-    char[] hex = "0123456789abcdef".toCharArray();
-    for (int i = 0; i < 0x20; i++)
-    {
-      CTRL_UNICODE_ESCAPES[i] = "\\u00" + hex[i >> 4] + hex[i & 0xF];
     }
   }
 
@@ -235,82 +229,6 @@ class Metadata
       }
     }
     return true;
-  }
-
-  static String jsonEncode(String s)
-  {
-    if (s == null)
-    {
-      return "";
-    }
-    return jsonEncodeLen(s, s.length());
-  }
-
-  /** JSON-encodes {@code s}, truncated to 100 chars to avoid logging excessive user input. */
-  static String jsonEncodeTruncated(String s)
-  {
-    if (s == null)
-    {
-      return "";
-    }
-    return jsonEncodeLen(s, Math.min(s.length(), 100));
-  }
-
-  private static String jsonEncodeLen(String s, int len)
-  {
-    StringBuilder sb = null;
-    for (int i = 0; i < len; i++)
-    {
-      char c = s.charAt(i);
-      String esc;
-      switch (c)
-      {
-      case '\\': esc = "\\\\"; break;
-      case '"':  esc = "\\\""; break;
-      case '/':  esc = "\\/";  break;
-      case '\n': esc = "\\n";  break;
-      case '\r': esc = "\\r";  break;
-      case '\t': esc = "\\t";  break;
-      case '\b': esc = "\\b";  break;
-      case '\f': esc = "\\f";  break;
-      default:
-        if (c < 0x20)
-        {
-          esc = CTRL_UNICODE_ESCAPES[c];
-        }
-        else if (c == '\u2028')
-        {
-          esc = "\\u2028";
-        }
-        else if (c == '\u2029')
-        {
-          esc = "\\u2029";
-        }
-        else
-        {
-          esc = null;
-        }
-        break;
-      }
-      if (esc != null)
-      {
-        if (sb == null)
-        {
-          sb = new StringBuilder(len + 16);
-          sb.append(s, 0, i);
-        }
-        sb.append(esc);
-      }
-      else if (sb != null)
-      {
-        sb.append(c);
-      }
-    }
-    if (sb != null)
-    {
-      return sb.toString();
-    }
-    return len == s.length() ? s : s.substring(0, len);
   }
 
   boolean isStrictError(ServletRequest req)

@@ -78,13 +78,13 @@ final class ItemNumericDelimited extends ItemNumeric
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg)
   {
-    return replacePlaceholder(errorMsg, Metadata.jsonEncode(delimiter));
+    return replacePlaceholder(errorMsg, JsonFormatter.jsonEncode(delimiter));
   }
 
   @Override
   String getProperties()
   {
-    return "\"delimiter\":\"" + Metadata.jsonEncode(delimiter) + "\"";
+    return "\"delimiter\":\"" + JsonFormatter.jsonEncode(delimiter) + "\"";
   }
 
   @Override

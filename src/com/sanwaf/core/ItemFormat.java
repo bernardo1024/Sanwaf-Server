@@ -222,7 +222,7 @@ final class ItemFormat extends Item
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg)
   {
-    return replacePlaceholder(errorMsg, Metadata.jsonEncode(formatString));
+    return replacePlaceholder(errorMsg, JsonFormatter.jsonEncode(formatString));
   }
 
   private void setFormat(String value)
@@ -457,7 +457,7 @@ final class ItemFormat extends Item
   @Override
   String getProperties()
   {
-    return "\"format\":\"" + Metadata.jsonEncode(formatString) + "\"";
+    return "\"format\":\"" + JsonFormatter.jsonEncode(formatString) + "\"";
   }
 
   @Override
