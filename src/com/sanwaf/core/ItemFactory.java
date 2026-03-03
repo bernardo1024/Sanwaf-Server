@@ -93,36 +93,35 @@ public final class ItemFactory
     {
       type = ensureComplexTypeFormat(type);
     }
-    Item item = getNewItem(new ItemData(shield, name, mode, display, type, msg, uri, max, min));
-    item.logger = logger;
-    item.required = Boolean.parseBoolean(xml.get(XML_ITEM_REQUIRED));
 
-    item.maxValue = Integer.MAX_VALUE;
+    boolean required = Boolean.parseBoolean(xml.get(XML_ITEM_REQUIRED));
+
+    double maxValue = Integer.MAX_VALUE;
     String sMaxVal = xml.get(XML_ITEM_MAX_VAL);
     if (!sMaxVal.isEmpty())
     {
-      item.maxValue = Shield.parseDouble(sMaxVal, Integer.MAX_VALUE);
+      maxValue = Shield.parseDouble(sMaxVal, Integer.MAX_VALUE);
     }
 
-    item.minValue = Integer.MIN_VALUE;
+    double minValue = Integer.MIN_VALUE;
     String sMinVal = xml.get(XML_ITEM_MIN_VAL);
     if (!sMinVal.isEmpty())
     {
-      item.minValue = Shield.parseDouble(sMinVal, Integer.MIN_VALUE);
+      minValue = Shield.parseDouble(sMinVal, Integer.MIN_VALUE);
     }
 
-    item.maskError = xml.get(XML_ITEM_MASK_ERROR);
+    String maskError = xml.get(XML_ITEM_MASK_ERROR);
 
+    String related = null;
+    RelationValidator.Block[] relatedBlocks = null;
     if (includeEndpointAttributes)
     {
-      item.related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
-      item.relatedBlocks = RelationValidator.parseRelation(item.related);
+      related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
+      relatedBlocks = RelationValidator.parseRelation(related);
     }
-    if (item instanceof ItemDependentFormat)
-    {
-      ((ItemDependentFormat) item).setAdditionalFields();
-    }
-    return item;
+
+    return getNewItem(new ItemData(shield, name, mode, display, type, msg, uri, max, min,
+        logger, required, maxValue, minValue, maskError, related, relatedBlocks));
   }
 
   private static String removeRelatedSpace(String related)

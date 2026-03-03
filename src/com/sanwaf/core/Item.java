@@ -35,10 +35,7 @@ abstract class Item
     name = id.name;
     mode = id.mode;
     shield = id.shield;
-    if (shield != null)
-    {
-      logger = id.shield.logger;
-    }
+    logger = id.logger;
 
     if (id.display.isEmpty())
     {
@@ -52,6 +49,12 @@ abstract class Item
     min = id.min;
     msg = id.msg;
     setUri(id.uri);
+    required = id.required;
+    maxValue = id.maxValue;
+    minValue = id.minValue;
+    maskError = id.maskError;
+    related = id.related;
+    relatedBlocks = id.relatedBlocks;
   }
 
   // implemented by Types

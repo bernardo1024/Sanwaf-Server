@@ -101,22 +101,11 @@ final class ItemDependentFormat extends Item
       String[] kv = valueFormatPair.split("=");
       if (kv.length == 2)
       {
-        ItemData formatId = new ItemData(id.shield, id.name, id.mode, id.display, "f{" + kv[1] + "}", id.msg, id.uri, id.max, id.min);
+        ItemData formatId = new ItemData(id.shield, id.name, id.mode, id.display, "f{" + kv[1] + "}", id.msg, id.uri, id.max, id.min,
+            id.logger, id.required, id.maxValue, id.minValue, id.maskError, id.related, id.relatedBlocks);
         ItemFormat item = new ItemFormat(formatId);
         formats.put(kv[0], item);
       }
-    }
-  }
-
-  void setAdditionalFields()
-  {
-    for (ItemFormat item : formats.values())
-    {
-      item.required = required;
-      item.maxValue = maxValue;
-      item.minValue = minValue;
-      item.related = related;
-      item.relatedBlocks = relatedBlocks;
     }
   }
 
