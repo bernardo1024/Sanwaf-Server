@@ -52,7 +52,7 @@ final class ItemString extends Item
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
   {
-    if (shouldSkipValidation(req, value))
+    if (hasPreValidationError(req, value))
     {
       return true;
     }

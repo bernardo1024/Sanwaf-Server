@@ -64,7 +64,7 @@ abstract class Item
 
   abstract Types getType();
 
-  boolean shouldSkipValidation(ServletRequest req, String value)
+  boolean hasPreValidationError(ServletRequest req, String value)
   {
     return mode == Modes.DISABLED || isUriInvalid(req) || isSizeError(value);
   }

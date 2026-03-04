@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -302,6 +303,19 @@ public class ModeTest
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("regexParmNoModeWithRegexDetectMode", "abcd");
     assertFalse(sanwaf.isThreatDetected(request));
+  }
+
+  @Test
+  public void testRegexDetectModeGetErrorPoints()
+  {
+    Shield shield = UnitTestUtil.getShield(sanwaf, "XSS");
+    Item item = shield.getItem(shield.parameters, "modeParameterRegex-DETECT");
+    assertNotNull(item);
+    // Clear cached rule so resolveRule must search both maps
+    UnitTestUtil.setField(item, "rule", null);
+    // date-DETECT defaults to match=pass (failOnMatch=false), so a non-date triggers error
+    List<Point> points = item.getErrorPoints(shield, "not-a-date");
+    assertFalse(points.isEmpty(), "detect-mode regex should produce error points");
   }
 
   @Test

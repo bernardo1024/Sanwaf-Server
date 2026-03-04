@@ -15,7 +15,7 @@ class ItemOpen extends Item
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
   {
-    return shouldSkipValidation(req, value);
+    return hasPreValidationError(req, value);
   }
 
   @Override

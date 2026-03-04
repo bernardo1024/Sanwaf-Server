@@ -42,6 +42,26 @@ final class ItemRegex extends Item
     this.isInline = il;
   }
 
+  private Rule resolveRule(Shield shield)
+  {
+    Rule r = this.rule;
+    if (r != null)
+    {
+      return r;
+    }
+    if (shield == null)
+    {
+      return null;
+    }
+    r = shield.customRulePatterns.get(patternName);
+    if (r == null)
+    {
+      r = shield.customRulePatternsDetect.get(patternName);
+    }
+    this.rule = r;
+    return r;
+  }
+
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value)
   {
@@ -49,12 +69,7 @@ final class ItemRegex extends Item
     {
       return Collections.emptyList();
     }
-    Rule r = this.rule;
-    if (r == null)
-    {
-      r = shield.customRulePatterns.get(patternName);
-      this.rule = r;
-    }
+    Rule r = resolveRule(shield);
     if (r == null || r.pattern == null)
     {
       return Collections.emptyList();
@@ -71,24 +86,11 @@ final class ItemRegex extends Item
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
   {
-    if (shouldSkipValidation(req, value))
+    if (hasPreValidationError(req, value))
     {
       return true;
     }
-    Rule r = this.rule;
-    if (r == null)
-    {
-      if (shield == null)
-      {
-        return false;
-      }
-      r = shield.customRulePatterns.get(patternName);
-      if (r == null)
-      {
-        r = shield.customRulePatternsDetect.get(patternName);
-      }
-      this.rule = r;
-    }
+    Rule r = resolveRule(shield);
     if (r == null)
     {
       if (logger != null && logger.isWarnEnabled())
