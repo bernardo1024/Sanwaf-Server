@@ -137,8 +137,7 @@ class Metadata
         {
           continue;
         }
-        Item item = ItemFactory.parseItem(shield, xml, includeEndpointAttributes, logger);
-        item.name = name;
+        Item item = ItemFactory.parseItem(shield, xml, name, includeEndpointAttributes, logger);
         item.display = name;
         items.put(caseSensitive ? name : name.toLowerCase(), item);
       }

@@ -49,12 +49,18 @@ public final class ItemFactory
 
   static Item parseItem(Xml xml, Logger logger)
   {
-    return parseItem(null, xml, false, logger);
+    return parseItem(null, xml, null, false, logger);
   }
 
   static Item parseItem(Shield shield, Xml xml, boolean includeEndpointAttributes, com.sanwaf.log.Logger logger)
   {
-    String name = xml.get(XML_ITEM_NAME);
+    return parseItem(shield, xml, null, includeEndpointAttributes, logger);
+  }
+
+  static Item parseItem(Shield shield, Xml xml, String nameOverride,
+      boolean includeEndpointAttributes, com.sanwaf.log.Logger logger)
+  {
+    String name = nameOverride != null ? nameOverride : xml.get(XML_ITEM_NAME);
     Modes mode = Modes.getMode(xml.get(XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
     String display = xml.get(XML_ITEM_DISPLAY);
     String type = xml.get(XML_ITEM_TYPE);
