@@ -346,8 +346,12 @@ public final class Sanwaf
    */
   public static boolean isThreatByXml(String value, String sXml)
   {
-    Item item = cachedParseItem(itemCache, sXml,
-        xml -> ItemFactory.parseItem(null, new Xml(xml), false, null));
+    Item item;
+    synchronized (itemCache)
+    {
+      item = cachedParseItem(itemCache, sXml,
+          xml -> ItemFactory.parseItem(null, new Xml(xml), false, null));
+    }
     return item.inError(null, null, value, false, false);
   }
 
@@ -424,8 +428,12 @@ public final class Sanwaf
   public boolean isThreat(String value, String shieldName, ServletRequest req, String xml)
   {
     SanwafConfig cfg = this.config;
-    Item item = cachedParseItem(instanceItemCache, xml,
-        x -> ItemFactory.parseItem(new Xml(x), logger));
+    Item item;
+    synchronized (instanceItemCache)
+    {
+      item = cachedParseItem(instanceItemCache, xml,
+          x -> ItemFactory.parseItem(new Xml(x), logger));
+    }
     Shield sh = (shieldName != null) ? cfg.shieldMap.get(shieldName) : null;
     if (sh == null)
     {
