@@ -68,7 +68,9 @@ final class ItemString extends Item
         return false;
       }
       //first process the detects & detect all - ignore the return value for detect
-      if (shield.rulePatternsDetectArray.length > 0)
+      //skip when item is BLOCK and caller wants fast-fail (doAllBlocks=false)
+      if (shield.rulePatternsDetectArray.length > 0
+          && (doAllBlocks || mode == Modes.DETECT || mode == Modes.DETECT_ALL))
       {
         isInErrorForPatterns(req, shield.rulePatternsDetectArray, value, doAllBlocks);
       }
