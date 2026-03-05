@@ -304,10 +304,13 @@ final class Shield
       return item.handleMode(value, req, item.mode, log, doAllBlocks, null);
     }
 
-    String relmsg = item.isRelateValid(value, req, meta);
-    if (relmsg != null)
+    if (item.related != null && !item.related.isEmpty())
     {
-      return item.handleMode(value, req, item.mode, log, doAllBlocks, relmsg);
+      String relmsg = item.isRelateValid(value, req, meta);
+      if (relmsg != null)
+      {
+        return item.handleMode(value, req, item.mode, log, doAllBlocks, relmsg);
+      }
     }
 
     if (item.inError(req, this, value, doAllBlocks, log))
@@ -664,7 +667,8 @@ final class Shield
 
   static boolean containsNoXssRelevantChar(String value)
   {
-    for (int i = 0; i < value.length(); i++)
+    int len = value.length();
+    for (int i = 0; i < len; i++)
     {
       switch (value.charAt(i))
       {
