@@ -120,10 +120,20 @@ abstract class Item
 
   void handleMode(String value, ServletRequest req, Modes action, boolean log)
   {
-    handleMode(value, req, action, log, false, null);
+    handleMode(value, req, action, log, false, null, null);
+  }
+
+  void handleMode(String value, ServletRequest req, Modes action, boolean log, List<Point> errorPoints)
+  {
+    handleMode(value, req, action, log, false, null, errorPoints);
   }
 
   boolean handleMode(String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks, String relatedErrMsg)
+  {
+    return handleMode(value, req, action, log, doAllBlocks, relatedErrMsg, null);
+  }
+
+  boolean handleMode(String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks, String relatedErrMsg, List<Point> errorPoints)
   {
     if (Modes.DISABLED == action)
     {
@@ -136,7 +146,7 @@ abstract class Item
       boolean doAttr = req != null && (cfg == null || cfg.onErrorAddParmErrors);
       if (doLog || doAttr)
       {
-        String json = JsonFormatter.toJson(this, value, mode, req, true, relatedErrMsg);
+        String json = JsonFormatter.toJson(this, value, mode, req, true, relatedErrMsg, errorPoints);
         if (doLog)
         {
           logger.error(json);
@@ -155,7 +165,7 @@ abstract class Item
       boolean doAttr = req != null && (cfg == null || cfg.onErrorAddParmDetections);
       if (doLog || doAttr)
       {
-        String json = JsonFormatter.toJson(this, value, mode, req, true, relatedErrMsg);
+        String json = JsonFormatter.toJson(this, value, mode, req, true, relatedErrMsg, errorPoints);
         if (doLog)
         {
           logger.warn(json);
@@ -186,6 +196,6 @@ abstract class Item
 
   public String toString()
   {
-    return JsonFormatter.toJson(this, null, null, null, true, null);
+    return JsonFormatter.toJson(this, null, null, null, true, null, null);
   }
 }

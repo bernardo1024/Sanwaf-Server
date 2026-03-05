@@ -262,5 +262,50 @@ public class SanwafIsThreatTest
     assertFalse(result);
   }
 
+  // --- mode tests for isThreatByXml ---
+  // Uses inline-regex type (x{...}) because its inError checks mode explicitly:
+  //   return r.mode == Modes.BLOCK && mode == Modes.BLOCK
+  // This makes the return value mode-sensitive even with shield=null.
+
+  private static final String MODE_XML_PREFIX = "<item><name>modeTest</name><mode>";
+  private static final String MODE_XML_SUFFIX = "</mode><type>x{^[0-9]+$}</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String MODE_XML_NO_MODE = "<item><name>modeTest</name><type>x{^[0-9]+$}</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String THREAT_VALUE = "abc";
+
+  @Test
+  public void testIsThreatByXml_modeBlock()
+  {
+    boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_PREFIX + "block" + MODE_XML_SUFFIX);
+    assertTrue(result);
+  }
+
+  @Test
+  public void testIsThreatByXml_modeDetect()
+  {
+    boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_PREFIX + "detect" + MODE_XML_SUFFIX);
+    assertFalse(result);
+  }
+
+  @Test
+  public void testIsThreatByXml_modeDetectAll()
+  {
+    boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_PREFIX + "detect-all" + MODE_XML_SUFFIX);
+    assertFalse(result);
+  }
+
+  @Test
+  public void testIsThreatByXml_modeDisabled()
+  {
+    boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_PREFIX + "disabled" + MODE_XML_SUFFIX);
+    assertTrue(result);
+  }
+
+  @Test
+  public void testIsThreatByXml_modeDefault()
+  {
+    boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_NO_MODE);
+    assertTrue(result);
+  }
+
 }
 

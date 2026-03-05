@@ -87,7 +87,7 @@ final class JsonFormatter
     set.add(value);
   }
 
-  static String toJson(Item item, String value, Modes thisMode, ServletRequest req, boolean verbose, String relatedErrMsg)
+  static String toJson(Item item, String value, Modes thisMode, ServletRequest req, boolean verbose, String relatedErrMsg, List<Point> errorPoints)
   {
     StringBuilder sb = new StringBuilder(512);
     sb.append("{");
@@ -184,10 +184,18 @@ final class JsonFormatter
 
     if (value != null && item.shield != null && verbose)
     {
-      List<Point> errorPoints = item.getErrorPoints(item.shield, value);
+      List<Point> points;
+      if (errorPoints != null && item.maskError.isEmpty())
+      {
+        points = errorPoints;
+      }
+      else
+      {
+        points = item.getErrorPoints(item.shield, value);
+      }
       sb.append(",\"samplePoints\":[");
       boolean doneFirst = false;
-      for (Point p : errorPoints)
+      for (Point p : points)
       {
         if (doneFirst)
         {

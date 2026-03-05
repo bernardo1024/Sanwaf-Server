@@ -891,13 +891,13 @@ public class DatatypeTest
   {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "error msg1", null, 1, 0);
     ItemChar item = new ItemChar(id);
-    String json = JsonFormatter.toJson(item, null, Modes.BLOCK, null, false, null);
+    String json = JsonFormatter.toJson(item, null, Modes.BLOCK, null, false, null, null);
     assertTrue(json.contains("\"value\":\"\""));
     assertFalse(json.contains("\"value\":\"null\""));
   }
 
   @Test
-  public void testFormatEscapceChars()
+  public void testFormatEscapeChars()
   {
     // <item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\(\)\|\:\=\+\-\;#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     // <item><name>parmformatEscapedXchar1</name><type>f{xxx}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>

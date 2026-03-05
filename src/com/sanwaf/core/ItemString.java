@@ -94,17 +94,19 @@ final class ItemString extends Item
         {
           continue;
         }
-        boolean match = r.matcher(value).find();
+        Matcher m = r.matcher(value);
+        boolean match = m.find();
         if ((r.failOnMatch && match) || (!r.failOnMatch && !match))
         {
+          List<Point> points = match ? collectMatchPoints(m) : null;
           if (r.mode == Modes.BLOCK)
           {
             inError = true;
-            handleMode(value, req, ruleMode, true, doAllBlocks, null);
+            handleMode(value, req, ruleMode, true, doAllBlocks, null, points);
           }
           else
           {
-            handleMode(value, req, ruleMode, true);
+            handleMode(value, req, ruleMode, true, points);
           }
           if (doAllBlocks || (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL))
           {
@@ -114,6 +116,17 @@ final class ItemString extends Item
       }
     }
     return inError;
+  }
+
+  private static List<Point> collectMatchPoints(Matcher m)
+  {
+    List<Point> points = new ArrayList<>();
+    do
+    {
+      points.add(new Point(m.start(), m.end()));
+    }
+    while (m.find());
+    return points;
   }
 
   @Override
