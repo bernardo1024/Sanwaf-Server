@@ -50,7 +50,7 @@ public class VerboseTest {
     String s = outContent.toString();
     assertTrue(s.contains("Settings:"));
     assertFalse(s.contains("RegexAlways=true"));
-    assertTrue(s.contains("StringRegexs:"));
+    assertTrue(s.contains("StringRegexes:"));
     assertTrue(s.contains("customPatterns:"));
     assertTrue(s.contains("Secured Items:"));
     assertTrue(s.contains("date="));
