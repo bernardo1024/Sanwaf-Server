@@ -9,68 +9,54 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-final class Xml
-{
+final class Xml {
   static final String CDATA_START = "<![CDATA[";
   static final String CDATA_END = "]]>";
 
   private final String rawXml;
   private final String rawXmlLower;
 
-  Xml(String rawXml)
-  {
+  Xml(String rawXml) {
     this.rawXml = stripXmlComments(rawXml);
     this.rawXmlLower = this.rawXml.toLowerCase();
   }
 
-  Xml(URL url) throws IOException
-  {
-    if (url != null)
-    {
+  Xml(URL url) throws IOException {
+    if (url != null) {
       rawXml = stripXmlComments(readFile(url.openStream()));
-    }
-    else
-    {
+    } else {
       throw new IOException("url provided is null");
     }
     rawXmlLower = rawXml.toLowerCase();
   }
 
-  static String readFile(InputStream is) throws IOException
-  {
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8), 4096))
-    {
+  static String readFile(InputStream is) throws IOException {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8), 4096)) {
       StringBuilder sb = new StringBuilder();
       char[] buf = new char[4096];
       int read;
-      while ((read = reader.read(buf)) != -1)
-      {
+      while ((read = reader.read(buf)) != -1) {
         sb.append(buf, 0, read);
       }
       return sb.toString();
     }
   }
 
-  static String stripXmlComments(String s)
-  {
-    if (s == null || s.isEmpty())
-    {
+  static String stripXmlComments(String s) {
+    if (s == null || s.isEmpty()) {
       return "";
     }
     StringBuilder sb = new StringBuilder(s.length());
     int pos = 0;
-    while (pos < s.length())
-    {
+    while (pos < s.length()) {
       int commentStart = s.indexOf("<!--", pos);
-      if (commentStart < 0)
-      {
+      if (commentStart < 0) {
         sb.append(s, pos, s.length());
         break;
       }
       sb.append(s, pos, commentStart);
       int commentEnd = s.indexOf("-->", commentStart + 4);
-      if (commentEnd < 0)
-      {
+      if (commentEnd < 0) {
         sb.append(s, commentStart, s.length());
         break;
       }
@@ -79,60 +65,49 @@ final class Xml
     return sb.toString();
   }
 
-  public String toString()
-  {
+  public String toString() {
     return rawXml;
   }
 
-  String get(String key)
-  {
+  String get(String key) {
     return get(rawXml, rawXmlLower, key);
   }
 
-  String get(String xml, String key)
-  {
-    if (xml == null || xml.isEmpty())
-    {
+  String get(String xml, String key) {
+    if (xml == null || xml.isEmpty()) {
       return "";
     }
     return get(xml, xml.toLowerCase(), key);
   }
 
-  private String get(String xml, String xmlLc, String key)
-  {
-    if (xml == null || xml.isEmpty())
-    {
+  private String get(String xml, String xmlLc, String key) {
+    if (xml == null || xml.isEmpty()) {
       return "";
     }
     String keyLc = "<" + key.toLowerCase() + ">";
     int start = xmlLc.indexOf(keyLc);
-    if (start < 0)
-    {
+    if (start < 0) {
       return "";
     }
     String endKeyLc = "</" + key.toLowerCase() + ">";
     int end = xmlLc.indexOf(endKeyLc, start);
-    if (end < 0)
-    {
+    if (end < 0) {
       return "";
     }
     String value = xml.substring(start + keyLc.length(), end);
     int cdataStart = value.indexOf(CDATA_START);
-    if (cdataStart == 0)
-    {
+    if (cdataStart == 0) {
       int cdataEnd = value.indexOf(CDATA_END, cdataStart);
       return value.substring(cdataStart + CDATA_START.length(), cdataEnd);
     }
     return value;
   }
 
-  String[] getAll(String key)
-  {
+  String[] getAll(String key) {
     return getAll(rawXml, rawXmlLower, "<" + key + ">", "</" + key + ">");
   }
 
-  private String[] getAll(String xml, String xmlLc, String key, String endKey)
-  {
+  private String[] getAll(String xml, String xmlLc, String key, String endKey) {
     List<String> hits = new ArrayList<>();
     int keyLen = key.length();
     int endKeyLen = endKey.length();
@@ -140,11 +115,9 @@ final class Xml
     int start;
     int end;
 
-    while ((start = xmlLc.indexOf(key, pos)) >= 0)
-    {
+    while ((start = xmlLc.indexOf(key, pos)) >= 0) {
       end = xmlLc.indexOf(endKey, start + keyLen);
-      if (end < 0)
-      {
+      if (end < 0) {
         break;
       }
       hits.add(xml.substring(start + keyLen, end));
@@ -153,4 +126,3 @@ final class Xml
     return hits.toArray(new String[0]);
   }
 }
-

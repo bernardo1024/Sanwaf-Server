@@ -7,8 +7,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class DatatypeXssPayloadsTest
-{
+public class DatatypeXssPayloadsTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
@@ -17,24 +16,18 @@ public class DatatypeXssPayloadsTest
   static final boolean logErrors = true;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void XssFormElements()
-  {
+  public void XssFormElements() {
     UnitTestResult result = UnitTestUtil.runTestsUsingFile(shield, "src.test/resources/xssFormPayloads.txt", iterations, doHex, logErrors);
     UnitTestUtil.log("XSS-SanWaf", result);
   }
 }
-

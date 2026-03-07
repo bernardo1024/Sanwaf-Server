@@ -10,26 +10,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ReduceXmlTest
-{
+public class ReduceXmlTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-reduced.xml");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void numericTest()
-  {
+  public void numericTest() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("Numeric", "abc123");
     boolean result = sanwaf.isThreatDetected(request);
@@ -41,4 +35,3 @@ public class ReduceXmlTest
     assertFalse(result);
   }
 }
-

@@ -13,41 +13,33 @@ import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ModeDetectLoggingTest
-{
+public class ModeDetectLoggingTest {
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
 
   static Sanwaf sanwaf;
 
   @BeforeEach
-  public void setUpStreams()
-  {
+  public void setUpStreams() {
     System.setOut(new PrintStream(outContent));
   }
 
   @AfterEach
-  public void restoreStreams()
-  {
+  public void restoreStreams() {
     System.setOut(originalOut);
   }
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-modes.xml");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testDatatypeDetect1()
-  {
+  public void testDatatypeDetect1() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("endpointRegex", "abc");
     sanwaf.isThreatDetected(request, false, true);
@@ -56,8 +48,7 @@ public class ModeDetectLoggingTest
   }
 
   @Test
-  public void testDatatypeDetect()
-  {
+  public void testDatatypeDetect() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("numericdelimited", "abc");
     sanwaf.isThreatDetected(request, false, true);
@@ -113,4 +104,3 @@ public class ModeDetectLoggingTest
     assertTrue(s.contains("\"formats\":{\"key\":\"123\""));
   }
 }
-

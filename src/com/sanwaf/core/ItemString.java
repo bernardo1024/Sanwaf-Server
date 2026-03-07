@@ -7,40 +7,31 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 
-final class ItemString extends Item
-{
+final class ItemString extends Item {
   static final ItemString DEFAULT_INSTANCE = new ItemString();
   static final String FAILED_PATTERN = "Failed Pattern: ";
 
-  ItemString()
-  {
+  ItemString() {
   }
 
-  ItemString(ItemData id)
-  {
+  ItemString(ItemData id) {
     super(id);
   }
 
   @Override
-  List<Point> getErrorPoints(final Shield shield, final String value)
-  {
-    if (shield == null || !maskError.isEmpty())
-    {
+  List<Point> getErrorPoints(final Shield shield, final String value) {
+    if (shield == null || !maskError.isEmpty()) {
       return Collections.emptyList();
     }
     List<Point> points = null;
     Rule[] rules = shield.rulePatternsArray;
-    for (Rule r : rules)
-    {
-      if (r.pattern == null)
-      {
+    for (Rule r : rules) {
+      if (r.pattern == null) {
         continue;
       }
       Matcher m = r.matcher(value);
-      while (m.find())
-      {
-        if (points == null)
-        {
+      while (m.find()) {
+        if (points == null) {
           points = new ArrayList<>();
         }
         points.add(new Point(m.start(), m.end()));
@@ -50,68 +41,51 @@ final class ItemString extends Item
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log)
-  {
-    if (hasPreValidationError(req, value))
-    {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
+    if (hasPreValidationError(req, value)) {
       return true;
     }
     boolean inError = false;
-    if (shield != null)
-    {
-      if (value.length() < shield.regexMinLen)
-      {
+    if (shield != null) {
+      if (value.length() < shield.regexMinLen) {
         return false;
       }
-      if (shield.canSkipByCharScan && Shield.containsNoXssRelevantChar(value))
-      {
+      if (shield.canSkipByCharScan && Shield.containsNoXssRelevantChar(value)) {
         return false;
       }
-      //first process the detects & detect all - ignore the return value for detect
-      //skip when item is BLOCK and caller wants fast-fail (doAllBlocks=false)
-      if (shield.rulePatternsDetectArray.length > 0
-          && (doAllBlocks || mode == Modes.DETECT || mode == Modes.DETECT_ALL))
-      {
+      // first process the detects & detect all - ignore the return value for detect
+      // skip when item is BLOCK and caller wants fast-fail (doAllBlocks=false)
+      if (shield.rulePatternsDetectArray.length > 0 && (doAllBlocks || mode == Modes.DETECT || mode == Modes.DETECT_ALL)) {
         isInErrorForPatterns(req, shield.rulePatternsDetectArray, value, doAllBlocks);
       }
-      //then do the blocks
+      // then do the blocks
       inError = isInErrorForPatterns(req, shield.rulePatternsArray, value, doAllBlocks);
     }
-    if (mode == Modes.DETECT || mode == Modes.DETECT_ALL)
-    {
+    if (mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
       return false;
     }
     return inError;
   }
 
-  private boolean isInErrorForPatterns(final ServletRequest req, Rule[] rules, final String value, boolean doAllBlocks)
-  {
+  private boolean isInErrorForPatterns(final ServletRequest req, Rule[] rules, final String value, boolean doAllBlocks) {
     boolean inError = false;
-    for (Rule r : rules)
-    {
+    for (Rule r : rules) {
       Modes ruleMode = r.mode;
-      if (ruleMode != Modes.DISABLED)
-      {
-        if (r.pattern == null)
-        {
+      if (ruleMode != Modes.DISABLED) {
+        if (r.pattern == null) {
           continue;
         }
         Matcher m = r.matcher(value);
         boolean match = m.find();
-        if ((r.failOnMatch && match) || (!r.failOnMatch && !match))
-        {
+        if ((r.failOnMatch && match) || (!r.failOnMatch && !match)) {
           List<Point> points = match ? collectMatchPoints(m) : null;
-          if (r.mode == Modes.BLOCK)
-          {
+          if (r.mode == Modes.BLOCK) {
             inError = true;
             handleMode(value, req, ruleMode, true, doAllBlocks, null, points);
-          }
-          else
-          {
+          } else {
             handleMode(value, req, ruleMode, true, points);
           }
-          if (doAllBlocks || (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL))
-          {
+          if (doAllBlocks || (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL)) {
             break;
           }
         }
@@ -120,27 +94,21 @@ final class ItemString extends Item
     return inError;
   }
 
-  private static List<Point> collectMatchPoints(Matcher m)
-  {
+  private static List<Point> collectMatchPoints(Matcher m) {
     List<Point> points = new ArrayList<>();
-    do
-    {
+    do {
       points.add(new Point(m.start(), m.end()));
-    }
-    while (m.find());
+    } while (m.find());
     return points;
   }
 
   @Override
-  String getDefaultErrorMessage()
-  {
+  String getDefaultErrorMessage() {
     return FAILED_PATTERN;
   }
 
   @Override
-  Types getType()
-  {
+  Types getType() {
     return Types.STRING;
   }
 }
-

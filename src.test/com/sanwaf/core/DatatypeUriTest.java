@@ -10,26 +10,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class DatatypeUriTest
-{
+public class DatatypeUriTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-uri.xml");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testNumeric()
-  {
+  public void testNumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("Numeric", "123");
@@ -42,8 +36,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testNumericDelimitedType()
-  {
+  public void testNumericDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("NumericDelimited", "123,456");
@@ -56,8 +49,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testAlphanumeric()
-  {
+  public void testAlphanumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("Alphanumeric", "abc123");
@@ -70,8 +62,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testAlphanumericAndMoreType()
-  {
+  public void testAlphanumericAndMoreType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("AlphanumericAndMore", "abc123 :");
@@ -84,8 +75,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testChar()
-  {
+  public void testChar() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("Char", "c");
@@ -98,8 +88,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testRegexType()
-  {
+  public void testRegexType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("Regex", "555-555-5555");
@@ -112,8 +101,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testConstantType()
-  {
+  public void testConstantType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("Constant", "FOO");
@@ -126,8 +114,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testJava()
-  {
+  public void testJava() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("Java", "10");
@@ -140,8 +127,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testString()
-  {
+  public void testString() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("String", "valid string");
@@ -154,8 +140,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testOpen()
-  {
+  public void testOpen() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("Open", "valid string");
@@ -168,8 +153,7 @@ public class DatatypeUriTest
   }
 
   @Test
-  public void testMultipleUris()
-  {
+  public void testMultipleUris() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
     req.addParameter("MultipleUris", "123456");
@@ -191,4 +175,3 @@ public class DatatypeUriTest
     assertTrue(sanwaf.isThreatDetected(req));
   }
 }
-

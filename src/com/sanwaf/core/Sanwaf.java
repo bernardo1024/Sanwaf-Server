@@ -18,8 +18,7 @@ import java.util.UUID;
 import java.util.LinkedHashMap;
 import java.util.function.Function;
 
-public final class Sanwaf
-{
+public final class Sanwaf {
   static final String DEFAULT_LOGGER_DETECTED_MSG = "NOTE: Sanwaf is using the Default \"SimpleLogger\" logger."
       + " To correct this, implement the com.sanwaf.log.Logger Interface and provide your logger in the Sanwaf constructor.";
   static final String STANDALONE_XML_FILENAME = "sanwaf.xml";
@@ -36,13 +35,11 @@ public final class Sanwaf
 
   volatile SanwafConfig config;
 
-  public enum AllowListType
-  {
+  public enum AllowListType {
     HEADER, COOKIE, PARAMETER
   }
 
-  static final class SanwafConfig
-  {
+  static final class SanwafConfig {
     final boolean enabled;
     final boolean verbose;
     final boolean onErrorAddTrackId;
@@ -57,13 +54,9 @@ public final class Sanwaf
     final Map<String, Shield> shieldMap;
     final Map<String, String> globalErrorMessages;
 
-    SanwafConfig(boolean enabled, boolean verbose, boolean onErrorAddTrackId,
-        boolean onErrorAddParmErrors, boolean onErrorAddParmDetections,
-        boolean onErrorLogParmErrors, boolean onErrorLogParmDetections,
-        boolean onErrorLogParmErrorsVerbose, boolean onErrorLogParmDetectionsVerbose,
-        String securedAppVersion, List<Shield> shields, Map<String, Shield> shieldMap,
-        Map<String, String> globalErrorMessages)
-    {
+    SanwafConfig(boolean enabled, boolean verbose, boolean onErrorAddTrackId, boolean onErrorAddParmErrors, boolean onErrorAddParmDetections, boolean onErrorLogParmErrors,
+        boolean onErrorLogParmDetections, boolean onErrorLogParmErrorsVerbose, boolean onErrorLogParmDetectionsVerbose, String securedAppVersion, List<Shield> shields, Map<String, Shield> shieldMap,
+        Map<String, String> globalErrorMessages) {
       this.enabled = enabled;
       this.verbose = verbose;
       this.onErrorAddTrackId = onErrorAddTrackId;
@@ -79,13 +72,11 @@ public final class Sanwaf
       this.globalErrorMessages = Collections.unmodifiableMap(globalErrorMessages);
     }
 
-    Builder toBuilder()
-    {
+    Builder toBuilder() {
       return new Builder(this);
     }
 
-    static final class Builder
-    {
+    static final class Builder {
       private boolean enabled;
       private boolean verbose;
       private boolean onErrorAddTrackId;
@@ -100,8 +91,7 @@ public final class Sanwaf
       private final Map<String, Shield> shieldMap;
       private final Map<String, String> globalErrorMessages;
 
-      Builder(SanwafConfig c)
-      {
+      Builder(SanwafConfig c) {
         this.enabled = c.enabled;
         this.verbose = c.verbose;
         this.onErrorAddTrackId = c.onErrorAddTrackId;
@@ -117,22 +107,54 @@ public final class Sanwaf
         this.globalErrorMessages = c.globalErrorMessages;
       }
 
-      Builder enabled(boolean v) { this.enabled = v; return this; }
-      Builder verbose(boolean v) { this.verbose = v; return this; }
-      Builder onErrorAddTrackId(boolean v) { this.onErrorAddTrackId = v; return this; }
-      Builder onErrorAddParmErrors(boolean v) { this.onErrorAddParmErrors = v; return this; }
-      Builder onErrorAddParmDetections(boolean v) { this.onErrorAddParmDetections = v; return this; }
-      Builder onErrorLogParmErrors(boolean v) { this.onErrorLogParmErrors = v; return this; }
-      Builder onErrorLogParmDetections(boolean v) { this.onErrorLogParmDetections = v; return this; }
-      Builder onErrorLogParmErrorsVerbose(boolean v) { this.onErrorLogParmErrorsVerbose = v; return this; }
-      Builder onErrorLogParmDetectionsVerbose(boolean v) { this.onErrorLogParmDetectionsVerbose = v; return this; }
+      Builder enabled(boolean v) {
+        this.enabled = v;
+        return this;
+      }
 
-      SanwafConfig build()
-      {
-        return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
-            onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
-            onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
-            shields, shieldMap, globalErrorMessages);
+      Builder verbose(boolean v) {
+        this.verbose = v;
+        return this;
+      }
+
+      Builder onErrorAddTrackId(boolean v) {
+        this.onErrorAddTrackId = v;
+        return this;
+      }
+
+      Builder onErrorAddParmErrors(boolean v) {
+        this.onErrorAddParmErrors = v;
+        return this;
+      }
+
+      Builder onErrorAddParmDetections(boolean v) {
+        this.onErrorAddParmDetections = v;
+        return this;
+      }
+
+      Builder onErrorLogParmErrors(boolean v) {
+        this.onErrorLogParmErrors = v;
+        return this;
+      }
+
+      Builder onErrorLogParmDetections(boolean v) {
+        this.onErrorLogParmDetections = v;
+        return this;
+      }
+
+      Builder onErrorLogParmErrorsVerbose(boolean v) {
+        this.onErrorLogParmErrorsVerbose = v;
+        return this;
+      }
+
+      Builder onErrorLogParmDetectionsVerbose(boolean v) {
+        this.onErrorLogParmDetectionsVerbose = v;
+        return this;
+      }
+
+      SanwafConfig build() {
+        return new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors, onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections, onErrorLogParmErrorsVerbose,
+            onErrorLogParmDetectionsVerbose, securedAppVersion, shields, shieldMap, globalErrorMessages);
       }
     }
   }
@@ -148,8 +170,7 @@ public final class Sanwaf
    * </pre>
    *
    */
-  public Sanwaf() throws IOException
-  {
+  public Sanwaf() throws IOException {
     this(new SimpleLogger(), "/" + STANDALONE_XML_FILENAME);
     logger.info(DEFAULT_LOGGER_DETECTED_MSG);
   }
@@ -158,7 +179,7 @@ public final class Sanwaf
    * Sanwaf constructor.
    *
    * <pre>
-   * Creates a new Sanwaf instance initializing it with the logger provided; 
+   * Creates a new Sanwaf instance initializing it with the logger provided;
    * Uses the default Sanwaf XML configuration file (sanwaf.xml on classpath)
    * </pre>
    *
@@ -166,8 +187,7 @@ public final class Sanwaf
    *          A logger of your choice that implements the com.sanwaf.log.Logger
    *          interface
    */
-  public Sanwaf(Logger logger) throws IOException
-  {
+  public Sanwaf(Logger logger) throws IOException {
     this(logger, "/" + STANDALONE_XML_FILENAME);
   }
 
@@ -184,8 +204,7 @@ public final class Sanwaf
    * @param filename
    *          Fully qualified path to a valid Sanwaf XML file
    */
-  public Sanwaf(Logger logger, String filename) throws IOException
-  {
+  public Sanwaf(Logger logger, String filename) throws IOException {
     this.logger = logger;
     this.xmlFilename = filename;
     loadProperties();
@@ -196,7 +215,7 @@ public final class Sanwaf
    *
    * <pre>
    * Threats detected are derived from all shields configurations
-   * If an error is detected, attributes will be added to request for processing latter.  
+   * If an error is detected, attributes will be added to request for processing latter.
    *  Attributes added are dependent on the properties settings of:
    *        <provideTrackId>true/false</provideTrackId>
    *        <provideErrors>true/false</provideErrors>
@@ -210,26 +229,25 @@ public final class Sanwaf
    *          threats
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreatDetected(ServletRequest req)
-  {
+  public boolean isThreatDetected(ServletRequest req) {
     return isThreatDetected(req, false, false);
   }
 
   /**
    * @deprecated Ambiguous boolean parameter — the {@code log} parameter is easily
    *             mistaken for {@code doAllBlocks}. A call like
-   *             {@code isThreatDetected(req, true)} sets {@code log=true, doAllBlocks=false},
-   *             which is the opposite of the likely intent.
-   *             Use {@link #isThreatDetected(ServletRequest, boolean, boolean)} instead.
+   *             {@code isThreatDetected(req, true)} sets
+   *             {@code log=true, doAllBlocks=false}, which is the opposite of the
+   *             likely intent. Use
+   *             {@link #isThreatDetected(ServletRequest, boolean, boolean)}
+   *             instead.
    */
   @Deprecated
-  public boolean isThreatDetected(ServletRequest req, boolean log)
-  {
+  public boolean isThreatDetected(ServletRequest req, boolean log) {
     return isThreatDetected(req, null, false, log);
   }
 
-  public boolean isThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
-  {
+  public boolean isThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     return isThreatDetected(req, null, doAllBlocks, log);
   }
 
@@ -239,7 +257,7 @@ public final class Sanwaf
    *
    * <pre>
    * Threats detected are derived from all shields configurations
-   * If an error is detected, attributes will be added to request for processing latter.  
+   * If an error is detected, attributes will be added to request for processing latter.
    *  Attributes added are dependent on the properties settings of:
    *        <provideTrackId>true/false</provideTrackId>
    *        <provideErrors>true/false</provideErrors>
@@ -254,12 +272,13 @@ public final class Sanwaf
    * @param shieldList
    *          list of string shield names you want run against
    * @param doAllBlocks
-   *          flag to control if sanwaf will stop on the first item marked as Block.  Set to true to run all blocks.
-   *          this is used with you want to get all the errors for a given request, otherwise, only the first block will be reported. 
+   *          flag to control if sanwaf will stop on the first item marked as
+   *          Block. Set to true to run all blocks. this is used with you want to
+   *          get all the errors for a given request, otherwise, only the first
+   *          block will be reported.
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks)
-  {
+  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks) {
     return isThreatDetected(req, shieldList, doAllBlocks, false);
   }
 
@@ -269,7 +288,7 @@ public final class Sanwaf
    *
    * <pre>
    * Threats detected are derived from all shields configurations
-   * If an error is detected, attributes will be added to request for processing latter.  
+   * If an error is detected, attributes will be added to request for processing latter.
    *  Attributes added are dependent on the properties settings of:
    *        <provideTrackId>true/false</provideTrackId>
    *        <provideErrors>true/false</provideErrors>
@@ -284,27 +303,25 @@ public final class Sanwaf
    * @param shieldList
    *          list of string shield names you want run against
    * @param doAllBlocks
-   *          flag to control if sanwaf will stop on the first item marked as Block.  Set to true to run all blocks.
-   *          this is used with you want to get all the errors for a given request, otherwise, only the first block will be reported. 
+   *          flag to control if sanwaf will stop on the first item marked as
+   *          Block. Set to true to run all blocks. this is used with you want to
+   *          get all the errors for a given request, otherwise, only the first
+   *          block will be reported.
    * @param log
-   * 		  flag to control if sanwaf will log errors detected. you can use the getAllErrors method to pull errors from the request object
+   *          flag to control if sanwaf will log errors detected. you can use the
+   *          getAllErrors method to pull errors from the request object
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks, boolean log)
-  {
+  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks, boolean log) {
     SanwafConfig cfg = this.config;
-    if (!cfg.enabled || !(req instanceof HttpServletRequest))
-    {
+    if (!cfg.enabled || !(req instanceof HttpServletRequest)) {
       return false;
     }
     boolean threat = false;
     Shield[] shields = cfg.shields;
-    for (Shield sh : shields)
-    {
-      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log))
-      {
-        if (!doAllBlocks)
-        {
+    for (Shield sh : shields) {
+      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log)) {
+        if (!doAllBlocks) {
           return true;
         }
         threat = true;
@@ -325,8 +342,7 @@ public final class Sanwaf
    *          the string you want to scan for threats
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreat(String value)
-  {
+  public boolean isThreat(String value) {
     return checkValueForShieldThreats(value, null, null);
   }
 
@@ -344,25 +360,22 @@ public final class Sanwaf
    *          item XML to be used to validate with
    * @return boolean true/false if a threat was detected
    */
-  public static boolean isThreatByXml(String value, String sXml)
-  {
+  public static boolean isThreatByXml(String value, String sXml) {
     Item item;
-    synchronized (itemCache)
-    {
-      item = cachedParseItem(itemCache, sXml,
-          xml -> ItemFactory.parseItem(null, new Xml(xml), false, null));
+    synchronized (itemCache) {
+      item = cachedParseItem(itemCache, sXml, xml -> ItemFactory.parseItem(null, new Xml(xml), false, null));
     }
     return item.inError(null, null, value, false, false);
   }
 
   /**
-   * @deprecated Ambiguous overload — a caller writing {@code sanwaf.isThreat(value, someString)}
-   *             hits this static method (no shield context) instead of the instance overloads.
-   *             Use {@link #isThreatByXml(String, String)} instead.
+   * @deprecated Ambiguous overload — a caller writing
+   *             {@code sanwaf.isThreat(value, someString)} hits this static
+   *             method (no shield context) instead of the instance overloads. Use
+   *             {@link #isThreatByXml(String, String)} instead.
    */
   @Deprecated
-  public static boolean isThreat(String value, String sXml)
-  {
+  public static boolean isThreat(String value, String sXml) {
     return isThreatByXml(value, sXml);
   }
 
@@ -390,8 +403,7 @@ public final class Sanwaf
    *          ServletRequest to add the error attributes
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreat(String value, String shieldName, ServletRequest req)
-  {
+  public boolean isThreat(String value, String shieldName, ServletRequest req) {
     return checkValueForShieldThreats(value, shieldName, req);
   }
 
@@ -425,27 +437,21 @@ public final class Sanwaf
    *          shield/metadata/secured section for configuration details
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreat(String value, String shieldName, ServletRequest req, String xml)
-  {
+  public boolean isThreat(String value, String shieldName, ServletRequest req, String xml) {
     SanwafConfig cfg = this.config;
     Item item;
-    synchronized (instanceItemCache)
-    {
-      item = cachedParseItem(instanceItemCache, xml,
-          x -> ItemFactory.parseItem(new Xml(x), logger));
+    synchronized (instanceItemCache) {
+      item = cachedParseItem(instanceItemCache, xml, x -> ItemFactory.parseItem(new Xml(x), logger));
     }
     Shield sh = (shieldName != null) ? cfg.shieldMap.get(shieldName) : null;
-    if (sh == null)
-    {
-      if (logger.isErrorEnabled())
-      {
+    if (sh == null) {
+      if (logger.isErrorEnabled()) {
         logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
       }
       return false;
     }
     boolean result = item.inError(req, sh, value, false, false);
-    if (result && req != null && cfg.onErrorAddTrackId && req.getAttribute(ATT_TRANS_ID) == null)
-    {
+    if (result && req != null && cfg.onErrorAddTrackId && req.getAttribute(ATT_TRANS_ID) == null) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID().toString());
     }
     return result;
@@ -468,8 +474,7 @@ public final class Sanwaf
    *          ServletRequest to add the error attributes
    * @return boolean true/false if a threat was detected
    */
-  public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req)
-  {
+  public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req) {
     return checkValueForShieldThreats(value, shieldName, req, false);
   }
 
@@ -489,17 +494,16 @@ public final class Sanwaf
    * @param req
    *          ServletRequest to add the error attributes
    * @param log
-   * 		  boolean value to tell sanwaf to log errors. you can get errors by calling getAllErrors(request) as errors are stored in the request attributes.
+   *          boolean value to tell sanwaf to log errors. you can get errors by
+   *          calling getAllErrors(request) as errors are stored in the request
+   *          attributes.
    * @return boolean true/false if a threat was detected
    */
-  public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req, boolean log)
-  {
+  public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req, boolean log) {
     SanwafConfig cfg = this.config;
     Shield[] shields = cfg.shields;
-    for (Shield sh : shields)
-    {
-      if ((shieldName == null || shieldName.equals(sh.name)) && sh.threat(req, value, log))
-      {
+    for (Shield sh : shields) {
+      if ((shieldName == null || shieldName.equals(sh.name)) && sh.threat(req, value, log)) {
         return true;
       }
     }
@@ -526,19 +530,17 @@ public final class Sanwaf
    * @param type
    *          Sanwaf.AllowListType enumeration (HEADER, COOKIE, PARAMETER)
    * @param req
-   *          HttpServletRequest Object to pull the header/cookie/parameter value from
+   *          HttpServletRequest Object to pull the header/cookie/parameter value
+   *          from
    * @return String the value of the requested header/cookie/parameter requested
    *         or null.
    */
-  public String getAllowListedValue(String name, AllowListType type, HttpServletRequest req)
-  {
+  public String getAllowListedValue(String name, AllowListType type, HttpServletRequest req) {
     SanwafConfig cfg = this.config;
     Shield[] shields = cfg.shields;
-    for (Shield sh : shields)
-    {
+    for (Shield sh : shields) {
       String value = sh.getAllowListedValue(name, type, req);
-      if (value != null)
-      {
+      if (value != null) {
         return value;
       }
     }
@@ -549,8 +551,7 @@ public final class Sanwaf
    * Dynamically reload sanwaf
    *
    */
-  public void reLoad() throws IOException
-  {
+  public void reLoad() throws IOException {
     instanceItemCache.clear();
     loadProperties();
   }
@@ -568,11 +569,9 @@ public final class Sanwaf
    *          Sanwaf.isThreatDetected() returned true.
    * @return String returns the Sanwaf Tracking ID
    */
-  public static String getTrackingId(HttpServletRequest req)
-  {
+  public static String getTrackingId(HttpServletRequest req) {
     Object o = req.getAttribute(ATT_TRANS_ID);
-    if (o != null)
-    {
+    if (o != null) {
       return String.valueOf(o);
     }
     return null;
@@ -592,8 +591,7 @@ public final class Sanwaf
    *          Sanwaf.isThreatDetected() returned true.
    * @return String Returns all threats found in JSON format
    */
-  public static String getErrors(HttpServletRequest req)
-  {
+  public static String getErrors(HttpServletRequest req) {
     return formatAttributeList(req.getAttribute(ATT_LOG_ERROR));
   }
 
@@ -610,31 +608,28 @@ public final class Sanwaf
    *          Sanwaf.isThreatDetected() returned true.
    * @return String Returns all threats found in JSON format
    */
-  public String rescanAndGetAllErrors(HttpServletRequest req)
-  {
-    if (req == null)
-    {
+  public String rescanAndGetAllErrors(HttpServletRequest req) {
+    if (req == null) {
       return null;
     }
     SanwafConfig cfg = this.config;
-    if (cfg.onErrorAddParmErrors)
-    {
-      //clear out the one from the block
+    if (cfg.onErrorAddParmErrors) {
+      // clear out the one from the block
       req.setAttribute(ATT_LOG_ERROR, null);
     }
-    //call all blocks, don't worry about the detects as they will have already been processed.
+    // call all blocks, don't worry about the detects as they will have already been
+    // processed.
     isThreatDetected(req, null, true);
     return formatAttributeList(req.getAttribute(ATT_LOG_ERROR));
   }
 
   /**
    * @deprecated Renamed to {@link #rescanAndGetAllErrors(HttpServletRequest)}.
-   *             This method re-scans the entire request (hidden side-effect);
-   *             the new name makes that explicit.
+   *             This method re-scans the entire request (hidden side-effect); the
+   *             new name makes that explicit.
    */
   @Deprecated
-  public String getAllErrors(HttpServletRequest req)
-  {
+  public String getAllErrors(HttpServletRequest req) {
     return rescanAndGetAllErrors(req);
   }
 
@@ -650,19 +645,15 @@ public final class Sanwaf
    *          Sanwaf.isThreatDetected() returned true.
    * @return String Returns all threats found in JSON format
    */
-  public static String getDetects(HttpServletRequest req)
-  {
+  public static String getDetects(HttpServletRequest req) {
     return formatAttributeList(req.getAttribute(ATT_LOG_DETECT));
   }
 
   @SuppressWarnings("unchecked")
-  private static String formatAttributeList(Object o)
-  {
-    if (o instanceof Collection)
-    {
+  private static String formatAttributeList(Object o) {
+    if (o instanceof Collection) {
       Collection<String> list = (Collection<String>) o;
-      if (list.isEmpty())
-      {
+      if (list.isEmpty()) {
         return null;
       }
       return "[" + String.join(",", list) + "]";
@@ -670,31 +661,23 @@ public final class Sanwaf
     return null;
   }
 
-  Shield getShield(String name)
-  {
-    if (name == null)
-    {
+  Shield getShield(String name) {
+    if (name == null) {
       return null;
     }
     return config.shieldMap.get(name);
   }
 
-  private static <K, V> Map<K, V> createLruCache()
-  {
-    return Collections.synchronizedMap(
-        new LinkedHashMap<K, V>(MAX_ITEM_CACHE_SIZE, 0.75f, true)
-        {
-          @Override
-          protected boolean removeEldestEntry(Map.Entry<K, V> eldest)
-          {
-            return size() > MAX_ITEM_CACHE_SIZE;
-          }
-        });
+  private static <K, V> Map<K, V> createLruCache() {
+    return Collections.synchronizedMap(new LinkedHashMap<K, V>(MAX_ITEM_CACHE_SIZE, 0.75f, true) {
+      @Override
+      protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return size() > MAX_ITEM_CACHE_SIZE;
+      }
+    });
   }
 
-  private static Item cachedParseItem(Map<String, Item> cache, String xml,
-      Function<String, Item> parser)
-  {
+  private static Item cachedParseItem(Map<String, Item> cache, String xml, Function<String, Item> parser) {
     return cache.computeIfAbsent(xml, parser);
   }
 
@@ -713,16 +696,12 @@ public final class Sanwaf
   private static final String XML_LOG_PARM_DETECT_VERB = "logDetectsVerbose";
   private static final String XML_SHIELD = "shield";
 
-  private synchronized void loadProperties() throws IOException
-  {
+  private synchronized void loadProperties() throws IOException {
     long start = System.currentTimeMillis();
     Xml xml;
-    try
-    {
+    try {
       xml = new Xml(Sanwaf.class.getResource(xmlFilename));
-    }
-    catch (IOException e)
-    {
+    } catch (IOException e) {
       throw new IOException("Sanwaf Failed to load config file " + xmlFilename + ".  \n**Server is NOT protected**\n", e);
     }
 
@@ -731,8 +710,7 @@ public final class Sanwaf
     boolean enabled = Boolean.parseBoolean(settingsBlockXml.get(XML_ENABLED));
     boolean verbose = Boolean.parseBoolean(settingsBlockXml.get(XML_VERBOSE));
     String securedAppVersion = settingsBlockXml.get(XML_APP_VER);
-    if (logger.isInfoEnabled())
-    {
+    if (logger.isInfoEnabled()) {
       logger.info("Starting Sanwaf:");
       logger.info("\n\tenabled=" + enabled + "\n\t" + XML_VERBOSE + "=" + verbose + "\n\t" + XML_APP_VER + "=" + securedAppVersion);
     }
@@ -749,8 +727,7 @@ public final class Sanwaf
 
     Map<String, String> globalErrorMessages = new HashMap<>(22); // 16 entries; (16/0.75)+1 avoids resize
     ItemFactory.setErrorMessages(globalErrorMessages, xml);
-    if (logger.isInfoEnabled())
-    {
+    if (logger.isInfoEnabled()) {
       logger.info("\tAddTrackId=" + onErrorAddTrackId + "\n\tAddErrors=" + onErrorAddParmErrors + "\n\tLogErrors=" + onErrorLogParmErrors + "\n\tLogErrorsVerbose=" + onErrorLogParmErrorsVerbose
           + "\n\tAddDetections=" + onErrorAddParmDetections + "\n\tLogDetects=" + onErrorLogParmDetections + "\n\tLogDetectsVerbose=" + onErrorLogParmDetectionsVerbose);
     }
@@ -758,52 +735,40 @@ public final class Sanwaf
     List<Shield> shields = new ArrayList<>();
     Map<String, Shield> shieldMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     String[] shieldXMLs = xml.getAll(XML_SHIELD);
-    for (String item : shieldXMLs)
-    {
+    for (String item : shieldXMLs) {
       Shield sh = new Shield(this, xml, new Xml(item), logger, verbose);
       shields.add(sh);
       shieldMap.put(sh.name, sh);
     }
 
-    this.config = new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors,
-        onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections,
-        onErrorLogParmErrorsVerbose, onErrorLogParmDetectionsVerbose, securedAppVersion,
-        shields, shieldMap, globalErrorMessages);
+    this.config = new SanwafConfig(enabled, verbose, onErrorAddTrackId, onErrorAddParmErrors, onErrorAddParmDetections, onErrorLogParmErrors, onErrorLogParmDetections, onErrorLogParmErrorsVerbose,
+        onErrorLogParmDetectionsVerbose, securedAppVersion, shields, shieldMap, globalErrorMessages);
     warnOnSuspiciousDefaults(this.config, settingsBlock, errorBlock);
 
-    if (logger.isInfoEnabled())
-    {
+    if (logger.isInfoEnabled()) {
       logger.info("Started in: " + (System.currentTimeMillis() - start) + " ms.");
     }
   }
 
-  private void warnOnSuspiciousDefaults(SanwafConfig cfg, String settingsBlock, String errorBlock)
-  {
-    if (!logger.isWarnEnabled())
-    {
+  private void warnOnSuspiciousDefaults(SanwafConfig cfg, String settingsBlock, String errorBlock) {
+    if (!logger.isWarnEnabled()) {
       return;
     }
-    if (!cfg.enabled)
-    {
+    if (!cfg.enabled) {
       logger.warn("Sanwaf is DISABLED (enabled=false). If unintentional, check <global-settings><enabled>");
     }
-    if (settingsBlock.isEmpty())
-    {
+    if (settingsBlock.isEmpty()) {
       logger.warn("<global-settings> block is missing from config");
     }
-    if (errorBlock.isEmpty())
-    {
+    if (errorBlock.isEmpty()) {
       logger.warn("<errorHandling> block is missing from config");
     }
-    if (cfg.shields.length == 0)
-    {
+    if (cfg.shields.length == 0) {
       logger.warn("No shields configured — nothing will be validated");
     }
-    if (!cfg.onErrorAddParmErrors && !cfg.onErrorLogParmErrors)
-    {
+    if (!cfg.onErrorAddParmErrors && !cfg.onErrorLogParmErrors) {
       logger.warn("Error reporting is disabled (provideErrors=false, logErrors=false) — blocked threats will be silent");
     }
   }
 
 }
-

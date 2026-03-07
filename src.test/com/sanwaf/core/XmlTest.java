@@ -12,37 +12,31 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class XmlTest
-{
+public class XmlTest {
   @Test
-  void TestXmlInit()
-  {
+  void TestXmlInit() {
     assertThrows(IOException.class, () -> new Xml((URL) null));
   }
 
   @Test
-  void TestXmlNullUrl()
-  {
-    //noinspection SpellCheckingInspection
+  void TestXmlNullUrl() {
+    // noinspection SpellCheckingInspection
     assertThrows(IOException.class, () -> new Xml(new URL("lakdfsj")));
   }
 
   @Test
-  public void TestXmlToString() throws IOException
-  {
+  public void TestXmlToString() throws IOException {
     Xml xml = new Xml(Sanwaf.class.getResource("/sanwaf.xml"));
     assertTrue(xml.toString().contains("<sanwaf>"));
   }
 
   @Test
-  public void testXmlPassingNull()
-  {
+  public void testXmlPassingNull() {
     assertEquals("", new Xml("").get(null, "test"));
   }
 
   @Test
-  public void testXmlInvalidEndTag()
-  {
+  public void testXmlInvalidEndTag() {
     String data = "<sanwaf><foo>foo<foo></sanwaf>";
     Xml xml = new Xml(data);
 
@@ -52,4 +46,3 @@ public class XmlTest
     assertEquals(0, new Xml("<sanwaf></foo>foo<foo></sanwaf>").getAll("foo").length);
   }
 }
-

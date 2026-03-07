@@ -12,29 +12,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class OtherClassesTest
-{
+public class OtherClassesTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
 
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void TestDefaultContructorParameterItem()
-  {
+  public void TestDefaultContructorParameterItem() {
     Sanwaf.SanwafConfig cfg = sanwaf.config;
     sanwaf.config = cfg.toBuilder().verbose(true).build();
     Item pi = new ItemString();
@@ -43,8 +37,7 @@ public class OtherClassesTest
   }
 
   @Test
-  public void testWithVerboseFalse()
-  {
+  public void testWithVerboseFalse() {
     Sanwaf.SanwafConfig cfg = sanwaf.config;
     sanwaf.config = cfg.toBuilder().verbose(false).build();
     assertFalse(sanwaf.config.verbose);
@@ -52,16 +45,14 @@ public class OtherClassesTest
   }
 
   @Test
-  public void TestLoggerSystemOut()
-  {
+  public void TestLoggerSystemOut() {
     SimpleLogger logger = new SimpleLogger();
     logger.error("foobar-error");
     logger.info("foobar-info");
   }
 
   @Test
-  public void splitTest()
-  {
+  public void splitTest() {
     List<String> list = Shield.split(null);
     assertTrue(list.isEmpty());
 
@@ -73,14 +64,13 @@ public class OtherClassesTest
   }
 
   @Test
-  public void jsonEncodeTest()
-  {
+  public void jsonEncodeTest() {
     assertEquals("", JsonFormatter.jsonEncode(null));
 
     // named escapes
     assertEquals("\\\\", JsonFormatter.jsonEncode("\\"));
     assertEquals("\\\"", JsonFormatter.jsonEncode("\""));
-    assertEquals("\\/",  JsonFormatter.jsonEncode("/"));
+    assertEquals("\\/", JsonFormatter.jsonEncode("/"));
     assertEquals("\\n", JsonFormatter.jsonEncode("\n"));
     assertEquals("\\r", JsonFormatter.jsonEncode("\r"));
     assertEquals("\\t", JsonFormatter.jsonEncode("\t"));
@@ -104,8 +94,7 @@ public class OtherClassesTest
   }
 
   @Test
-  public void parseIntTest()
-  {
+  public void parseIntTest() {
     int i = Shield.parseInt("12345", -123);
     assertEquals(12345, i);
     i = Shield.parseInt("123abc", -123);
@@ -113,8 +102,7 @@ public class OtherClassesTest
   }
 
   @Test
-  public void isNotAlphanumericTest()
-  {
+  public void isNotAlphanumericTest() {
     char c = 0x29;
     assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x7b;
@@ -143,8 +131,7 @@ public class OtherClassesTest
   }
 
   @Test
-  public void isCharAlphanumericTest()
-  {
+  public void isCharAlphanumericTest() {
     char c = 0x29;
     assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x7b;
@@ -173,8 +160,7 @@ public class OtherClassesTest
   }
 
   @Test
-  public void stripEOSnumbersTest()
-  {
+  public void stripEOSnumbersTest() {
     String s = Metadata.stripEosNumbers("s");
     assert (s.equals("s"));
     s = Metadata.stripEosNumbers("s");
@@ -184,17 +170,14 @@ public class OtherClassesTest
   }
 
   @Test
-  public void refineNameTest()
-  {
+  public void refineNameTest() {
     assert (Metadata.refineName("*foo.method()", shield.parameters.index) == null);
     assert (Metadata.refineName("foo*abc", shield.parameters.index) == null);
   }
 
   @Test
-  public void stripXmlCommentsTest()
-  {
+  public void stripXmlCommentsTest() {
     assert (Xml.stripXmlComments("").isEmpty());
     assert (Xml.stripXmlComments(null).isEmpty());
   }
 }
-

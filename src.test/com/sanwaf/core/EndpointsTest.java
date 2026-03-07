@@ -13,26 +13,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class EndpointsTest
-{
+public class EndpointsTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf();
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testEndpointChar()
-  {
+  public void testEndpointChar() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("char", "a");
@@ -47,8 +41,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRegex()
-  {
+  public void testEndpointRegex() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("endpointRegex", "a");
@@ -63,8 +56,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointMaxMinValue()
-  {
+  public void testEndpointMaxMinValue() {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -116,8 +108,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRequired()
-  {
+  public void testEndpointRequired() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("required", "a");
@@ -132,8 +123,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointOpen()
-  {
+  public void testEndpointOpen() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("open", "(123) 456-7890 abz ABZ");
@@ -142,8 +132,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointFormat()
-  {
+  public void testEndpointFormat() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "(123) 456-7890 abz ABZ");
@@ -254,8 +243,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedSimple()
-  {
+  public void testEndpointRelatedSimple() {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -280,8 +268,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedInvalidConfig()
-  {
+  public void testEndpointRelatedInvalidConfig() {
     // related-invalid-child<related>related-invalid</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -321,8 +308,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedEqualsNoParent()
-  {
+  public void testEndpointRelatedEqualsNoParent() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-equals-req-parent", "aaa");
@@ -332,8 +318,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedEquals()
-  {
+  public void testEndpointRelatedEquals() {
     // related-equals-child<related>related-equals-parent:=</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -406,8 +391,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedNoParentDefined()
-  {
+  public void testEndpointRelatedNoParentDefined() {
     // related-simple-or-no-parent-parent:Yes<
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -431,8 +415,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedSimpleOr()
-  {
+  public void testEndpointRelatedSimpleOr() {
     // related-simple-or-child<related>related-simple-or-parent:aaa||bbb</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -471,8 +454,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedOr()
-  {
+  public void testEndpointRelatedOr() {
     // related-or-child<related>(related-or-parent1:aaa||bbb)||(related-or-parent2:ccc||ddd)</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -532,8 +514,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedAndOr()
-  {
+  public void testEndpointRelatedAndOr() {
     // related-and-or-child<related>(related-and-or-parent1:aaa||bbb)||(related-and-or-parent2:ccc||ddd)&&(related-and-or-parent3:eee|fff)</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -611,8 +592,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointRelatedRemoveSpace()
-  {
+  public void testEndpointRelatedRemoveSpace() {
     // <related> ( related-and-or-parentY1 : aaa || bbb ) || (
     // related-and-or-parentY2 : ccc || ddd ) && ( related-and-or-parentY3 : eee
     // || fff ) || ( related-and-or-parentY4 : ggg || hhh ) && (
@@ -631,8 +611,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointStrictWithLess()
-  {
+  public void testEndpointStrictWithLess() {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLess.jsp");
@@ -642,8 +621,7 @@ public class EndpointsTest
   }
 
   @Test
-  public void testEndpointStrictTest()
-  {
+  public void testEndpointStrictTest() {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -733,4 +711,3 @@ public class EndpointsTest
   }
 
 }
-

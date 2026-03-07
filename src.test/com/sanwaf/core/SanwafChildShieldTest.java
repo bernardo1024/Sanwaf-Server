@@ -16,34 +16,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class SanwafChildShieldTest
-{
+public class SanwafChildShieldTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-childShield.xml");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testHasChildShield()
-  {
+  public void testHasChildShield() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss");
     Assertions.assertNotNull(shield.childShield);
     assertEquals("XSS-CHILD", shield.childShield.name);
   }
 
   @Test
-  public void testChildShieldNoMaxViolationThreat()
-  {
+  public void testChildShieldNoMaxViolationThreat() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "javascript: should pass short string has no javascript: test");
     boolean result = sanwaf.isThreatDetected(request);
@@ -51,8 +44,7 @@ public class SanwafChildShieldTest
   }
 
   @Test
-  public void testChildShieldMaxViolationThreat()
-  {
+  public void testChildShieldMaxViolationThreat() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail");
     boolean result = sanwaf.isThreatDetected(request);
@@ -60,27 +52,23 @@ public class SanwafChildShieldTest
   }
 
   @Test
-  public void testIsThreatNoMaxViolation()
-  {
+  public void testIsThreatNoMaxViolation() {
     String value = "javascript: should pass short string has no javascript: test";
     boolean result = sanwaf.isThreat(value);
     assertFalse(result);
   }
 
   @Test
-  public void testIsThreatMaxViolation()
-  {
+  public void testIsThreatMaxViolation() {
     String value = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail";
     boolean result = sanwaf.isThreat(value);
     assertTrue(result);
   }
 
   @Test
-  public void testHasInvalidChildShield()
-  {
+  public void testHasInvalidChildShield() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss-invalid-child-shield");
     assertNull(shield.childShield);
   }
 
 }
-

@@ -9,22 +9,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class CustomPropertiesFooTest
-{
+public class CustomPropertiesFooTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
   @SuppressWarnings("SpellCheckingInspection")
   @Test
-  public void fooXmlResourceTest()
-  {
-    try
-    {
+  public void fooXmlResourceTest() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-foo.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
 
@@ -85,4 +80,3 @@ public class CustomPropertiesFooTest
     assertFalse(shield.threat(req, shield.parameters, "*foo", "<script>alert(1)</script>"));
   }
 }
-

@@ -19,28 +19,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class MultiDimentionalyParmsTest
-{
+public class MultiDimentionalyParmsTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
       shield = UnitTestUtil.getShield(sanwaf, "MultiDimTest");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testVariablenumericDelimited()
-  {
+  public void testVariablenumericDelimited() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("a['1'].b['2']", "1234567890,0987654321");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -59,8 +53,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testVariablenumeric()
-  {
+  public void testVariablenumeric() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("b[1].c[2]", "1234567890");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -79,8 +72,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testVariablenumeric2()
-  {
+  public void testVariablenumeric2() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo1", "1234567890");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -95,8 +87,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testVariableAlphanumericAndMore()
-  {
+  public void testVariableAlphanumericAndMore() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("c('1').d('2')", "12345,abcd");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -115,8 +106,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testVariableAlpahnumeric()
-  {
+  public void testVariableAlpahnumeric() {
     // <item>d(*).e(*)=a(6,10)</item>
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("d(1).e(2)", "12345abcde");
@@ -136,8 +126,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testVariableChar()
-  {
+  public void testVariableChar() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("e[1].f[2]g(3)-h(4)", "1");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -148,8 +137,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testVariableNotDefined()
-  {
+  public void testVariableNotDefined() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("notdefined[1]", "<script>alert(1)</script>");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -160,8 +148,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testVariablenumericInvalidFormat()
-  {
+  public void testVariablenumericInvalidFormat() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo((0)", "1234567890");
     r.addParameter("foo[[0]", "1234567890");
@@ -171,8 +158,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testVariablenumericArray()
-  {
+  public void testVariablenumericArray() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo0", "1234567890");
     r.addParameter("foo1", "1234567890");
@@ -189,8 +175,7 @@ public class MultiDimentionalyParmsTest
   }
 
   @Test
-  public void testInvalidArray() throws IOException
-  {
+  public void testInvalidArray() throws IOException {
     Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
     Shield sh = UnitTestUtil.getShield(sw, "MultiDimTest");
     assertNotNull(sh);
@@ -209,4 +194,3 @@ public class MultiDimentionalyParmsTest
   }
 
 }
-

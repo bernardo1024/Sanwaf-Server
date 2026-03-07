@@ -9,95 +9,75 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-final class JsonFormatter
-{
+final class JsonFormatter {
   private static final String[] CTRL_UNICODE_ESCAPES = new String[0x20];
 
-  static
-  {
+  static {
     char[] hex = "0123456789abcdef".toCharArray();
-    for (int i = 0; i < 0x20; i++)
-    {
+    for (int i = 0; i < 0x20; i++) {
       CTRL_UNICODE_ESCAPES[i] = "\\u00" + hex[i >> 4] + hex[i & 0xF];
     }
   }
 
-  private JsonFormatter()
-  {
+  private JsonFormatter() {
   }
 
-  static void handleStrictError(String value, ServletRequest req, Logger logger, boolean log)
-  {
+  static void handleStrictError(String value, ServletRequest req, Logger logger, boolean log) {
     String json = formatStrictErrorJson(value);
-    if (log && logger.isErrorEnabled())
-    {
+    if (log && logger.isErrorEnabled()) {
       logger.error(json);
     }
     appendAttribute(Sanwaf.ATT_LOG_ERROR, json, req);
   }
 
-  static String formatStrictErrorJson(String value)
-  {
+  static String formatStrictErrorJson(String value) {
     StringBuilder sb = new StringBuilder(256);
     sb.append("{\"item\":{\"name\":\"\"");
     sb.append(",\"display\":\"\"");
     sb.append(",\"mode\":\"BLOCK\"");
     sb.append(",\"action\":\"BLOCK\"");
     sb.append(",\"type\":\"STRICT\"");
-    if (value != null && !value.isEmpty())
-    {
+    if (value != null && !value.isEmpty()) {
       sb.append(",\"value\":\"");
-      if (value.length() < 100)
-      {
+      if (value.length() < 100) {
         sb.append(jsonEncode(value));
-      }
-      else
-      {
+      } else {
         sb.append(jsonEncodeTruncated(value)).append("...");
       }
       sb.append("\"");
-    }
-    else
-    {
+    } else {
       sb.append(",\"value\":\"\"");
     }
     sb.append("}}");
     return sb.toString();
   }
 
-  static void appendAttribute(String att, String value, ServletRequest req)
-  {
-    if (req == null)
-    {
+  static void appendAttribute(String att, String value, ServletRequest req) {
+    if (req == null) {
       return;
     }
     Object o = req.getAttribute(att);
     Set<String> set = null;
-    if (o instanceof Set)
-    {
+    if (o instanceof Set) {
       @SuppressWarnings("unchecked")
       Set<String> tmp = (Set<String>) o;
       set = tmp;
     }
-    if (set == null)
-    {
+    if (set == null) {
       set = new LinkedHashSet<>();
       req.setAttribute(att, set);
     }
     set.add(value);
   }
 
-  static String toJson(Item item, String value, Modes thisMode, ServletRequest req, boolean verbose, String relatedErrMsg, List<Point> errorPoints)
-  {
+  static String toJson(Item item, String value, Modes thisMode, ServletRequest req, boolean verbose, String relatedErrMsg, List<Point> errorPoints) {
     StringBuilder sb = new StringBuilder(512);
     sb.append("{");
 
-    if (req != null)
-    {
+    if (req != null) {
       HttpServletRequest hreq = (HttpServletRequest) req;
       Object transId = hreq.getAttribute(Sanwaf.ATT_TRANS_ID);
-      if (transId == null)
-      {
+      if (transId == null) {
         transId = UUID.randomUUID().toString();
         hreq.setAttribute(Sanwaf.ATT_TRANS_ID, transId);
       }
@@ -106,8 +86,7 @@ final class JsonFormatter
       sb.append(",\"referer\":\"").append(jsonEncode(hreq.getHeader("referer"))).append("\",");
     }
 
-    if (item.shield != null && verbose)
-    {
+    if (item.shield != null && verbose) {
       Sanwaf.SanwafConfig c = item.shield.sanwaf.config;
       sb.append("\"shield\":{\"name\":\"").append(item.shield.name).append("\"");
       sb.append(",\"mode\":\"").append(item.shield.mode).append("\"");
@@ -118,63 +97,46 @@ final class JsonFormatter
     sb.append("\"item\":{\"name\":\"").append(jsonEncode(item.name)).append("\"");
     sb.append(",\"display\":\"").append(jsonEncode(item.display)).append("\"");
     sb.append(",\"mode\":\"").append(item.mode).append("\"");
-    if (thisMode != null)
-    {
+    if (thisMode != null) {
       sb.append(",\"action\":\"").append(thisMode).append("\"");
-    }
-    else
-    {
+    } else {
       sb.append(",\"action\":\"").append("\"");
     }
     sb.append(",\"type\":\"").append(item.getType()).append("\"");
 
-    if (value != null && !value.isEmpty())
-    {
+    if (value != null && !value.isEmpty()) {
       sb.append(",\"value\":\"");
       String mValue = value;
-      if (!item.maskError.isEmpty())
-      {
+      if (!item.maskError.isEmpty()) {
         mValue = item.maskError;
       }
-      if (mValue.length() < 100)
-      {
+      if (mValue.length() < 100) {
         sb.append(jsonEncode(mValue));
-      }
-      else
-      {
+      } else {
         sb.append(jsonEncodeTruncated(mValue)).append("...");
       }
       sb.append("\"");
-    }
-    else
-    {
+    } else {
       sb.append(",\"value\":\"\"");
     }
 
-    if (item.shield != null)
-    {
+    if (item.shield != null) {
       String baseErr = getErrorMessage(item, req, item.shield);
       boolean needsRequired = item.required && value != null && value.isEmpty();
       boolean needsLength = value != null && (value.length() < item.min || value.length() > item.max);
       boolean needsRelated = relatedErrMsg != null && !relatedErrMsg.isEmpty();
       String errMsg;
-      if (!needsRequired && !needsLength && !needsRelated)
-      {
+      if (!needsRequired && !needsLength && !needsRelated) {
         errMsg = baseErr;
-      }
-      else
-      {
+      } else {
         StringBuilder errSb = new StringBuilder(baseErr);
-        if (needsRequired)
-        {
+        if (needsRequired) {
           errSb.append(getErrorMessage(item, req, item.shield, ItemFactory.XML_REQUIRED_MSG));
         }
-        if (needsLength)
-        {
+        if (needsLength) {
           errSb.append(modifyInvalidLengthErrorMsg(getErrorMessage(item, req, item.shield, ItemFactory.XML_INVALID_LENGTH_MSG), item.min, item.max));
         }
-        if (needsRelated)
-        {
+        if (needsRelated) {
           errSb.append(relatedErrMsg);
         }
         errMsg = errSb.toString();
@@ -182,27 +144,19 @@ final class JsonFormatter
       sb.append(",\"error\":\"").append(jsonEncode(errMsg)).append("\"");
     }
 
-    if (value != null && item.shield != null && verbose)
-    {
+    if (value != null && item.shield != null && verbose) {
       List<Point> points;
-      if (errorPoints != null && item.maskError.isEmpty())
-      {
+      if (errorPoints != null && item.maskError.isEmpty()) {
         points = errorPoints;
-      }
-      else
-      {
+      } else {
         points = item.getErrorPoints(item.shield, value);
       }
       sb.append(",\"samplePoints\":[");
       boolean doneFirst = false;
-      for (Point p : points)
-      {
-        if (doneFirst)
-        {
+      for (Point p : points) {
+        if (doneFirst) {
           sb.append(",");
-        }
-        else
-        {
+        } else {
           doneFirst = true;
         }
         sb.append("{\"start\":\"").append(p.start).append("\"");
@@ -211,24 +165,18 @@ final class JsonFormatter
       sb.append("]");
     }
 
-    if (item.shield != null && verbose)
-    {
+    if (item.shield != null && verbose) {
       sb.append(",\"properties\": {");
       sb.append("\"maxlength\":\"").append(item.max).append("\"");
       sb.append(",\"minlength\":\"").append(item.min).append("\"");
       sb.append(",\"msg\":\"").append(jsonEncode(item.msg)).append("\"");
       sb.append(",\"uri\":\"");
-      if (item.uriSet != null)
-      {
+      if (item.uriSet != null) {
         boolean first = true;
-        for (String u : item.uriSet)
-        {
-          if (!first)
-          {
+        for (String u : item.uriSet) {
+          if (!first) {
             sb.append(',');
-          }
-          else
-          {
+          } else {
             first = false;
           }
           sb.append(jsonEncode(u));
@@ -241,8 +189,7 @@ final class JsonFormatter
       sb.append(",\"maskerr\":\"").append(jsonEncode(item.maskError)).append("\"");
       sb.append(",\"related\":\"").append(jsonEncode(item.related)).append("\"");
       String s = item.getProperties();
-      if (s != null && !s.isEmpty())
-      {
+      if (s != null && !s.isEmpty()) {
         sb.append(",").append(s);
       }
       sb.append("}}");
@@ -251,129 +198,118 @@ final class JsonFormatter
     return sb.toString();
   }
 
-  static String getErrorMessage(Item item, ServletRequest req, Shield shield)
-  {
+  static String getErrorMessage(Item item, ServletRequest req, Shield shield) {
     return getErrorMessage(item, req, shield, null);
   }
 
-  static String getErrorMessage(Item item, ServletRequest req, Shield shield, String errorMsgKey)
-  {
+  static String getErrorMessage(Item item, ServletRequest req, Shield shield, String errorMsgKey) {
     String err = null;
-    if (item.msg != null && !item.msg.isEmpty())
-    {
+    if (item.msg != null && !item.msg.isEmpty()) {
       err = item.msg;
     }
-    if (err == null)
-    {
-      if (errorMsgKey == null)
-      {
+    if (err == null) {
+      if (errorMsgKey == null) {
         errorMsgKey = item.getType().toString();
       }
       err = shield.errorMessages.get(errorMsgKey);
-      if (err == null || err.isEmpty())
-      {
+      if (err == null || err.isEmpty()) {
         Sanwaf.SanwafConfig c = shield.sanwaf.config;
-        if (c != null)
-        {
+        if (c != null) {
           err = c.globalErrorMessages.get(errorMsgKey);
         }
       }
     }
-    if (err == null || err.isEmpty())
-    {
+    if (err == null || err.isEmpty()) {
       err = item.getDefaultErrorMessage();
     }
     return item.modifyErrorMsg(req, err);
   }
 
-  static String modifyInvalidLengthErrorMsg(String errorMsg, int min, int max)
-  {
+  static String modifyInvalidLengthErrorMsg(String errorMsg, int min, int max) {
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
-    if (i >= 0)
-    {
+    if (i >= 0) {
       int pLen = ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length();
       errorMsg = errorMsg.substring(0, i) + min + errorMsg.substring(i + pLen);
     }
     i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER2);
-    if (i >= 0)
-    {
+    if (i >= 0) {
       int pLen = ItemFactory.XML_ERROR_MSG_PLACEHOLDER2.length();
       errorMsg = errorMsg.substring(0, i) + max + errorMsg.substring(i + pLen);
     }
     return errorMsg;
   }
 
-  static String jsonEncode(String s)
-  {
-    if (s == null)
-    {
+  static String jsonEncode(String s) {
+    if (s == null) {
       return "";
     }
     return jsonEncodeLen(s, s.length());
   }
 
-  /** JSON-encodes {@code s}, truncated to 100 chars to avoid logging excessive user input. */
-  static String jsonEncodeTruncated(String s)
-  {
-    if (s == null)
-    {
+  /**
+   * JSON-encodes {@code s}, truncated to 100 chars to avoid logging excessive
+   * user input.
+   */
+  static String jsonEncodeTruncated(String s) {
+    if (s == null) {
       return "";
     }
     return jsonEncodeLen(s, Math.min(s.length(), 100));
   }
 
-  private static String jsonEncodeLen(String s, int len)
-  {
+  private static String jsonEncodeLen(String s, int len) {
     StringBuilder sb = null;
-    for (int i = 0; i < len; i++)
-    {
+    for (int i = 0; i < len; i++) {
       char c = s.charAt(i);
       String esc;
-      switch (c)
-      {
-      case '\\': esc = "\\\\"; break;
-      case '"':  esc = "\\\""; break;
-      case '/':  esc = "\\/";  break;
-      case '\n': esc = "\\n";  break;
-      case '\r': esc = "\\r";  break;
-      case '\t': esc = "\\t";  break;
-      case '\b': esc = "\\b";  break;
-      case '\f': esc = "\\f";  break;
+      switch (c) {
+      case '\\':
+        esc = "\\\\";
+        break;
+      case '"':
+        esc = "\\\"";
+        break;
+      case '/':
+        esc = "\\/";
+        break;
+      case '\n':
+        esc = "\\n";
+        break;
+      case '\r':
+        esc = "\\r";
+        break;
+      case '\t':
+        esc = "\\t";
+        break;
+      case '\b':
+        esc = "\\b";
+        break;
+      case '\f':
+        esc = "\\f";
+        break;
       default:
-        if (c < 0x20)
-        {
+        if (c < 0x20) {
           esc = CTRL_UNICODE_ESCAPES[c];
-        }
-        else if (c == '\u2028')
-        {
+        } else if (c == '\u2028') {
           esc = "\\u2028";
-        }
-        else if (c == '\u2029')
-        {
+        } else if (c == '\u2029') {
           esc = "\\u2029";
-        }
-        else
-        {
+        } else {
           esc = null;
         }
         break;
       }
-      if (esc != null)
-      {
-        if (sb == null)
-        {
+      if (esc != null) {
+        if (sb == null) {
           sb = new StringBuilder(len + 16);
           sb.append(s, 0, i);
         }
         sb.append(esc);
-      }
-      else if (sb != null)
-      {
+      } else if (sb != null) {
         sb.append(c);
       }
     }
-    if (sb != null)
-    {
+    if (sb != null) {
       return sb.toString();
     }
     return len == s.length() ? s : s.substring(0, len);

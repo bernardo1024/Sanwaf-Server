@@ -8,51 +8,38 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnitTestUtil
-{
+public class UnitTestUtil {
 
-  static void setField(Object target, String fieldName, Object value)
-  {
-    try
-    {
+  static void setField(Object target, String fieldName, Object value) {
+    try {
       java.lang.reflect.Field field = target.getClass().getDeclaredField(fieldName);
       field.setAccessible(true);
       field.set(target, value);
-    }
-    catch (ReflectiveOperationException e)
-    {
+    } catch (ReflectiveOperationException e) {
       throw new RuntimeException("Failed to set field " + fieldName, e);
     }
   }
 
-  public static void log(String title, UnitTestResult result)
-  {
-    if (result == null)
-    {
+  public static void log(String title, UnitTestResult result) {
+    if (result == null) {
       System.out.println(title + " - error; result is null.");
-    }
-    else
-    {
+    } else {
       System.out.println(title + "\t#pass:\t" + result.pass + "\t#fail:\t" + result.fail + "\tin:\t" + result.getTestTime() + "\tper:\t" + result.getAvgTime());
 
-      if (result.errors.length() > 0)
-      {
+      if (result.errors.length() > 0) {
         System.out.println(title + " ERRORS:\n" + result.errors);
       }
     }
   }
 
-  static Shield getShield(Sanwaf sanwaf, String name)
-  {
+  static Shield getShield(Sanwaf sanwaf, String name) {
     return sanwaf.getShield(name);
   }
 
-  static UnitTestResult runTestsUsingFile(Shield shield, String filename, int iterations, boolean doHex, boolean logErrors)
-  {
+  static UnitTestResult runTestsUsingFile(Shield shield, String filename, int iterations, boolean doHex, boolean logErrors) {
     UnitTestResult result = new UnitTestResult();
     String file = UnitTestUtil.readFile(filename);
-    if (file.isEmpty())
-    {
+    if (file.isEmpty()) {
       return null;
     }
 
@@ -60,32 +47,23 @@ public class UnitTestUtil
     String[] lines = file.split("\n");
 
     List<String[]> lineArrays = new ArrayList<>();
-    for (String line : lines)
-    {
-      if (!line.startsWith("#"))
-      {
+    for (String line : lines) {
+      if (!line.startsWith("#")) {
         String[] data = line.split("\t\t");
-        if (data.length == 3)
-        {
+        if (data.length == 3) {
           lineArrays.add(data);
         }
       }
     }
 
     result.start();
-    for (int i = 0; i < iterations; i++)
-    {
-      for (String[] data : lineArrays)
-      {
-        if (doHex)
-        {
+    for (int i = 0; i < iterations; i++) {
+      for (String[] data : lineArrays) {
+        if (doHex) {
           testAllHexPermutations(shield, result, data[0], data[2], Boolean.parseBoolean(data[1]), logErrors);
-        }
-        else
-        {
+        } else {
           boolean runMultiple = data[2].startsWith("#");
-          if (runMultiple)
-          {
+          if (runMultiple) {
             data[2] = data[2].substring(1);
           }
           runTests(shield, result, data[0], data[2], Boolean.parseBoolean(data[1]), runMultiple, logErrors);
@@ -96,38 +74,30 @@ public class UnitTestUtil
     return result;
   }
 
-  static void testAllHexPermutations(Shield shield, UnitTestResult result, String parmName, String payload, boolean expected, boolean logError)
-  {
-    if (payload == null || payload.isEmpty())
-    {
+  static void testAllHexPermutations(Shield shield, UnitTestResult result, String parmName, String payload, boolean expected, boolean logError) {
+    if (payload == null || payload.isEmpty()) {
       return;
     }
     boolean runMultiple = payload.startsWith("#");
-    if (runMultiple)
-    {
+    if (runMultiple) {
       payload = payload.substring(1);
     }
     int len = payload.length();
-    for (int block = 0; block <= len + 1; block++)
-    {
-      for (int pos = 0; pos < (len - block + 1); pos++)
-      {
+    for (int block = 0; block <= len + 1; block++) {
+      for (int pos = 0; pos < (len - block + 1); pos++) {
         String start = payload.substring(0, pos);
         String middle = getHexValueOfString(payload.substring(pos, pos + block));
         String end = payload.substring(pos + block);
         runTests(shield, result, parmName, start + middle + end, expected, runMultiple, logError);
-        if (block == 0)
-        {// block 0 is un-altered payload already run
+        if (block == 0) {// block 0 is un-altered payload already run
           break;
         }
       }
     }
   }
 
-  private static void runTests(Shield shield, UnitTestResult result, String parameterName, String payload, boolean expected, boolean runMultiple, boolean logError)
-  {
-    if (runMultiple)
-    {
+  private static void runTests(Shield shield, UnitTestResult result, String parameterName, String payload, boolean expected, boolean runMultiple, boolean logError) {
+    if (runMultiple) {
       runTest(shield, result, parameterName, "<word " + payload + "=", expected, logError);
       runTest(shield, result, parameterName, getHexValueOfString("<") + "word " + payload + "=", expected, logError);
       runTest(shield, result, parameterName, getHexValueOfString("<") + "word " + payload + getHexValueOfString("="), expected, logError);
@@ -140,105 +110,77 @@ public class UnitTestUtil
       runTest(shield, result, parameterName, getHexValueOfString("'") + payload + "=", expected, logError);
       runTest(shield, result, parameterName, getHexValueOfString("'") + payload + getHexValueOfString("="), expected, logError);
       runTest(shield, result, parameterName, "'" + payload + getHexValueOfString("="), expected, logError);
-    }
-    else
-    {
+    } else {
       runTest(shield, result, parameterName, payload, expected, logError);
     }
   }
 
-  private static void runTest(Shield shield, UnitTestResult result, String parameterName, String payload, boolean expected, boolean logError)
-  {
+  private static void runTest(Shield shield, UnitTestResult result, String parameterName, String payload, boolean expected, boolean logError) {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean retval = shield.threat(req, shield.parameters, parameterName, payload);
-    if (retval != expected)
-    {
-      if (logError)
-      {
+    if (retval != expected) {
+      if (logError) {
         result.errors.append(parameterName).append("\t").append(payload).append("\n");
       }
       result.fail++;
-    }
-    else
-    {
+    } else {
       result.pass++;
     }
   }
 
-  static String getHexValueOfString(String s)
-  {
+  static String getHexValueOfString(String s) {
     StringBuilder sb = new StringBuilder();
     char[] chars = s.toCharArray();
-    for (char c : chars)
-    {
+    for (char c : chars) {
       sb.append("%").append(Integer.toHexString(c));
     }
     return sb.toString();
   }
 
-  static String parseFolderName(String s)
-  {
+  static String parseFolderName(String s) {
     int i = s.lastIndexOf(File.separator);
-    if (i < 0)
-    {
+    if (i < 0) {
       // see if this is the other separator
-      if (File.separator.equals("\\"))
-      {
+      if (File.separator.equals("\\")) {
         i = s.lastIndexOf("/");
-      }
-      else
-      {
+      } else {
         i = s.lastIndexOf("\\");
       }
     }
     return s.substring(0, i);
   }
 
-  static String readFile(String s)
-  {
+  static String readFile(String s) {
     FileInputStream fis = null;
-    try
-    {
+    try {
       File f = new File(s);
-      if (!f.exists())
-      {
+      if (!f.exists()) {
         return "";
       }
       int size = (int) f.length();
       int read = 0;
       fis = new FileInputStream(s);
       byte[] bytes = new byte[size];
-      while (read < size)
-      {
+      while (read < size) {
         read += fis.read(bytes, read, size - read);
       }
       fis.close();
       return new String(bytes);
-    }
-    catch (Exception e)
-    {
+    } catch (Exception e) {
       System.err.println("Failed to read file: " + s);
-    }
-    finally
-    {
+    } finally {
       safeClose(fis);
     }
     return "";
   }
 
-  public static void safeClose(FileInputStream fis)
-  {
-    if (fis != null)
-    {
-      try
-      {
+  public static void safeClose(FileInputStream fis) {
+    if (fis != null) {
+      try {
         fis.close();
-      }
-      catch (IOException e)
-      {
+      } catch (IOException e) {
         System.err.println("Failed to close FileInputStream");
       }
     }
   }
 }
-

@@ -17,20 +17,18 @@ import java.util.concurrent.TimeUnit;
 /**
  * JMH benchmarks for all Sanwaf validation Item types.
  * <p>
- * Run all:    bash src.test/com/sanwaf/core/benchmark/run-benchmarks.sh
- * Run one:    bash run-benchmarks.sh -p ".*numericClean"
- * Compare:    bash run-benchmarks.sh --compare baseline.json
- * Save:       bash run-benchmarks.sh -o results.json
- * See:        bash run-benchmarks.sh --help
+ * Run all: bash src.test/com/sanwaf/core/benchmark/run-benchmarks.sh Run one:
+ * bash run-benchmarks.sh -p ".*numericClean" Compare: bash run-benchmarks.sh
+ * --compare baseline.json Save: bash run-benchmarks.sh -o results.json See:
+ * bash run-benchmarks.sh --help
  */
-@BenchmarkMode({Mode.Throughput, Mode.AverageTime})
+@BenchmarkMode({ Mode.Throughput, Mode.AverageTime })
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Thread)
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 5, time = 1)
-@Fork(value = 2, jvmArgsAppend = {"-Xms256m", "-Xmx256m"})
-public class SanwafJmhBenchmark
-{
+@Fork(value = 2, jvmArgsAppend = { "-Xms256m", "-Xmx256m" })
+public class SanwafJmhBenchmark {
   private Sanwaf sanwaf;
 
   // --- Test values ---
@@ -68,41 +66,42 @@ public class SanwafJmhBenchmark
   private String dirtyFormat;
 
   // --- Static API XML fragments ---
-  private static final String NUMERIC_XML =
-      "<item><name>n</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>";
-  private static final String INTEGER_XML =
-      "<item><name>i</name><type>i</type><max></max><min></min><msg></msg><uri></uri></item>";
-  private static final String NUMERIC_DELIMITED_XML =
-      "<item><name>nd</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>";
-  private static final String INTEGER_DELIMITED_XML =
-      "<item><name>id</name><type>i{,}</type><max></max><min></min><msg></msg><uri></uri></item>";
-  private static final String ALPHANUMERIC_XML =
-      "<item><name>a</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>";
-  private static final String AN_MORE_XML =
-      "<item><name>am</name><type>a{?\\s:}</type><max></max><min></min><msg></msg><uri></uri></item>";
-  private static final String CHAR_XML =
-      "<item><name>c</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>";
-  private static final String CONSTANT_XML =
-      "<item><name>k</name><type>k{FOO,BAR,FAR}</type><max></max><min></min><msg></msg><uri></uri></item>";
-  private static final String REGEX_XML =
-      "<item><name>r</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>";
-  private static final String INLINE_REGEX_XML =
-      "<item><name>x</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type>"
+  private static final String NUMERIC_XML = "<item><name>n</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String INTEGER_XML = "<item><name>i</name><type>i</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String NUMERIC_DELIMITED_XML = "<item><name>nd</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String INTEGER_DELIMITED_XML = "<item><name>id</name><type>i{,}</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String ALPHANUMERIC_XML = "<item><name>a</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String AN_MORE_XML = "<item><name>am</name><type>a{?\\s:}</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String CHAR_XML = "<item><name>c</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String CONSTANT_XML = "<item><name>k</name><type>k{FOO,BAR,FAR}</type><max></max><min></min><msg></msg><uri></uri></item>";
+  private static final String REGEX_XML = "<item><name>r</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>";
+  private static final String INLINE_REGEX_XML = "<item><name>x</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type>"
       + "<max>12</max><min>12</min><msg></msg><uri></uri></item>";
-  private static final String FORMAT_XML =
-      "<item><name>f</name><type>f{###-###-####}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>";
+  private static final String FORMAT_XML = "<item><name>f</name><type>f{###-###-####}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>";
 
   @Setup(Level.Trial)
-  public void setUp() throws IOException
-  {
-    Logger noOpLogger = new Logger()
-    {
-      public void error(String s) {}
-      public void warn(String s) {}
-      public void info(String s) {}
-      public boolean isErrorEnabled() { return false; }
-      public boolean isWarnEnabled() { return false; }
-      public boolean isInfoEnabled() { return false; }
+  public void setUp() throws IOException {
+    Logger noOpLogger = new Logger() {
+      public void error(String s) {
+      }
+
+      public void warn(String s) {
+      }
+
+      public void info(String s) {
+      }
+
+      public boolean isErrorEnabled() {
+        return false;
+      }
+
+      public boolean isWarnEnabled() {
+        return false;
+      }
+
+      public boolean isInfoEnabled() {
+        return false;
+      }
     };
     sanwaf = new Sanwaf(noOpLogger, "/sanwaf-isThreat.xml");
 
@@ -114,10 +113,8 @@ public class SanwafJmhBenchmark
     cleanTextShort = "ok";
 
     // Long clean text — realistic textarea/comment body (~300 chars)
-    cleanTextLong = "Thank you for your prompt response regarding our order. "
-        + "We would like to confirm that the delivery address is 123 Main Street, "
-        + "Suite 400, Springfield IL 62701. Please ensure the package is marked fragile "
-        + "as it contains sensitive electronic equipment. Our reference number is PO-2024-78543. "
+    cleanTextLong = "Thank you for your prompt response regarding our order. " + "We would like to confirm that the delivery address is 123 Main Street, "
+        + "Suite 400, Springfield IL 62701. Please ensure the package is marked fragile " + "as it contains sensitive electronic equipment. Our reference number is PO-2024-78543. "
         + "Contact us at support if there are any issues with fulfillment.";
 
     // URL with special chars — no angle brackets
@@ -196,231 +193,216 @@ public class SanwafJmhBenchmark
     Sanwaf.isThreatByXml(cleanFormat, FORMAT_XML);
   }
 
-  // ==================== String (instance API — full pipeline) ====================
+  // ==================== String (instance API — full pipeline)
+  // ====================
 
   @Benchmark
-  public boolean stringClean()
-  {
+  public boolean stringClean() {
     return sanwaf.isThreat(cleanText);
   }
 
   @Benchmark
-  public boolean stringDirtyXss()
-  {
+  public boolean stringDirtyXss() {
     return sanwaf.isThreat(dirtyXss);
   }
 
   @Benchmark
-  public boolean stringCleanShort() { return sanwaf.isThreat(cleanTextShort); }
+  public boolean stringCleanShort() {
+    return sanwaf.isThreat(cleanTextShort);
+  }
 
   @Benchmark
-  public boolean stringCleanLong() { return sanwaf.isThreat(cleanTextLong); }
+  public boolean stringCleanLong() {
+    return sanwaf.isThreat(cleanTextLong);
+  }
 
   @Benchmark
-  public boolean stringCleanUrl() { return sanwaf.isThreat(cleanUrl); }
+  public boolean stringCleanUrl() {
+    return sanwaf.isThreat(cleanUrl);
+  }
 
   @Benchmark
-  public boolean stringCleanHtmlEntities() { return sanwaf.isThreat(cleanHtmlEntities); }
+  public boolean stringCleanHtmlEntities() {
+    return sanwaf.isThreat(cleanHtmlEntities);
+  }
 
   @Benchmark
-  public boolean stringDirtyXssEncoded() { return sanwaf.isThreat(dirtyXssEncoded); }
+  public boolean stringDirtyXssEncoded() {
+    return sanwaf.isThreat(dirtyXssEncoded);
+  }
 
   @Benchmark
-  public boolean stringDirtyXssInText() { return sanwaf.isThreat(dirtyXssInText); }
+  public boolean stringDirtyXssInText() {
+    return sanwaf.isThreat(dirtyXssInText);
+  }
 
   @Benchmark
-  public boolean stringDirtyXssLong() { return sanwaf.isThreat(dirtyXssLong); }
+  public boolean stringDirtyXssLong() {
+    return sanwaf.isThreat(dirtyXssLong);
+  }
 
   @Benchmark
-  public boolean stringDirtyXssImg() { return sanwaf.isThreat(dirtyXssImg); }
+  public boolean stringDirtyXssImg() {
+    return sanwaf.isThreat(dirtyXssImg);
+  }
 
   // ==================== Numeric ====================
 
   @Benchmark
-  public boolean numericClean()
-  {
+  public boolean numericClean() {
     return Sanwaf.isThreatByXml(cleanNumeric, NUMERIC_XML);
   }
 
   @Benchmark
-  public boolean numericDirty()
-  {
+  public boolean numericDirty() {
     return Sanwaf.isThreatByXml(dirtyNumeric, NUMERIC_XML);
   }
 
   // ==================== Integer ====================
 
   @Benchmark
-  public boolean integerClean()
-  {
+  public boolean integerClean() {
     return Sanwaf.isThreatByXml(cleanInteger, INTEGER_XML);
   }
 
   @Benchmark
-  public boolean integerDirty()
-  {
+  public boolean integerDirty() {
     return Sanwaf.isThreatByXml(dirtyInteger, INTEGER_XML);
   }
 
   // ==================== Numeric Delimited ====================
 
   @Benchmark
-  public boolean numericDelimitedClean()
-  {
+  public boolean numericDelimitedClean() {
     return Sanwaf.isThreatByXml(cleanNumericDelimited, NUMERIC_DELIMITED_XML);
   }
 
   @Benchmark
-  public boolean numericDelimitedDirty()
-  {
+  public boolean numericDelimitedDirty() {
     return Sanwaf.isThreatByXml(dirtyNumericDelimited, NUMERIC_DELIMITED_XML);
   }
 
   // ==================== Integer Delimited ====================
 
   @Benchmark
-  public boolean integerDelimitedClean()
-  {
+  public boolean integerDelimitedClean() {
     return Sanwaf.isThreatByXml(cleanIntegerDelimited, INTEGER_DELIMITED_XML);
   }
 
   @Benchmark
-  public boolean integerDelimitedDirty()
-  {
+  public boolean integerDelimitedDirty() {
     return Sanwaf.isThreatByXml(dirtyIntegerDelimited, INTEGER_DELIMITED_XML);
   }
 
   // ==================== Alphanumeric ====================
 
   @Benchmark
-  public boolean alphanumericClean()
-  {
+  public boolean alphanumericClean() {
     return Sanwaf.isThreatByXml(cleanAlphanumeric, ALPHANUMERIC_XML);
   }
 
   @Benchmark
-  public boolean alphanumericDirty()
-  {
+  public boolean alphanumericDirty() {
     return Sanwaf.isThreatByXml(dirtyAlphanumeric, ALPHANUMERIC_XML);
   }
 
   // ==================== Alphanumeric And More ====================
 
   @Benchmark
-  public boolean alphanumericMoreClean()
-  {
+  public boolean alphanumericMoreClean() {
     return Sanwaf.isThreatByXml(cleanAlphanumericMore, AN_MORE_XML);
   }
 
   @Benchmark
-  public boolean alphanumericMoreDirty()
-  {
+  public boolean alphanumericMoreDirty() {
     return Sanwaf.isThreatByXml(dirtyAlphanumericMore, AN_MORE_XML);
   }
 
   // ==================== Char ====================
 
   @Benchmark
-  public boolean charClean()
-  {
+  public boolean charClean() {
     return Sanwaf.isThreatByXml(cleanChar, CHAR_XML);
   }
 
   @Benchmark
-  public boolean charDirty()
-  {
+  public boolean charDirty() {
     return Sanwaf.isThreatByXml(dirtyChar, CHAR_XML);
   }
 
   // ==================== Constant ====================
 
   @Benchmark
-  public boolean constantClean()
-  {
+  public boolean constantClean() {
     return Sanwaf.isThreatByXml(cleanConstant, CONSTANT_XML);
   }
 
   @Benchmark
-  public boolean constantDirty()
-  {
+  public boolean constantDirty() {
     return Sanwaf.isThreatByXml(dirtyConstant, CONSTANT_XML);
   }
 
   // ==================== Regex (named pattern) ====================
 
   @Benchmark
-  public boolean regexClean()
-  {
+  public boolean regexClean() {
     return Sanwaf.isThreatByXml(cleanRegex, REGEX_XML);
   }
 
   @Benchmark
-  public boolean regexDirty()
-  {
+  public boolean regexDirty() {
     return Sanwaf.isThreatByXml(dirtyRegex, REGEX_XML);
   }
 
   // ==================== Inline Regex ====================
 
   @Benchmark
-  public boolean inlineRegexClean()
-  {
+  public boolean inlineRegexClean() {
     return Sanwaf.isThreatByXml(cleanInlineRegex, INLINE_REGEX_XML);
   }
 
   @Benchmark
-  public boolean inlineRegexDirty()
-  {
+  public boolean inlineRegexDirty() {
     return Sanwaf.isThreatByXml(dirtyInlineRegex, INLINE_REGEX_XML);
   }
 
   // ==================== Format ====================
 
   @Benchmark
-  public boolean formatClean()
-  {
+  public boolean formatClean() {
     return Sanwaf.isThreatByXml(cleanFormat, FORMAT_XML);
   }
 
   @Benchmark
-  public boolean formatDirty()
-  {
+  public boolean formatDirty() {
     return Sanwaf.isThreatByXml(dirtyFormat, FORMAT_XML);
   }
 
   // ==================== Main ====================
 
-  public static void main(String[] args) throws Exception
-  {
+  public static void main(String[] args) throws Exception {
     // Parse our custom flags before passing to JMH
     String pattern = null;
     String outputFile = null;
     boolean showHelp = false;
 
-    for (int idx = 0; idx < args.length; idx++)
-    {
-      if ("-p".equals(args[idx]) && idx + 1 < args.length)
-      {
+    for (int idx = 0; idx < args.length; idx++) {
+      if ("-p".equals(args[idx]) && idx + 1 < args.length) {
         pattern = args[idx + 1];
         args[idx] = "";
         args[idx + 1] = "";
         idx++;
-      }
-      else if ("-o".equals(args[idx]) && idx + 1 < args.length)
-      {
+      } else if ("-o".equals(args[idx]) && idx + 1 < args.length) {
         outputFile = args[idx + 1];
         args[idx] = "";
         args[idx + 1] = "";
         idx++;
-      }
-      else if ("--help".equals(args[idx]))
-      {
+      } else if ("--help".equals(args[idx])) {
         showHelp = true;
       }
     }
 
-    if (showHelp)
-    {
+    if (showHelp) {
       System.out.println("Sanwaf JMH Benchmark Runner");
       System.out.println("Usage: run-benchmarks.sh [options]");
       System.out.println();
@@ -455,17 +437,22 @@ public class SanwafJmhBenchmark
 
     // Build JMH include pattern
     String include = SanwafJmhBenchmark.class.getSimpleName();
-    if (pattern != null)
-    {
+    if (pattern != null) {
       include = SanwafJmhBenchmark.class.getSimpleName() + "\\." + pattern;
     }
 
     // Filter out empty args (our flags were blanked above)
     int count = 0;
-    for (String arg : args) { if (!arg.isEmpty()) count++; }
+    for (String arg : args) {
+      if (!arg.isEmpty())
+        count++;
+    }
     String[] filtered = new String[count];
     int fi = 0;
-    for (String arg : args) { if (!arg.isEmpty()) filtered[fi++] = arg; }
+    for (String arg : args) {
+      if (!arg.isEmpty())
+        filtered[fi++] = arg;
+    }
 
     // Let JMH parse remaining args (forks, iterations, etc.)
     CommandLineOptions cmdOpts = new CommandLineOptions(filtered);
@@ -475,17 +462,15 @@ public class SanwafJmhBenchmark
     builder.include(include);
     builder.addProfiler("gc");
 
-    if (outputFile != null)
-    {
-      //noinspection JvmTaintAnalysis
+    if (outputFile != null) {
+      // noinspection JvmTaintAnalysis
       builder.resultFormat(ResultFormatType.JSON).result(outputFile);
     }
 
     Options opt = builder.build();
     Collection<RunResult> results = new Runner(opt).run();
 
-    if (outputFile != null)
-    {
+    if (outputFile != null) {
       System.out.println("\nResults saved to: " + outputFile);
     }
   }

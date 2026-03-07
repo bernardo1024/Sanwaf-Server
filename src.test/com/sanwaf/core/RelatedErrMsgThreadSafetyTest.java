@@ -18,62 +18,47 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class RelatedErrMsgThreadSafetyTest
-{
+public class RelatedErrMsgThreadSafetyTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf();
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testRelatedErrMsgIsNotSharedAcrossThreads() throws Exception
-  {
+  public void testRelatedErrMsgIsNotSharedAcrossThreads() throws Exception {
     int threadCount = 20;
     ExecutorService executor = Executors.newFixedThreadPool(threadCount);
     CountDownLatch startLatch = new CountDownLatch(1);
     CountDownLatch doneLatch = new CountDownLatch(threadCount);
     AtomicInteger failures = new AtomicInteger(0);
 
-    for (int i = 0; i < threadCount; i++)
-    {
+    for (int i = 0; i < threadCount; i++) {
       final int threadId = i;
-      executor.submit(() ->
-      {
-        try
-        {
+      executor.submit(() -> {
+        try {
           startLatch.await();
           MockHttpServletRequest req = new MockHttpServletRequest();
           req.setRequestURI("/foo/bar/test.jsp");
           req.addParameter("related-equals-child", "child-" + threadId);
           req.addParameter("related-equals-parent", "parent-" + threadId);
           boolean threat = sanwaf.isThreatDetected(req);
-          if (!threat)
-          {
+          if (!threat) {
             failures.incrementAndGet();
             return;
           }
           String errors = Sanwaf.getErrors(req);
-          if (errors == null || !errors.contains("child-" + threadId) || !errors.contains("does not match"))
-          {
+          if (errors == null || !errors.contains("child-" + threadId) || !errors.contains("does not match")) {
             failures.incrementAndGet();
           }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
           failures.incrementAndGet();
-        }
-        finally
-        {
+        } finally {
           doneLatch.countDown();
         }
       });
@@ -85,8 +70,7 @@ public class RelatedErrMsgThreadSafetyTest
   }
 
   @Test
-  public void testRelatedErrMsgDoesNotLeakToSubsequentCleanRequests()
-  {
+  public void testRelatedErrMsgDoesNotLeakToSubsequentCleanRequests() {
     // First: trigger a related error (mismatched values)
     MockHttpServletRequest req1 = new MockHttpServletRequest();
     req1.setRequestURI("/foo/bar/test.jsp");
@@ -104,8 +88,7 @@ public class RelatedErrMsgThreadSafetyTest
   }
 
   @Test
-  public void testRelatedErrMsgInDetectMode()
-  {
+  public void testRelatedErrMsgInDetectMode() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/test.jsp");
     req.addParameter("related-detect-child", "abc");

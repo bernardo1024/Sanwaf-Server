@@ -11,28 +11,22 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ItemLengthsTest
-{
+public class ItemLengthsTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testNumeric()
-  {
+  public void testNumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "lengthN_0_5", "12345"));
     assertFalse(shield.threat(req, shield.parameters, "lengthN_0_5", "12345"));
@@ -45,8 +39,7 @@ public class ItemLengthsTest
   }
 
   @Test
-  public void testNumericDelimited()
-  {
+  public void testNumericDelimited() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "lengthNN_6_6", "123456"));
     assertFalse(shield.threat(req, shield.parameters, "lengthNN_6_6", "-12345"));
@@ -64,8 +57,7 @@ public class ItemLengthsTest
   }
 
   @Test
-  public void testAlphanumeric()
-  {
+  public void testAlphanumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "lengthA_0_3", "ab1"));
     assertTrue(shield.threat(req, shield.parameters, "lengthA_0_3", "abc4"));
@@ -75,8 +67,7 @@ public class ItemLengthsTest
   }
 
   @Test
-  public void testAlphanumericAndMore()
-  {
+  public void testAlphanumericAndMore() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "lengthAA_0_4", "abc1"));
     assertFalse(shield.threat(req, shield.parameters, "lengthAA_0_4", "ab:1"));
@@ -92,8 +83,7 @@ public class ItemLengthsTest
   }
 
   @Test
-  public void testChar()
-  {
+  public void testChar() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "lengthC_1_1", "a"));
     assertFalse(shield.threat(req, shield.parameters, "lengthC_1_1", "1"));
@@ -113,8 +103,7 @@ public class ItemLengthsTest
   }
 
   @Test
-  public void testCustomRegex()
-  {
+  public void testCustomRegex() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "lengthR_0_11", "555-55-5555"));
     assertTrue(shield.threat(req, shield.parameters, "lengthR_0_11", "abc-de-fghi1"));
@@ -124,8 +113,7 @@ public class ItemLengthsTest
   }
 
   @Test
-  public void testStringType()
-  {
+  public void testStringType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertTrue(shield.threat(req, shield.parameters, "lengthS2_0_7", "12345678"));
 
@@ -143,16 +131,14 @@ public class ItemLengthsTest
   }
 
   @Test
-  public void testStringTypeMinSetNoValue()
-  {
+  public void testStringTypeMinSetNoValue() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertTrue(shield.threat(req, shield.parameters, "lengthNN2_6_6", ""));
     assertFalse(shield.threat(req, shield.parameters, "lengthNN2_6_6", null));
   }
 
   @Test
-  public void TestMaxMinLength()
-  {
+  public void TestMaxMinLength() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "ParmLength");
     assertEquals(Integer.MAX_VALUE, shield.maxLen);
     assertEquals(0, shield.minLen);
@@ -163,4 +149,3 @@ public class ItemLengthsTest
     assertEquals(0, p.min);
   }
 }
-

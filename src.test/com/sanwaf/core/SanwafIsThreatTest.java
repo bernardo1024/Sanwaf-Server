@@ -15,26 +15,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class SanwafIsThreatTest
-{
+public class SanwafIsThreatTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-isThreat.xml");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testSanWafIsThreat()
-  {
+  public void testSanWafIsThreat() {
     boolean b = sanwaf.isThreat("<script>alert(1)</script>");
     assertTrue(b);
 
@@ -43,15 +37,13 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testThreatWithNull()
-  {
+  public void testThreatWithNull() {
     boolean b = sanwaf.isThreat(null);
     assertFalse(b);
   }
 
   @Test
-  public void testSanWafIsThreatSetAttributesParameters()
-  {
+  public void testSanWafIsThreatSetAttributesParameters() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     boolean result = sanwaf.isThreat("<script>alert(1)</script>", null, request);
     assertTrue(result);
@@ -78,8 +70,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatDoNotAddErrorParms()
-  {
+  public void testSanWafIsThreatDoNotAddErrorParms() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     Sanwaf.SanwafConfig saved = sanwaf.config;
     sanwaf.config = saved.toBuilder().onErrorAddParmErrors(false).build();
@@ -100,8 +91,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatWithShieldName()
-  {
+  public void testSanWafIsThreatWithShieldName() {
     boolean result = sanwaf.checkValueForShieldThreats("<script>alert(1)</script>", "XSS", null);
     assertTrue(result);
 
@@ -110,8 +100,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatNumeric()
-  {
+  public void testSanWafIsThreatNumeric() {
     boolean result = Sanwaf.isThreatByXml("abc123", "<item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
@@ -120,8 +109,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatNumericDelimited()
-  {
+  public void testSanWafIsThreatNumericDelimited() {
     boolean result = Sanwaf.isThreatByXml("abc123", "<item><name>numericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
@@ -130,8 +118,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatAlphanumeric()
-  {
+  public void testSanWafIsThreatAlphanumeric() {
     boolean result = Sanwaf.isThreatByXml("abc123!!!", "<item><name>alphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
@@ -140,8 +127,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatAlphanumericAndMore()
-  {
+  public void testSanWafIsThreatAlphanumericAndMore() {
     boolean result = Sanwaf.isThreatByXml("abc123!!!", "<item><name>alphanumericAndMore</name><type>a{?\\s:}</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
@@ -150,8 +136,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatChar()
-  {
+  public void testSanWafIsThreatChar() {
     boolean result = Sanwaf.isThreatByXml("abc123!!!", "<item><name>char</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
@@ -160,8 +145,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatRegex()
-  {
+  public void testSanWafIsThreatRegex() {
     boolean result = Sanwaf.isThreatByXml("abc123!!!", "<item><name>regex</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
@@ -170,13 +154,13 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatXRegex()
-  {
+  public void testSanWafIsThreatXRegex() {
     boolean result = Sanwaf.isThreatByXml("noName",
         "<item><name>regex</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
-    result = Sanwaf.isThreatByXml("abc123!!!", "<item><name></name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    result = Sanwaf.isThreatByXml("abc123!!!",
+        "<item><name></name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
     result = Sanwaf.isThreatByXml("abc123!!!",
@@ -190,7 +174,8 @@ public class SanwafIsThreatTest
         "<item><name>regex</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertFalse(result);
 
-    result = Sanwaf.isThreatByXml("123.123.1234", "<item><name></name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    result = Sanwaf.isThreatByXml("123.123.1234",
+        "<item><name></name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertFalse(result);
 
     result = Sanwaf.isThreatByXml("123.123.1234",
@@ -202,8 +187,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatConstant()
-  {
+  public void testSanWafIsThreatConstant() {
     boolean result = Sanwaf.isThreatByXml("abc123!!!", "<item><name>constant</name><type>k{FOO,BAR,FAR}</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertTrue(result);
 
@@ -212,9 +196,9 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatJava()
-  {
-    // j{} type is blocked on the static API path (no shield) — falls back to string validation
+  public void testSanWafIsThreatJava() {
+    // j{} type is blocked on the static API path (no shield) — falls back to string
+    // validation
     boolean result = Sanwaf.isThreatByXml("100", "<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertFalse(result);
 
@@ -223,8 +207,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatMaxMinMsgUri()
-  {
+  public void testSanWafIsThreatMaxMinMsgUri() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foobar");
     boolean result = Sanwaf.isThreatByXml("12345", "<item><name>MaxMinMsgUri</name><type>n</type><max>5</max><min>5</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>");
@@ -247,8 +230,7 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatViolateMin()
-  {
+  public void testSanWafIsThreatViolateMin() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foobar");
     boolean result = Sanwaf.isThreatByXml("3", "<item><name>invalidMin</name><type>n</type><max>5</max><min>2</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>");
@@ -256,15 +238,14 @@ public class SanwafIsThreatTest
   }
 
   @Test
-  public void testSanWafIsThreatDynamicXmlInvalidShieldName()
-  {
+  public void testSanWafIsThreatDynamicXmlInvalidShieldName() {
     boolean result = Sanwaf.isThreatByXml("<script>alert(1)</script>", "<item><name>string</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertFalse(result);
   }
 
   // --- mode tests for isThreatByXml ---
   // Uses inline-regex type (x{...}) because its inError checks mode explicitly:
-  //   return r.mode == Modes.BLOCK && mode == Modes.BLOCK
+  // return r.mode == Modes.BLOCK && mode == Modes.BLOCK
   // This makes the return value mode-sensitive even with shield=null.
 
   private static final String MODE_XML_PREFIX = "<item><name>modeTest</name><mode>";
@@ -273,39 +254,33 @@ public class SanwafIsThreatTest
   private static final String THREAT_VALUE = "abc";
 
   @Test
-  public void testIsThreatByXml_modeBlock()
-  {
+  public void testIsThreatByXml_modeBlock() {
     boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_PREFIX + "block" + MODE_XML_SUFFIX);
     assertTrue(result);
   }
 
   @Test
-  public void testIsThreatByXml_modeDetect()
-  {
+  public void testIsThreatByXml_modeDetect() {
     boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_PREFIX + "detect" + MODE_XML_SUFFIX);
     assertFalse(result);
   }
 
   @Test
-  public void testIsThreatByXml_modeDetectAll()
-  {
+  public void testIsThreatByXml_modeDetectAll() {
     boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_PREFIX + "detect-all" + MODE_XML_SUFFIX);
     assertFalse(result);
   }
 
   @Test
-  public void testIsThreatByXml_modeDisabled()
-  {
+  public void testIsThreatByXml_modeDisabled() {
     boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_PREFIX + "disabled" + MODE_XML_SUFFIX);
     assertTrue(result);
   }
 
   @Test
-  public void testIsThreatByXml_modeDefault()
-  {
+  public void testIsThreatByXml_modeDefault() {
     boolean result = Sanwaf.isThreatByXml(THREAT_VALUE, MODE_XML_NO_MODE);
     assertTrue(result);
   }
 
 }
-

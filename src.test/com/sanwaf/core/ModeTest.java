@@ -13,26 +13,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ModeTest
-{
+public class ModeTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-modes.xml");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testColonedParameters()
-  {
+  public void testColonedParameters() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("p1", "foo<body onload='alert(1)'>bar");
     assertTrue(sanwaf.isThreatDetected(request, true, false));
@@ -40,16 +34,14 @@ public class ModeTest
   }
 
   @Test
-  public void testParameter()
-  {
+  public void testParameter() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("modeParameter", "foobarfoobar");
     assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testParameterString()
-  {
+  public void testParameterString() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("modeParameterString", "javascript: ");
     assertFalse(sanwaf.isThreatDetected(request));
@@ -60,16 +52,14 @@ public class ModeTest
   }
 
   @Test
-  public void testParameterRegex()
-  {
+  public void testParameterRegex() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("modeParameterRegex", "foobarfoobar");
     assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testParameterBlock()
-  {
+  public void testParameterBlock() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-BLOCK", "foobarfoobar");
@@ -77,8 +67,7 @@ public class ModeTest
   }
 
   @Test
-  public void testParameterDisabled()
-  {
+  public void testParameterDisabled() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-DISABLED", "foobarfoobar");
@@ -86,8 +75,7 @@ public class ModeTest
   }
 
   @Test
-  public void testParameterNoMode()
-  {
+  public void testParameterNoMode() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-NO-MODE", "foobarfoobar");
@@ -95,8 +83,7 @@ public class ModeTest
   }
 
   @Test
-  public void testParameterItemRuleCombinations()
-  {
+  public void testParameterItemRuleCombinations() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-DETECT-BLOCK", "foobarfoobar");
@@ -119,48 +106,42 @@ public class ModeTest
   }
 
   @Test
-  public void testHeader()
-  {
+  public void testHeader() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("modeHeader", "foobarfoobar");
     assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testHeaderNoMode()
-  {
+  public void testHeaderNoMode() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("modeHeader-NO-MODE", "<script>");
     assertTrue(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testHeaderNoModeLargeValue()
-  {
+  public void testHeaderNoModeLargeValue() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("modeParameter-DETECT2", ":RULE-IS-DETECT<script> 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
     assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testCookie()
-  {
+  public void testCookie() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setCookies(new Cookie("modeCookie", "foobarfoobar"));
     assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testCookieNoMode()
-  {
+  public void testCookieNoMode() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setCookies(new Cookie("modeCookie-NO-MODE", "foobarfoobar"));
     assertTrue(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testEndPointDetect()
-  {
+  public void testEndPointDetect() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-DETECT", "foobarfoobar");
@@ -187,8 +168,7 @@ public class ModeTest
   }
 
   @Test
-  public void testEndPointBlock()
-  {
+  public void testEndPointBlock() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-BLOCK", "foobarfoobar");
@@ -196,8 +176,7 @@ public class ModeTest
   }
 
   @Test
-  public void testEndPointDisabled()
-  {
+  public void testEndPointDisabled() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-DISABLED", "foobarfoobar");
@@ -205,8 +184,7 @@ public class ModeTest
   }
 
   @Test
-  public void testEndPointNoMode()
-  {
+  public void testEndPointNoMode() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-NO-MODE", "foobarfoobar");
@@ -214,8 +192,7 @@ public class ModeTest
   }
 
   @Test
-  public void testEndPointItemRuleCombinations()
-  {
+  public void testEndPointItemRuleCombinations() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-DETECT-BLOCK", "foobarfoobar");
@@ -238,8 +215,7 @@ public class ModeTest
   }
 
   @Test
-  public void testDatatypeDetect()
-  {
+  public void testDatatypeDetect() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("char", "cc");
     assertFalse(sanwaf.isThreatDetected(request));
@@ -290,37 +266,34 @@ public class ModeTest
   }
 
   @Test
-  public void testTest()
-  {
+  public void testTest() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("numericdelimited", "abc");
     assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testRegexModeDetextNoModeOnParmDetect()
-  {
+  public void testRegexModeDetextNoModeOnParmDetect() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("regexParmNoModeWithRegexDetectMode", "abcd");
     assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
-  public void testRegexDetectModeGetErrorPoints()
-  {
+  public void testRegexDetectModeGetErrorPoints() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "XSS");
     Item item = shield.getItem(shield.parameters, "modeParameterRegex-DETECT");
     assertNotNull(item);
     // Clear cached rule so resolveRule must search both maps
     UnitTestUtil.setField(item, "rule", null);
-    // date-DETECT defaults to match=pass (failOnMatch=false), so a non-date triggers error
+    // date-DETECT defaults to match=pass (failOnMatch=false), so a non-date
+    // triggers error
     List<Point> points = item.getErrorPoints(shield, "not-a-date");
     assertFalse(points.isEmpty(), "detect-mode regex should produce error points");
   }
 
   @Test
-  public void testColonedParametersReportCorrectName()
-  {
+  public void testColonedParametersReportCorrectName() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("p1", "foo<body onload='alert(1)'>bar");
     assertTrue(sanwaf.isThreatDetected(request, true, false));
@@ -339,4 +312,3 @@ public class ModeTest
   }
 
 }
-

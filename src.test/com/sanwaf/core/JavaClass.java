@@ -10,18 +10,14 @@ import jakarta.servlet.ServletRequest;
  *   4. method returns true for an issue detected; false of no issue
  */
 @SuppressWarnings("unused")
-public class JavaClass
-{
-  public static boolean over10TrueElseFalse(String s, ServletRequest req)
-  {
+public class JavaClass {
+  public static boolean over10TrueElseFalse(String s, ServletRequest req) {
     return Integer.parseInt(s) > 10;
   }
 
-  public static boolean multiParmsNotEqual(String s, ServletRequest req)
-  {
+  public static boolean multiParmsNotEqual(String s, ServletRequest req) {
     String s2 = req.getParameter("JavaMultiParm2");
     String s3 = req.getParameter("JavaMultiParm3");
     return !s.equals(s2) || !s.equals(s3);
   }
 }
-

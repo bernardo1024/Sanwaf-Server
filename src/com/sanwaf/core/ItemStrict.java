@@ -5,29 +5,24 @@ import jakarta.servlet.ServletRequest;
 import java.util.Collections;
 import java.util.List;
 
-class ItemStrict extends Item
-{
+class ItemStrict extends Item {
 
-  ItemStrict(String s)
-  {
+  ItemStrict(String s) {
     msg = s;
   }
 
   @Override
-  boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks, boolean log)
-  {
+  boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks, boolean log) {
     return false;
   }
 
   @Override
-  List<Point> getErrorPoints(Shield shield, String value)
-  {
+  List<Point> getErrorPoints(Shield shield, String value) {
     return Collections.emptyList();
   }
 
   @Override
-  Types getType()
-  {
+  Types getType() {
     return Types.STRICT;
   }
 }

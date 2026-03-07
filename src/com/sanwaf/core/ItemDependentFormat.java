@@ -7,31 +7,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class ItemDependentFormat extends Item
-{
+final class ItemDependentFormat extends Item {
   static final String INVALID_DEP_FORMAT = "Invalid Dependent Format: ";
   final String depFormatString;
   final String dependentElementName;
   final Map<String, ItemFormat> formats = new HashMap<>();
 
-  ItemDependentFormat(ItemData id)
-  {
+  ItemDependentFormat(ItemData id) {
     super(id);
     String depFmt = null;
     String depName = null;
     int start = id.type.indexOf(ItemFactory.DEPENDENT_FORMAT);
-    if (start >= 0)
-    {
+    if (start >= 0) {
       depFmt = id.type.substring(start + ItemFactory.DEPENDENT_FORMAT.length(), id.type.length() - 1);
-      if (!depFmt.isEmpty())
-      {
+      if (!depFmt.isEmpty()) {
         String[] elementFormatData = depFmt.split(":");
-        if (elementFormatData.length == 2)
-        {
+        if (elementFormatData.length == 2) {
           depName = elementFormatData[0];
           String[] valueFormatPairs = elementFormatData[1].split(";");
-          if (valueFormatPairs.length > 0)
-          {
+          if (valueFormatPairs.length > 0) {
             parseFormats(id, valueFormatPairs);
           }
         }
@@ -42,29 +36,23 @@ final class ItemDependentFormat extends Item
   }
 
   @Override
-  List<Point> getErrorPoints(final Shield shield, final String value)
-  {
-    if (value.isEmpty() || !maskError.isEmpty())
-    {
+  List<Point> getErrorPoints(final Shield shield, final String value) {
+    if (value.isEmpty() || !maskError.isEmpty()) {
       return Collections.emptyList();
     }
     return Collections.singletonList(new Point(0, value.length()));
   }
 
   @Override
-  boolean inError(final ServletRequest req, Shield shield, final String value, boolean doAllBlocks, boolean log)
-  {
-    if (mode == Modes.DISABLED)
-    {
+  boolean inError(final ServletRequest req, Shield shield, final String value, boolean doAllBlocks, boolean log) {
+    if (mode == Modes.DISABLED) {
       return false;
     }
     String elementValue = null;
-    if (dependentElementName != null)
-    {
+    if (dependentElementName != null) {
       elementValue = req.getParameter(dependentElementName);
     }
-    if (elementValue == null)
-    {
+    if (elementValue == null) {
       return false;
     }
     ItemFormat format = getFormatForValue(elementValue);
@@ -72,37 +60,30 @@ final class ItemDependentFormat extends Item
     return format != null && format.inError(req, shield, value, doAllBlocks, log);
   }
 
-  private ItemFormat getFormatForValue(String value)
-  {
+  private ItemFormat getFormatForValue(String value) {
     return formats.get(value);
   }
 
   @Override
-  String modifyErrorMsg(ServletRequest req, String errorMsg)
-  {
-    if (req == null || dependentElementName == null)
-    {
+  String modifyErrorMsg(ServletRequest req, String errorMsg) {
+    if (req == null || dependentElementName == null) {
       return "";
     }
     String elementValue = req.getParameter(dependentElementName);
     ItemFormat format = getFormatForValue(elementValue);
     String formatString = " --- ";
-    if (format != null)
-    {
+    if (format != null) {
       formatString = format.formatString;
     }
     return replacePlaceholder(errorMsg, JsonFormatter.jsonEncode(formatString));
   }
 
-  private void parseFormats(ItemData id, String[] valueFormatPairs)
-  {
-    for (String valueFormatPair : valueFormatPairs)
-    {
+  private void parseFormats(ItemData id, String[] valueFormatPairs) {
+    for (String valueFormatPair : valueFormatPairs) {
       String[] kv = valueFormatPair.split("=");
-      if (kv.length == 2)
-      {
-        ItemData formatId = new ItemData(id.shield, id.name, id.mode, id.display, "f{" + kv[1] + "}", id.msg, id.uri, id.max, id.min,
-            id.logger, id.required, id.maxValue, id.minValue, id.maskError, id.related, id.relatedBlocks);
+      if (kv.length == 2) {
+        ItemData formatId = new ItemData(id.shield, id.name, id.mode, id.display, "f{" + kv[1] + "}", id.msg, id.uri, id.max, id.min, id.logger, id.required, id.maxValue, id.minValue, id.maskError,
+            id.related, id.relatedBlocks);
         ItemFormat item = new ItemFormat(formatId);
         formats.put(kv[0], item);
       }
@@ -110,13 +91,11 @@ final class ItemDependentFormat extends Item
   }
 
   @Override
-  String getProperties()
-  {
+  String getProperties() {
     StringBuilder sb = new StringBuilder();
     sb.append("\"formats\":{");
     String sep = "";
-    for (Map.Entry<String, ItemFormat> entry : formats.entrySet())
-    {
+    for (Map.Entry<String, ItemFormat> entry : formats.entrySet()) {
       sb.append(sep).append("\"key\":\"").append(entry.getKey()).append("\"");
       sb.append(",\"value\":\"").append(entry.getValue().formatString).append("\"");
       sep = ",";
@@ -126,15 +105,12 @@ final class ItemDependentFormat extends Item
   }
 
   @Override
-  String getDefaultErrorMessage()
-  {
+  String getDefaultErrorMessage() {
     return INVALID_DEP_FORMAT;
   }
 
   @Override
-  Types getType()
-  {
+  Types getType() {
     return Types.DEPENDENT_FORMAT;
   }
 }
-

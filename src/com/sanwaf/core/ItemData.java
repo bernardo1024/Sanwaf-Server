@@ -2,8 +2,7 @@ package com.sanwaf.core;
 
 import com.sanwaf.log.Logger;
 
-class ItemData
-{
+class ItemData {
   final String name;
   final String display;
   final Shield shield;
@@ -21,15 +20,12 @@ class ItemData
   final String related;
   final RelationValidator.Block[] relatedBlocks;
 
-  ItemData(Shield shield, String name, Modes mode, String display, String type, String msg, String uri, int max, int min)
-  {
-    this(shield, name, mode, display, type, msg, uri, max, min,
-        shield != null ? shield.logger : null, false, Integer.MAX_VALUE, Integer.MIN_VALUE, "", null, null);
+  ItemData(Shield shield, String name, Modes mode, String display, String type, String msg, String uri, int max, int min) {
+    this(shield, name, mode, display, type, msg, uri, max, min, shield != null ? shield.logger : null, false, Integer.MAX_VALUE, Integer.MIN_VALUE, "", null, null);
   }
 
-  ItemData(Shield shield, String name, Modes mode, String display, String type, String msg, String uri, int max, int min,
-      Logger logger, boolean required, double maxValue, double minValue, String maskError, String related, RelationValidator.Block[] relatedBlocks)
-  {
+  ItemData(Shield shield, String name, Modes mode, String display, String type, String msg, String uri, int max, int min, Logger logger, boolean required, double maxValue, double minValue,
+      String maskError, String related, RelationValidator.Block[] relatedBlocks) {
     this.name = name;
     this.display = display;
     this.shield = shield;

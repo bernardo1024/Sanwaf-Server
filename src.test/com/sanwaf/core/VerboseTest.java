@@ -13,8 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class VerboseTest
-{
+public class VerboseTest {
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
 
@@ -22,20 +21,17 @@ public class VerboseTest
   static Shield shield;
 
   @BeforeEach
-  public void setUpStreams()
-  {
+  public void setUpStreams() {
     System.setOut(new PrintStream(outContent));
   }
 
   @AfterEach
-  public void restoreStreams()
-  {
+  public void restoreStreams() {
     System.setOut(originalOut);
   }
 
   @Test
-  public void verboseDisabledTest() throws IOException
-  {
+  public void verboseDisabledTest() throws IOException {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf.xml");
     String s = outContent.toString();
     assertFalse(s.contains("Settings:"));
@@ -49,8 +45,7 @@ public class VerboseTest
   }
 
   @Test
-  public void verboseEnabledTest() throws IOException
-  {
+  public void verboseEnabledTest() throws IOException {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-verbose.xml");
     String s = outContent.toString();
     assertTrue(s.contains("Settings:"));
@@ -63,10 +58,8 @@ public class VerboseTest
   }
 
   @Test
-  public void testForceString()
-  {
-    try
-    {
+  public void testForceString() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-forceRegex.xml");
       MockHttpServletRequest request = new MockHttpServletRequest();
       request.addParameter("modeParameter", "foobarfoobar");
@@ -75,16 +68,13 @@ public class VerboseTest
       request = new MockHttpServletRequest();
       request.addParameter("xxxx", "<script>");
       assertTrue(sanwaf.isThreatDetected(request));
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void verboseEnabledRegexTest() throws IOException
-  {
+  public void verboseEnabledRegexTest() throws IOException {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-verboseRegexAlways.xml");
     String s = outContent.toString();
     assertTrue(s.contains("forceStringPatterns=true"));
@@ -96,11 +86,9 @@ public class VerboseTest
   }
 
   @Test
-  public void verboseChildShieldTest() throws IOException
-  {
+  public void verboseChildShieldTest() throws IOException {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-childShield.xml");
     String s = outContent.toString();
     assertTrue(s.contains("child-shield=XSS-CHILD"));
   }
 }
-

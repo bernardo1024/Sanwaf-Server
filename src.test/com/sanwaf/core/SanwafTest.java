@@ -17,28 +17,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class SanwafTest
-{
+public class SanwafTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testXssNoThreat()
-  {
+  public void testXssNoThreat() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "abcdefghij");
     boolean result = sanwaf.isThreatDetected(request);
@@ -46,8 +40,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testXssWithThreat()
-  {
+  public void testXssWithThreat() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1);</script>");
     boolean result = sanwaf.isThreatDetected(request);
@@ -55,8 +48,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testTrackIdAndGetErrorsNumbersDelimited()
-  {
+  public void testTrackIdAndGetErrorsNumbersDelimited() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
     boolean result = sanwaf.isThreatDetected(request);
@@ -73,8 +65,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testTrackIdAndGetErrorsAlphanumericAndMore()
-  {
+  public void testTrackIdAndGetErrorsAlphanumericAndMore() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("AlphanumericAndMore", "Some Bad! data;----?? ");
     boolean result = sanwaf.isThreatDetected(request);
@@ -88,8 +79,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testTrackIdDisabled()
-  {
+  public void testTrackIdDisabled() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("NumericDelimited", "+foobar");
     boolean result = sanwaf.isThreatDetected(request);
@@ -113,78 +103,60 @@ public class SanwafTest
   }
 
   @Test
-  public void testSanwafReload()
-  {
-    try
-    {
+  public void testSanwafReload() {
+    try {
       Sanwaf sw = new Sanwaf();
       assertNotNull(sw);
       sw.reLoad();
       assertNotNull(sw);
-    }
-    catch (IOException ignored)
-    {
+    } catch (IOException ignored) {
     }
   }
 
   @Test
-  public void testSanwafInstantiateLoggerOnly()
-  {
-    try
-    {
+  public void testSanwafInstantiateLoggerOnly() {
+    try {
       Sanwaf sw = new Sanwaf(new com.sanwaf.log.SimpleLogger());
       assertNotNull(sw);
       sw.reLoad();
-    }
-    catch (IOException ignored)
-    {
+    } catch (IOException ignored) {
     }
   }
 
   @Test
-  public void testSanwafInstantiate()
-  {
-    try
-    {
+  public void testSanwafInstantiate() {
+    try {
       Sanwaf sw = new Sanwaf();
       assertNotNull(sw);
       sw.reLoad();
-    }
-    catch (IOException ignored)
-    {
+    } catch (IOException ignored) {
     }
   }
 
   @Test
-  public void testSanWafInvalidXML()
-  {
+  public void testSanWafInvalidXML() {
     assertThrows(IOException.class, () -> new Sanwaf(new UnitTestLogger(), "invalidXmlFilename.foobar"));
   }
 
   @Test
-  public void testSanWafLoggerAndFile()
-  {
-    try
-    {
+  public void testSanWafLoggerAndFile() {
+    try {
       Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf.xml");
       assertNotNull(sw);
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail("exception Raised");
     }
   }
 
   @Test
-  public void TestNonMappedParamDefaultToStingWithRegexAlwaysEnabled()
-  {
+  public void TestNonMappedParamDefaultToStingWithRegexAlwaysEnabled() {
     boolean xssAlways = shield.regexAlways;
     UnitTestUtil.setField(shield, "regexAlways", true);
     boolean b = sanwaf.isThreatDetected(null);
     assertFalse(b);
 
     MockHttpServletRequest request = new MockHttpServletRequest();
-    //noinspection SpellCheckingInspection
+    // noinspection SpellCheckingInspection
     request.addParameter("foobarTHISisNOTmappedXssError", "<script>alert(1)</script>");
     boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
@@ -193,8 +165,7 @@ public class SanwafTest
   }
 
   @Test
-  public void testIsThreatDetectedWithShieldList()
-  {
+  public void testIsThreatDetectedWithShieldList() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "<script>alert(1)</script>");
     assertTrue(sanwaf.isThreatDetected(request, Collections.singletonList("XSS"), false));
@@ -208,4 +179,3 @@ public class SanwafTest
     assertTrue(sanwaf.isThreatDetected(request, null, false));
   }
 }
-

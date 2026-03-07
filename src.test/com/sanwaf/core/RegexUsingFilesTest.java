@@ -10,28 +10,22 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class RegexUsingFilesTest
-{
+public class RegexUsingFilesTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-regexUsingFiles.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testRegex1()
-  {
+  public void testRegex1() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("regex1", "123456");
     assertTrue(sanwaf.isThreatDetected(request));
@@ -42,8 +36,7 @@ public class RegexUsingFilesTest
   }
 
   @Test
-  public void testRegex2()
-  {
+  public void testRegex2() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("regex2", "123456");
     assertTrue(sanwaf.isThreatDetected(request));
@@ -54,8 +47,7 @@ public class RegexUsingFilesTest
   }
 
   @Test
-  public void testRegexString()
-  {
+  public void testRegexString() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("string", "123-456-7890");
     assertTrue(sanwaf.isThreatDetected(request));
@@ -66,4 +58,3 @@ public class RegexUsingFilesTest
   }
 
 }
-

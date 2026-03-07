@@ -11,28 +11,22 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class DefaultErrorMessageTest
-{
+public class DefaultErrorMessageTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-reduced.xml");
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void stringFallbackTest()
-  {
+  public void stringFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "s", "", null, Integer.MAX_VALUE, 0);
     ItemString item = new ItemString(id);
@@ -41,8 +35,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void numericFallbackTest()
-  {
+  public void numericFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "n", "", null, Integer.MAX_VALUE, 0);
     ItemNumeric item = new ItemNumeric(id, false);
@@ -51,8 +44,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void alphanumericFallbackTest()
-  {
+  public void alphanumericFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "a", "", null, Integer.MAX_VALUE, 0);
     ItemAlphanumeric item = new ItemAlphanumeric(id);
@@ -61,8 +53,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void alphanumericAndMoreFallbackTest()
-  {
+  public void alphanumericAndMoreFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "a{? :}", "", null, Integer.MAX_VALUE, 0);
     ItemAlphanumericAndMore item = new ItemAlphanumericAndMore(id);
@@ -71,8 +62,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void charFallbackTest()
-  {
+  public void charFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "", null, Integer.MAX_VALUE, 0);
     ItemChar item = new ItemChar(id);
@@ -81,8 +71,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void constantFallbackTest()
-  {
+  public void constantFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "k{foo,bar}", "", null, Integer.MAX_VALUE, 0);
     ItemConstant item = new ItemConstant(id);
@@ -91,8 +80,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void formatFallbackTest()
-  {
+  public void formatFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "f{###-###-####}", "", null, Integer.MAX_VALUE, 0);
     ItemFormat item = new ItemFormat(id);
@@ -101,8 +89,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void dependentFormatFallbackTest()
-  {
+  public void dependentFormatFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "d{depField:val1=###;val2=##-##}", "", null, Integer.MAX_VALUE, 0);
     ItemDependentFormat item = new ItemDependentFormat(id);
@@ -111,8 +98,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void regexFallbackTest()
-  {
+  public void regexFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "r{somePattern}", "", null, Integer.MAX_VALUE, 0);
     ItemRegex item = new ItemRegex(id);
@@ -121,8 +107,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void javaFallbackTest()
-  {
+  public void javaFallbackTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "j{com.sanwaf.core.JavaClass.over10trueElseFalse()}", "", null, Integer.MAX_VALUE, 0);
     ItemJava item = new ItemJava(id);
@@ -131,8 +116,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void perItemMsgTakesPrecedenceTest()
-  {
+  public void perItemMsgTakesPrecedenceTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "n", "custom per-item msg", null, Integer.MAX_VALUE, 0);
     ItemNumeric item = new ItemNumeric(id, false);
@@ -141,8 +125,7 @@ public class DefaultErrorMessageTest
   }
 
   @Test
-  public void charFallbackSaysCharNotConstantTest()
-  {
+  public void charFallbackSaysCharNotConstantTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "", null, Integer.MAX_VALUE, 0);
     ItemChar item = new ItemChar(id);

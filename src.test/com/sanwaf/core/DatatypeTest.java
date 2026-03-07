@@ -16,28 +16,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class DatatypeTest
-{
+public class DatatypeTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "xss");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testNumeric()
-  {
+  public void testNumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "lengthN_0_5", "12345"));
     assertFalse(shield.threat(req, shield.parameters, "Numeric", "0123456789"));
@@ -61,8 +55,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testInteger()
-  {
+  public void testInteger() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "Integer", "12345"));
     assertFalse(shield.threat(req, shield.parameters, "Integer", "0123456789"));
@@ -76,8 +69,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testNumericDelimitedType()
-  {
+  public void testNumericDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "n{}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
@@ -92,8 +84,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testNumericDelimitedInErrorNull()
-  {
+  public void testNumericDelimitedInErrorNull() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "n{,}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
@@ -101,8 +92,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testIntegerDelimitedType()
-  {
+  public void testIntegerDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "i{}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
@@ -117,8 +107,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumeric()
-  {
+  public void testAlphanumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "Alphanumeric", "abcdefghijklmnopqrstuvwxyz0123456789"));
     assertTrue(shield.threat(req, shield.parameters, "Alphanumeric", "1239.a"));
@@ -131,8 +120,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumericSizeError()
-  {
+  public void testAlphanumericSizeError() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertTrue(shield.threat(req, shield.parameters, "AlphanumericSizeError", "123"));
     assertTrue(shield.threat(req, shield.parameters, "AlphanumericSizeError", "1234"));
@@ -144,8 +132,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumericAndMore()
-  {
+  public void testAlphanumericAndMore() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "AlphanumericAndMore", "abcde"));
     assertFalse(shield.threat(req, shield.parameters, "AlphanumericAndMore", "1?234"));
@@ -159,8 +146,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumericAndMoreInvalidConfig()
-  {
+  public void testAlphanumericAndMoreInvalidConfig() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig1", "abc123? :"));
     assertFalse(shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig2", "1?234"));
@@ -169,16 +155,14 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumericGetErrorPointsAllValid()
-  {
+  public void testAlphanumericGetErrorPointsAllValid() {
     ItemAlphanumeric p = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
     List<Point> list = p.getErrorPoints(shield, "abcde");
     assertEquals(0, list.size());
   }
 
   @Test
-  public void testAlphanumericGetErrorPointsMiddleError()
-  {
+  public void testAlphanumericGetErrorPointsMiddleError() {
     ItemAlphanumeric p = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
     List<Point> list = p.getErrorPoints(shield, "abc??de");
     assertEquals(1, list.size());
@@ -187,8 +171,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumericGetErrorPointsTrailingError()
-  {
+  public void testAlphanumericGetErrorPointsTrailingError() {
     ItemAlphanumeric p = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
     List<Point> list = p.getErrorPoints(shield, "abc??");
     assertEquals(1, list.size());
@@ -197,8 +180,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumericGetErrorPointsAllInvalid()
-  {
+  public void testAlphanumericGetErrorPointsAllInvalid() {
     ItemAlphanumeric p = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
     List<Point> list = p.getErrorPoints(shield, "??");
     assertEquals(1, list.size());
@@ -207,8 +189,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumericAndMoreType()
-  {
+  public void testAlphanumericAndMoreType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "a{,}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemAlphanumericAndMore p = new ItemAlphanumericAndMore(id);
@@ -227,23 +208,20 @@ public class DatatypeTest
   }
 
   @Test
-  public void testAlphanumericAndMoreTypeSpecialChars()
-  {
+  public void testAlphanumericAndMoreTypeSpecialChars() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "AlphanumericAndMoreSpecialChars", "a b\tc\nd\re"));
     assertTrue(shield.threat(req, shield.parameters, "AlphanumericAndMoreSpecialChars", "a \\"));
   }
 
   @Test
-  public void testAlphanumericAndMoreTypeCurlyBraces()
-  {
+  public void testAlphanumericAndMoreTypeCurlyBraces() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "AlphanumericAndMoreCurlyBraces", "{a}"));
   }
 
   @Test
-  public void testChar()
-  {
+  public void testChar() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "Char", "a"));
     assertFalse(shield.threat(req, shield.parameters, "Char", "1"));
@@ -266,8 +244,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testCharGetErrorPointsNull()
-  {
+  public void testCharGetErrorPointsNull() {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "error msg1", null, 1, 0);
     ItemChar p = new ItemChar(id);
     List<Point> points = p.getErrorPoints(shield, null);
@@ -275,8 +252,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testOpen()
-  {
+  public void testOpen() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "Open", "a"));
     assertFalse(shield.threat(req, shield.parameters, "Open", "1 "));
@@ -300,8 +276,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testOpenErrorPoints()
-  {
+  public void testOpenErrorPoints() {
     // <item><name>openErrorPoints</name><type>o</type><max>5</max><min>5</min></item>
     // <item><name>openErrorPointsMask</name><type>o</type><max>5</max><min>5</min><mask-err>***</mask-err></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -316,8 +291,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testRegex()
-  {
+  public void testRegex() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "CustomRegexSSN", "555-55-5555"));
     assertTrue(shield.threat(req, shield.parameters, "CustomRegexSSN", "abc-de-fghi"));
@@ -344,8 +318,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testRegexType()
-  {
+  public void testRegexType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "r{telephone}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemRegex p = new ItemRegex(id);
@@ -367,8 +340,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testRegexTypeInvalidFormta()
-  {
+  public void testRegexTypeInvalidFormta() {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "r telephone", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemRegex p = new ItemRegex(id);
     assertNull(p.patternName);
@@ -376,8 +348,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testRegexTypeNonExistentPattern()
-  {
+  public void testRegexTypeNonExistentPattern() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "r{nonExistentPattern}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemRegex p = new ItemRegex(id);
@@ -385,8 +356,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testConstantType()
-  {
+  public void testConstantType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "Constant", "FOO"));
     assertFalse(shield.threat(req, shield.parameters, "Constant", "BAR"));
@@ -413,8 +383,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testConstantTypeNonExistentConstants()
-  {
+  public void testConstantTypeNonExistentConstants() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "rk FOO,BAR", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemConstant p = new ItemConstant(id);
@@ -427,15 +396,13 @@ public class DatatypeTest
   }
 
   @Test
-  public void testPoint()
-  {
+  public void testPoint() {
     Point p = new Point(1, 100);
     assertTrue(p.toString().contains("start: 1, end: 100"));
   }
 
   @Test
-  public void testJava()
-  {
+  public void testJava() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertTrue(shield.threat(req, shield.parameters, "Java", "12345"));
     assertTrue(shield.threat(req, shield.parameters, "Java", "12345678901"));// violates
@@ -451,15 +418,13 @@ public class DatatypeTest
   }
 
   @Test
-  public void parseMethodNameTest()
-  {
+  public void parseMethodNameTest() {
     assert (ItemJava.parseMethod("foo.method()").equals("method"));
     assert (ItemJava.parseMethod("foomethod()").equals("foomethod()"));
   }
 
   @Test
-  public void testJavaMultipleParms()
-  {
+  public void testJavaMultipleParms() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("JavaMultiParm", "foobarfoobar");
     request.addParameter("JavaMultiParm2", "foobarfoobar");
@@ -490,8 +455,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testJavaInvalidClass()
-  {
+  public void testJavaInvalidClass() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, "JavaInvalidClass", "0000");
     assertTrue(b);
@@ -510,16 +474,14 @@ public class DatatypeTest
   }
 
   @Test
-  public void testJavaInvalidMethod()
-  {
+  public void testJavaInvalidMethod() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, "JavaInvalidMethod", "0000");
     assertFalse(b);
   }
 
   @Test
-  public void testFormatType()
-  {
+  public void testFormatType() {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "f{(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemFormat p = new ItemFormat(id);
     assertNotNull(p.formatString);
@@ -527,16 +489,14 @@ public class DatatypeTest
   }
 
   @Test
-  public void testInvalidFormatType()
-  {
+  public void testInvalidFormatType() {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "f {(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemFormat p = new ItemFormat(id);
     assertNull(p.formatString);
   }
 
   @Test
-  public void testFormat()
-  {
+  public void testFormat() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "parmformat", "(123) 456-7890 abc ABC"));
     assertTrue(shield.threat(req, shield.parameters, "parmformat", "BAR"));
@@ -545,8 +505,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testFormatRequired()
-  {
+  public void testFormatRequired() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "parmFormatRequired", "(123) 456-7890 abc ABC"));
     assertTrue(shield.threat(req, shield.parameters, "parmFormatRequired", "BAR"));
@@ -555,8 +514,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testFormat2Required()
-  {
+  public void testFormat2Required() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZzZ"));
     assertFalse(shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zzz"));
@@ -595,8 +553,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testFormat2()
-  {
+  public void testFormat2() {
     // <item><name>parmformat2</name><type>f{#[1-12] / #[21-35]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "parmformat2", "12 / 30"));
@@ -623,8 +580,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testFormat2brackets()
-  {
+  public void testFormat2brackets() {
     // <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "parmformat2brackets", "[]01"));
@@ -671,8 +627,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testBadFormats()
-  {
+  public void testBadFormats() {
     // <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "parmbadformat1", "@"));
@@ -682,8 +637,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testMultiFormats()
-  {
+  public void testMultiFormats() {
     // <item><name>parmMultiFormat1</name><type>f{#####||#####-####}</type></item>
     // <item><name>parmMultiFormat2</name><type>f{#####||#####-####||A#A-#A#}</type></item>
     // <item><name>parmMultiFormat3</name><type>f{#####||#####-####||A#A-#A#||A##
@@ -708,8 +662,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testDependentFormats()
-  {
+  public void testDependentFormats() {
     // <item><name>depformatParent</name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     // <item><name>depformat</name><type>d{depformatParent:US=#####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     // <item><name>depformatMultiple</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
@@ -852,8 +805,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testDepFormatType()
-  {
+  public void testDepFormatType() {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "d {depformatParent:US=#####;Canada=A#A-#A#", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemDependentFormat p = new ItemDependentFormat(id);
     assertNull(p.dependentElementName);
@@ -868,8 +820,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testDependentFormatModifyErrorMsgNullDepName()
-  {
+  public void testDependentFormatModifyErrorMsgNullDepName() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "d{noColon}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemDependentFormat p = new ItemDependentFormat(id);
@@ -879,16 +830,14 @@ public class DatatypeTest
   }
 
   @Test
-  public void testFormatStrictErrorJsonNull()
-  {
+  public void testFormatStrictErrorJsonNull() {
     String json = JsonFormatter.formatStrictErrorJson(null);
     assertTrue(json.contains("\"value\":\"\""));
     assertFalse(json.contains("\"value\":\"null\""));
   }
 
   @Test
-  public void testToJsonNullValue()
-  {
+  public void testToJsonNullValue() {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "error msg1", null, 1, 0);
     ItemChar item = new ItemChar(id);
     String json = JsonFormatter.toJson(item, null, Modes.BLOCK, null, false, null, null);
@@ -897,8 +846,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testFormatEscapeChars()
-  {
+  public void testFormatEscapeChars() {
     // <item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\(\)\|\:\=\+\-\;#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     // <item><name>parmformatEscapedXchar1</name><type>f{xxx}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     // <item><name>parmformatEscapedXchar2</name><type>f{xxx
@@ -934,8 +882,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testFormatsWithDates()
-  {
+  public void testFormatsWithDates() {
     // <item><name>parmFormatWithDate1</name><type>f{#[yy-yy(+10)]}</type></item>
     // <item><name>parmFormatWithDate2</name><type>f{#[yyyy-yyyy(+10)]}</type></item>
     // <item><name>parmFormatWithDate3</name><type>f{#[dd-dd(+5)]}</type></item>
@@ -993,8 +940,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testParmFormatIP()
-  {
+  public void testParmFormatIP() {
     // <item><name>parmFormatIP</name><type>f{#[0-255].#[0-255].#[0-255].#[0-255]}</type></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertFalse(shield.threat(req, shield.parameters, "parmFormatIP", "111.111.111.111"));
@@ -1009,8 +955,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testItemStrictNoNPE()
-  {
+  public void testItemStrictNoNPE() {
     ItemStrict item = new ItemStrict("test value");
     assertNotNull(item.getErrorPoints(shield, "test"));
     assertTrue(item.getErrorPoints(shield, "test").isEmpty());
@@ -1018,8 +963,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testItemStrictInErrorAlwaysFalse()
-  {
+  public void testItemStrictInErrorAlwaysFalse() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemStrict item = new ItemStrict("strict msg");
     assertFalse(item.inError(req, shield, "anything", false, false));
@@ -1029,8 +973,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testItemStrictMsgStoredCorrectly()
-  {
+  public void testItemStrictMsgStoredCorrectly() {
     ItemStrict item = new ItemStrict("custom error");
     assertEquals("custom error", item.msg);
 
@@ -1042,8 +985,7 @@ public class DatatypeTest
   }
 
   @Test
-  public void testItemStrictGetErrorPointsWithEdgeCases()
-  {
+  public void testItemStrictGetErrorPointsWithEdgeCases() {
     ItemStrict item = new ItemStrict("msg");
     assertTrue(item.getErrorPoints(shield, null).isEmpty());
     assertTrue(item.getErrorPoints(shield, "").isEmpty());
@@ -1052,40 +994,34 @@ public class DatatypeTest
   }
 
   @Test
-  public void testReplaceStringMultipleOccurrences()
-  {
+  public void testReplaceStringMultipleOccurrences() {
     assertEquals("a b ", ItemAlphanumericAndMore.replaceString("a\\sb\\s", "\\s", " "));
     assertEquals("a\tb\t", ItemAlphanumericAndMore.replaceString("a\\tb\\t", "\\t", "\t"));
   }
 
   @Test
-  public void testGetMoreCharArrayMultipleSpecialChars()
-  {
+  public void testGetMoreCharArrayMultipleSpecialChars() {
     char[] result = ItemAlphanumericAndMore.getMoreCharArray("-\\s.\\s");
-    assertArrayEquals(new char[]{'-', ' ', '.', ' '}, result);
+    assertArrayEquals(new char[] { '-', ' ', '.', ' ' }, result);
   }
 
   @Test
-  public void testHandleSpecialCharsMultipleSpaces()
-  {
-    assertEquals("-<space>.<space>", ItemAlphanumericAndMore.handleSpecialChars(new char[]{'-', ' ', '.', ' '}));
+  public void testHandleSpecialCharsMultipleSpaces() {
+    assertEquals("-<space>.<space>", ItemAlphanumericAndMore.handleSpecialChars(new char[] { '-', ' ', '.', ' ' }));
   }
 
   @Test
-  public void testIsSizeErrorNullRequiredDoesNotNPE()
-  {
+  public void testIsSizeErrorNullRequiredDoesNotNPE() {
     Item item = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
     item.required = true;
     assertTrue(item.isSizeError(null));
   }
 
   @Test
-  public void testIsSizeErrorNullNotRequired()
-  {
+  public void testIsSizeErrorNullNotRequired() {
     Item item = new ItemAlphanumeric(new ItemData(shield, "test", Modes.BLOCK, "", "a", "", "", Integer.MAX_VALUE, 0));
     item.required = false;
     assertFalse(item.isSizeError(null));
   }
 
 }
-

@@ -4,8 +4,7 @@ import jakarta.servlet.ServletRequest;
 
 import java.util.Arrays;
 
-final class ItemAlphanumericAndMore extends ItemAlphanumeric
-{
+final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   static final String INVALID_AN_MORE = "Invalid Alphanumeric And More: ";
   static final String SPACE = "\\s";
   static final String TAB = "\\t";
@@ -21,31 +20,24 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   private final boolean[] asciiLookup;
   private final char[] nonAsciiChars;
 
-  ItemAlphanumericAndMore(ItemData id)
-  {
+  ItemAlphanumericAndMore(ItemData id) {
     super(id);
     int start = id.type.indexOf(ItemFactory.SEP_START);
     int end = id.type.lastIndexOf(ItemFactory.SEP_END);
     this.moreChars = getMoreCharArray(id.type.substring(start + ItemFactory.SEP_START.length(), end));
     this.asciiLookup = new boolean[128];
     int nonAsciiCount = 0;
-    for (char c : moreChars)
-    {
-      if (c < 128)
-      {
+    for (char c : moreChars) {
+      if (c < 128) {
         asciiLookup[c] = true;
-      }
-      else
-      {
+      } else {
         nonAsciiCount++;
       }
     }
     char[] nac = new char[nonAsciiCount];
     int idx = 0;
-    for (char c : moreChars)
-    {
-      if (c >= 128)
-      {
+    for (char c : moreChars) {
+      if (c >= 128) {
         nac[idx++] = c;
       }
     }
@@ -55,28 +47,23 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
   }
 
   @Override
-  boolean isInvalidChar(char c)
-  {
+  boolean isInvalidChar(char c) {
     return isNotAlphanumeric(c) && notInMoreChars(c);
   }
 
-  private boolean notInMoreChars(char c)
-  {
-    if (c < 128)
-    {
+  private boolean notInMoreChars(char c) {
+    if (c < 128) {
       return !asciiLookup[c];
     }
     return Arrays.binarySearch(nonAsciiChars, c) < 0;
   }
 
   @Override
-  String modifyErrorMsg(ServletRequest req, String errorMsg)
-  {
+  String modifyErrorMsg(ServletRequest req, String errorMsg) {
     return replacePlaceholder(errorMsg, moreCharsDisplay);
   }
 
-  static String handleSpecialChars(char[] chars)
-  {
+  static String handleSpecialChars(char[] chars) {
     String s = String.valueOf(chars);
     s = replaceString(s, " ", SPACE_LONG);
     s = replaceString(s, "\t", TAB_LONG);
@@ -85,8 +72,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     return s;
   }
 
-  static char[] getMoreCharArray(String s)
-  {
+  static char[] getMoreCharArray(String s) {
     s = replaceString(s, SPACE, " ");
     s = replaceString(s, TAB, "\t");
     s = replaceString(s, NEWLINE, "\n");
@@ -94,27 +80,22 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric
     return s.toCharArray();
   }
 
-  static String replaceString(String s, String from, String to)
-  {
+  static String replaceString(String s, String from, String to) {
     return s.replace(from, to);
   }
 
   @Override
-  String getProperties()
-  {
+  String getProperties() {
     return "\"morechars\":\"" + JsonFormatter.jsonEncode(new String(moreChars)) + "\"";
   }
 
   @Override
-  String getDefaultErrorMessage()
-  {
+  String getDefaultErrorMessage() {
     return INVALID_AN_MORE;
   }
 
   @Override
-  Types getType()
-  {
+  Types getType() {
     return Types.ALPHANUMERIC_AND_MORE;
   }
 }
-

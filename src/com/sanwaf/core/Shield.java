@@ -18,8 +18,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-final class Shield
-{
+final class Shield {
   private static final String STRICT_PARAMETER_DETECTED = "URI Strict Parameter Error - Unknown Parameter Detected";
   private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
   private static final String REGEX_FILE_MARKER = "file=";
@@ -48,8 +47,7 @@ final class Shield
   final boolean endpointsCaseSensitive;
   final Map<String, Metadata> endpointParameters;
 
-  Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger, boolean verbose)
-  {
+  Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger, boolean verbose) {
     this.sanwaf = sanwaf;
     this.logger = logger;
 
@@ -85,30 +83,31 @@ final class Shield
 
     boolean allFailOnMatch = true;
     for (Rule r : rulePatternsArray)
-      if (!r.failOnMatch) { allFailOnMatch = false; break; }
+      if (!r.failOnMatch) {
+        allFailOnMatch = false;
+        break;
+      }
     if (allFailOnMatch)
       for (Rule r : rulePatternsDetectArray)
-        if (!r.failOnMatch) { allFailOnMatch = false; break; }
+        if (!r.failOnMatch) {
+          allFailOnMatch = false;
+          break;
+        }
 
-    boolean canSkip = allFailOnMatch
-        && (rulePatternsArray.length > 0 || rulePatternsDetectArray.length > 0);
-    if (canSkip)
-    {
-      for (Rule r : rulePatternsArray)
-      {
-        if (r.pattern != null && patternLacksXssChar(r.pattern))
-        {
-          canSkip = false; break;
+    boolean canSkip = allFailOnMatch && (rulePatternsArray.length > 0 || rulePatternsDetectArray.length > 0);
+    if (canSkip) {
+      for (Rule r : rulePatternsArray) {
+        if (r.pattern != null && patternLacksXssChar(r.pattern)) {
+          canSkip = false;
+          break;
         }
       }
     }
-    if (canSkip)
-    {
-      for (Rule r : rulePatternsDetectArray)
-      {
-        if (r.pattern != null && patternLacksXssChar(r.pattern))
-        {
-          canSkip = false; break;
+    if (canSkip) {
+      for (Rule r : rulePatternsDetectArray) {
+        if (r.pattern != null && patternLacksXssChar(r.pattern)) {
+          canSkip = false;
+          break;
         }
       }
     }
@@ -120,9 +119,7 @@ final class Shield
     String alwaysBlock = shieldXml.get(XML_REGEX_ALWAYS_REGEX);
     Xml alwaysBlockXml = new Xml(alwaysBlock);
     this.regexAlways = Boolean.parseBoolean(alwaysBlockXml.get(XML_ENABLED));
-    this.regexAlwaysExclusions = regexAlways
-        ? Collections.unmodifiableSet(loadRegexExclusions(alwaysBlockXml))
-        : Collections.emptySet();
+    this.regexAlwaysExclusions = regexAlways ? Collections.unmodifiableSet(loadRegexExclusions(alwaysBlockXml)) : Collections.emptySet();
 
     Metadata.ParsedMetadataXml epParsed = Metadata.parseMetadataXml(shieldXml, Metadata.XML_ENDPOINTS);
     this.endpointsEnabled = epParsed.enabled;
@@ -135,52 +132,40 @@ final class Shield
     logStartup(verbose);
   }
 
-  boolean threatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
-  {
-    return ((endpointsEnabled && endpointsThreatDetected(req, doAllBlocks, log)) ||
-        (parameters.enabled && parameterThreatDetected(req, doAllBlocks, log)) ||
-        (headers.enabled && headerThreatDetected(req, doAllBlocks, log)) ||
-        (cookies.enabled && cookieThreatDetected(req, doAllBlocks, log)));
+  boolean threatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
+    return ((endpointsEnabled && endpointsThreatDetected(req, doAllBlocks, log)) || (parameters.enabled && parameterThreatDetected(req, doAllBlocks, log))
+        || (headers.enabled && headerThreatDetected(req, doAllBlocks, log)) || (cookies.enabled && cookieThreatDetected(req, doAllBlocks, log)));
   }
 
-  private boolean endpointsThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
-  {
+  private boolean endpointsThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     HttpServletRequest hreq = (HttpServletRequest) req;
     String uri = hreq.getRequestURI();
 
     Metadata meta = endpointParameters.get(uri);
-    if (meta == null || meta.endpointMode == Modes.DISABLED)
-    {
+    if (meta == null || meta.endpointMode == Modes.DISABLED) {
       return false;
     }
 
-    if (!doAllBlocks && meta.endpointMode != Modes.BLOCK)
-    {
+    if (!doAllBlocks && meta.endpointMode != Modes.BLOCK) {
       return false;
     }
 
     boolean strictError = meta.isStrictError(req);
-    if (strictError)
-    {
+    if (strictError) {
       JsonFormatter.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
-      if (!doAllBlocks)
-      {
+      if (!doAllBlocks) {
         return true;
       }
     }
 
     boolean threat = strictError;
     Enumeration<?> names = req.getParameterNames();
-    while (names.hasMoreElements())
-    {
+    while (names.hasMoreElements()) {
       String k = (String) names.nextElement();
       String[] values = req.getParameterValues(k);
-      for (String v : values)
-      {
-        if (threat(req, meta, k, v, true, doAllBlocks, log))
-        {
-          if (!doAllBlocks)
-          {
+      for (String v : values) {
+        if (threat(req, meta, k, v, true, doAllBlocks, log)) {
+          if (!doAllBlocks) {
             return true;
           }
           threat = true;
@@ -190,19 +175,14 @@ final class Shield
     return threat;
   }
 
-  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
-  {
+  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     boolean threat = false;
     Enumeration<?> names = req.getParameterNames();
-    while (names.hasMoreElements())
-    {
+    while (names.hasMoreElements()) {
       String name = (String) names.nextElement();
-      for (String value : req.getParameterValues(name))
-      {
-        if (threat(req, parameters, name, value, false, doAllBlocks, log))
-        {
-          if (!doAllBlocks)
-          {
+      for (String value : req.getParameterValues(name)) {
+        if (threat(req, parameters, name, value, false, doAllBlocks, log)) {
+          if (!doAllBlocks) {
             return true;
           }
           threat = true;
@@ -212,21 +192,16 @@ final class Shield
     return threat;
   }
 
-  private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
-  {
+  private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     HttpServletRequest hreq = (HttpServletRequest) req;
     boolean threat = false;
     Enumeration<String> names = hreq.getHeaderNames();
-    while (names.hasMoreElements())
-    {
+    while (names.hasMoreElements()) {
       String name = names.nextElement();
       Enumeration<String> values = hreq.getHeaders(name);
-      while (values.hasMoreElements())
-      {
-        if (threat(req, headers, name, values.nextElement(), false, doAllBlocks, log))
-        {
-          if (!doAllBlocks)
-          {
+      while (values.hasMoreElements()) {
+        if (threat(req, headers, name, values.nextElement(), false, doAllBlocks, log)) {
+          if (!doAllBlocks) {
             return true;
           }
           threat = true;
@@ -236,20 +211,15 @@ final class Shield
     return threat;
   }
 
-  private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log)
-  {
+  private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     boolean threat = false;
     Cookie[] cookieArray = ((HttpServletRequest) req).getCookies();
-    if (cookieArray == null)
-    {
+    if (cookieArray == null) {
       return false;
     }
-    for (Cookie c : cookieArray)
-    {
-      if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks, log))
-      {
-        if (!doAllBlocks)
-        {
+    for (Cookie c : cookieArray) {
+      if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks, log)) {
+        if (!doAllBlocks) {
           return true;
         }
         threat = true;
@@ -258,76 +228,59 @@ final class Shield
     return threat;
   }
 
-  boolean threat(String v, boolean log)
-  {
+  boolean threat(String v, boolean log) {
     return threat(null, null, "", v, false, false, log);
   }
 
   // Convenience overload: assumes isEndpoint=false and log=false
-  boolean threat(ServletRequest req, Metadata meta, String key, String value)
-  {
+  boolean threat(ServletRequest req, Metadata meta, String key, String value) {
     return threat(req, meta, key, value, false, false, false);
   }
 
-  boolean threat(ServletRequest req, String value, boolean log)
-  {
+  boolean threat(ServletRequest req, String value, boolean log) {
     return threat(req, null, "", value, false, false, log);
   }
 
-  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean doAllBlocks, boolean log)
-  {
-    if (value == null)
-    {
+  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean doAllBlocks, boolean log) {
+    if (value == null) {
       return false;
     }
     int len = value.length();
-    if (len < minLen || len > maxLen)
-    {
+    if (len < minLen || len > maxLen) {
       return handleChildShield(req, value, log);
     }
     Item item;
-    if (meta != null)
-    {
+    if (meta != null) {
       item = getItemFromMetaOrIndex(meta, key);
-      if (item == null)
-      {
+      if (item == null) {
         return false;
       }
-    }
-    else
-    {
+    } else {
       item = ItemString.DEFAULT_INSTANCE;
     }
 
-    if (item.required && value.isEmpty())
-    {
+    if (item.required && value.isEmpty()) {
       return item.handleMode(value, req, item.mode, log, doAllBlocks, null);
     }
 
-    if (item.related != null && !item.related.isEmpty())
-    {
+    if (item.related != null && !item.related.isEmpty()) {
       String relmsg = item.isRelateValid(value, req, meta);
-      if (relmsg != null)
-      {
+      if (relmsg != null) {
         return item.handleMode(value, req, item.mode, log, doAllBlocks, relmsg);
       }
     }
 
-    if (item.inError(req, this, value, doAllBlocks, log))
-    {
+    if (item.inError(req, this, value, doAllBlocks, log)) {
       return item.handleMode(value, req, item.mode, log, doAllBlocks, null);
     }
     return false;
   }
 
-  private Item getItemFromMetaOrIndex(Metadata meta, String key)
-  {
+  private Item getItemFromMetaOrIndex(Metadata meta, String key) {
     Item item = getItemFromMetadata(meta, key);
-    if (item == null)
-    {
+    if (item == null) {
       String a = meta.getFromIndex(key);
-      if (a == null)
-      {
+      if (a == null) {
         return null;
       }
       item = getItemFromMetadata(meta, a);
@@ -335,42 +288,32 @@ final class Shield
     return item;
   }
 
-  private boolean handleChildShield(ServletRequest req, String value, boolean log)
-  {
-    if (childShield != null)
-    {
-      if (req == null)
-      {
+  private boolean handleChildShield(ServletRequest req, String value, boolean log) {
+    if (childShield != null) {
+      if (req == null) {
         return childShield.threat(value, log);
-      }
-      else
-      {
+      } else {
         return childShield.threatDetected(req, false, log);
       }
     }
     return false;
   }
 
-  private Item getItemFromMetadata(Metadata meta, String key)
-  {
+  private Item getItemFromMetadata(Metadata meta, String key) {
     Item item;
     item = getItem(meta, key);
-    if (item == null && regexAlways && !regexAlwaysExclusions.contains(key))
-    {
+    if (item == null && regexAlways && !regexAlwaysExclusions.contains(key)) {
       item = ItemString.DEFAULT_INSTANCE;
     }
     return item;
   }
 
-  String getAllowListedValue(String name, AllowListType type, HttpServletRequest req)
-  {
-    if (name == null || type == null || req == null)
-    {
+  String getAllowListedValue(String name, AllowListType type, HttpServletRequest req) {
+    if (name == null || type == null || req == null) {
       return null;
     }
 
-    switch (type)
-    {
+    switch (type) {
     case HEADER:
       return getAllowListedHeader(name, req);
     case COOKIE:
@@ -382,28 +325,21 @@ final class Shield
     }
   }
 
-  String getAllowListedHeader(String name, HttpServletRequest req)
-  {
+  String getAllowListedHeader(String name, HttpServletRequest req) {
     Item item = getItemFromMetadata(headers, name);
-    if (item != null)
-    {
+    if (item != null) {
       return req.getHeader(name);
     }
     return null;
   }
 
-  String getAllowListedCookie(String name, HttpServletRequest req)
-  {
+  String getAllowListedCookie(String name, HttpServletRequest req) {
     Item item = getItemFromMetadata(cookies, name);
-    if (item != null)
-    {
+    if (item != null) {
       Cookie[] cookieValues = req.getCookies();
-      if (cookieValues != null)
-      {
-        for (Cookie c : cookieValues)
-        {
-          if (c.getName().equals(name))
-          {
+      if (cookieValues != null) {
+        for (Cookie c : cookieValues) {
+          if (c.getName().equals(name)) {
             return c.getValue();
           }
         }
@@ -412,18 +348,15 @@ final class Shield
     return null;
   }
 
-  String getAllowListedParameter(String name, HttpServletRequest req)
-  {
+  String getAllowListedParameter(String name, HttpServletRequest req) {
     Item item = getItemFromMetadata(parameters, name);
-    if (item != null)
-    {
+    if (item != null) {
       return req.getParameter(name);
     }
     return null;
   }
 
-  Item getItem(Metadata meta, String key)
-  {
+  Item getItem(Metadata meta, String key) {
     return meta.getItem(key);
   }
 
@@ -448,38 +381,31 @@ final class Shield
   private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
   private static final Pattern PIPE_PATTERN = Pattern.compile("\\|");
 
-  private static Shield findChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger, boolean verbose)
-  {
+  private static Shield findChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger, boolean verbose) {
     String[] children = xml.getAll(XML_CHILD_SHIELD);
-    for (String child : children)
-    {
+    for (String child : children) {
       Xml childXml = new Xml(child);
       Xml settings = new Xml(childXml.get(XML_SHIELD_SETTINGS));
-      if (settings.get(XML_NAME).equals(childShieldName))
-      {
+      if (settings.get(XML_NAME).equals(childShieldName)) {
         return new Shield(sanwaf, xml, new Xml(child), logger, verbose);
       }
     }
     return null;
   }
 
-  private static Set<String> loadRegexExclusions(Xml alwaysBlockXml)
-  {
+  private static Set<String> loadRegexExclusions(Xml alwaysBlockXml) {
     Set<String> exclusions = new LinkedHashSet<>();
     String exclusionsBlock = alwaysBlockXml.get(XML_REGEX_ALWAYS_REGEX_EXCLUSIONS);
     Xml exclusionsBlockXml = new Xml(exclusionsBlock);
     String[] items = exclusionsBlockXml.getAll(ItemFactory.XML_ITEM);
-    for (String item : items)
-    {
+    for (String item : items) {
       List<String> list = split(item);
       exclusions.addAll(list);
     }
     return exclusions;
   }
 
-  private void loadPatterns(Xml xml, Map<String, Rule> rulePatterns, Map<String, Rule> customRulePatterns,
-      Map<String, Rule> rulePatternsDetect, Map<String, Rule> customRulePatternsDetect)
-  {
+  private void loadPatterns(Xml xml, Map<String, Rule> rulePatterns, Map<String, Rule> customRulePatterns, Map<String, Rule> rulePatternsDetect, Map<String, Rule> customRulePatternsDetect) {
     String autoBlock = xml.get(XML_REGEX_PATTERNS_AUTO);
     Xml autoBlockXml = new Xml(autoBlock);
     String[] items = autoBlockXml.getAll(ItemFactory.XML_ITEM);
@@ -490,105 +416,79 @@ final class Shield
     setRulePattern(items, customRulePatterns, customRulePatternsDetect, "pass");
   }
 
-  private void setRulePattern(String[] items, Map<String, Rule> patterns, Map<String, Rule> patternsDetect, String defaultMatch)
-  {
-    for (String item : items)
-    {
+  private void setRulePattern(String[] items, Map<String, Rule> patterns, Map<String, Rule> patternsDetect, String defaultMatch) {
+    for (String item : items) {
       Xml itemBlockXml = new Xml(item);
       String key = itemBlockXml.get(XML_KEY);
       String value = itemBlockXml.get(XML_VALUE);
       Modes m = Modes.getMode(itemBlockXml.get(XML_MODE), Modes.BLOCK);
       List<String> list = split(value);
-      for (String l : list)
-      {
-        if (l.startsWith(REGEX_FILE_MARKER))
-        {
+      for (String l : list) {
+        if (l.startsWith(REGEX_FILE_MARKER)) {
           String x = getXmlFileFile(l);
-          if (x == null)
-          {
+          if (x == null) {
             continue;
           }
           l = x;
         }
         String match = itemBlockXml.get(ItemFactory.XML_ITEM_MATCH);
-        if (match.isEmpty())
-        {
+        if (match.isEmpty()) {
           match = defaultMatch;
         }
         String msg = itemBlockXml.get(ItemFactory.XML_ITEM_MSG);
         Rule r = new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE), match, msg);
-        if (r.mode == Modes.DISABLED || r.pattern == null)
-        {
+        if (r.mode == Modes.DISABLED || r.pattern == null) {
           continue;
         }
-        if (r.mode == Modes.BLOCK)
-        {
+        if (r.mode == Modes.BLOCK) {
           patterns.put(key, r);
-        }
-        else
-        {
+        } else {
           patternsDetect.put(key, r);
         }
       }
     }
   }
 
-  private String getXmlFileFile(String xml)
-  {
+  private String getXmlFileFile(String xml) {
     String filename = xml.substring(REGEX_FILE_MARKER.length());
     String filekey = null;
     String[] a = PIPE_PATTERN.split(xml);
-    if (a.length == 2)
-    {
+    if (a.length == 2) {
       filename = a[0].substring(REGEX_FILE_MARKER.length());
       filekey = a[1];
-    }
-    else if (a.length != 1)
-    {
-      if (logger.isErrorEnabled())
-      {
+    } else if (a.length != 1) {
+      if (logger.isErrorEnabled()) {
         logger.error("invalid pattern definition (unable to load specified file):" + xml);
       }
       return null;
     }
 
-    try
-    {
+    try {
       Xml fileXml = new Xml(Shield.class.getResource(filename));
-      if (filekey == null)
-      {
+      if (filekey == null) {
         return fileXml.toString().trim();
-      }
-      else
-      {
+      } else {
         return fileXml.get(filekey).trim();
       }
-    }
-    catch (IOException e)
-    {
-      if (logger.isErrorEnabled())
-      {
+    } catch (IOException e) {
+      if (logger.isErrorEnabled()) {
         logger.error("invalid pattern definition (unable to load specified file):" + filename);
       }
     }
     return null;
   }
 
-  private void logStartup(boolean verbose)
-  {
-    if (!logger.isInfoEnabled())
-    {
+  private void logStartup(boolean verbose) {
+    if (!logger.isInfoEnabled()) {
       return;
     }
     StringBuilder sb = new StringBuilder();
     sb.append("Loading Shield: ").append(name).append(" - Mode: ").append(mode);
-    if (verbose)
-    {
+    if (verbose) {
       sb.append("\nSettings:\n");
       sb.append("\t").append(XML_MAX_LEN).append("=").append(maxLen).append("\n");
       sb.append("\t").append(XML_MIN_LEN).append("=").append(minLen).append("\n");
-      if (childShield != null)
-      {
+      if (childShield != null) {
         sb.append("\t").append(XML_CHILD_SHIELD).append("=").append(childShield.name).append("\n");
       }
       sb.append("\t").append("regex ").append(XML_MIN_LEN).append("=").append(regexMinLen).append("\n");
@@ -605,19 +505,16 @@ final class Shield
       appendRules(sb, customRulePatterns);
       appendRules(sb, customRulePatternsDetect);
 
-      if (regexAlways)
-      {
+      if (regexAlways) {
         sb.append("\n\tShield Secured List: *Ignored*");
         sb.append("\n\t").append(XML_REGEX_ALWAYS_REGEX).append("=true (process all parameters)");
         sb.append("\n\tExcept for (exclusion list):\n");
-        for (String s : regexAlwaysExclusions)
-        {
+        for (String s : regexAlwaysExclusions) {
           sb.append("\t").append(s);
         }
       }
       sb.append("\n");
-      if (!regexAlways)
-      {
+      if (!regexAlways) {
         sb.append("Secured Items:\n");
         appendPItemMapToSB(headers.items, sb, "\tHeaders");
         appendPItemMapToSB(cookies.items, sb, "\tCookies");
@@ -629,10 +526,8 @@ final class Shield
     logger.info(sb.toString());
   }
 
-  private static void appendRules(StringBuilder sb, Map<String, Rule> rules)
-  {
-    for (Map.Entry<String, Rule> e : rules.entrySet())
-    {
+  private static void appendRules(StringBuilder sb, Map<String, Rule> rules) {
+    for (Map.Entry<String, Rule> e : rules.entrySet()) {
       sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
     }
   }
@@ -642,119 +537,111 @@ final class Shield
    * character. Always-literal chars ({@code % ; ' " / &}) are checked
    * unconditionally. {@code <} and {@code :} are counted only when the two
    * preceding chars are NOT {@code (?}, which distinguishes literal use from
-   * group syntax ({@code (?:...)}, {@code (?<name>...)}, {@code (?<=...)}).
-   * Used at load time to decide if char-scan can safely skip this pattern.
+   * group syntax ({@code (?:...)}, {@code (?<name>...)}, {@code (?<=...)}). Used
+   * at load time to decide if char-scan can safely skip this pattern.
    */
-  private static boolean patternLacksXssChar(Pattern p)
-  {
+  private static boolean patternLacksXssChar(Pattern p) {
     String src = p.pattern();
-    for (int i = 0, len = src.length(); i < len; i++)
-    {
-      switch (src.charAt(i))
-      {
-        case '%': case ';': case '\'': case '"': case '/': case '&':
+    for (int i = 0, len = src.length(); i < len; i++) {
+      switch (src.charAt(i)) {
+      case '%':
+      case ';':
+      case '\'':
+      case '"':
+      case '/':
+      case '&':
+        return false;
+      case '<':
+      case ':':
+        if (i < 2 || src.charAt(i - 2) != '(' || src.charAt(i - 1) != '?')
           return false;
-        case '<': case ':':
-          if (i < 2 || src.charAt(i - 2) != '(' || src.charAt(i - 1) != '?')
-            return false;
-          break;
-        default:
-          break;
+        break;
+      default:
+        break;
       }
     }
     return true;
   }
 
-  static boolean containsNoXssRelevantChar(String value)
-  {
+  static boolean containsNoXssRelevantChar(String value) {
     int len = value.length();
-    for (int i = 0; i < len; i++)
-    {
-      switch (value.charAt(i))
-      {
-        case '<': case '>': case '%': case '(': case ')':
-        case ':': case ';': case '\'': case '"': case '/':
-        case '\\': case '&': case '=': case '{': case '}':
-        case 0:
-          return false;
-        default:
-          break;
+    for (int i = 0; i < len; i++) {
+      switch (value.charAt(i)) {
+      case '<':
+      case '>':
+      case '%':
+      case '(':
+      case ')':
+      case ':':
+      case ';':
+      case '\'':
+      case '"':
+      case '/':
+      case '\\':
+      case '&':
+      case '=':
+      case '{':
+      case '}':
+      case 0:
+        return false;
+      default:
+        break;
       }
     }
     return true;
   }
 
-  static int parseInt(String s, int d)
-  {
-    try
-    {
+  static int parseInt(String s, int d) {
+    try {
       return Integer.parseInt(s);
-    }
-    catch (NumberFormatException nfe)
-    {
+    } catch (NumberFormatException nfe) {
       return d;
     }
   }
 
-  static double parseDouble(String s, double d)
-  {
-    try
-    {
+  static double parseDouble(String s, double d) {
+    try {
       return Double.parseDouble(s);
-    }
-    catch (NumberFormatException nfe)
-    {
+    } catch (NumberFormatException nfe) {
       return d;
     }
   }
 
-  static void appendEndpoints(Map<String, Metadata> endpointParameters, StringBuilder sb)
-  {
+  static void appendEndpoints(Map<String, Metadata> endpointParameters, StringBuilder sb) {
     appendItemToSb(sb, endpointParameters);
   }
 
-  private static void appendItemToSb(StringBuilder sb, Map<String, Metadata> map)
-  {
-    for (Map.Entry<String, Metadata> pair : map.entrySet())
-    {
+  private static void appendItemToSb(StringBuilder sb, Map<String, Metadata> map) {
+    for (Map.Entry<String, Metadata> pair : map.entrySet()) {
       appendPItemMapToSB(pair.getValue().items, sb, "\t", pair.getKey()); // "\t" = log indentation prefix
     }
   }
 
-  static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label)
-  {
+  static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label) {
     appendPItemMapToSB(map, sb, label, "");
   }
 
-  static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label, String labelSuffix)
-  {
+  static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label, String labelSuffix) {
     sb.append(label).append(labelSuffix);
-    if (map != null && !map.isEmpty())
-    {
-      for (Map.Entry<String, Item> e : map.entrySet())
-      {
+    if (map != null && !map.isEmpty()) {
+      for (Map.Entry<String, Item> e : map.entrySet()) {
         sb.append("\n\t\t").append(e.getKey()).append("=").append(e.getValue());
       }
     }
     sb.append("\n");
   }
 
-  private static void appendMetadataSettings(StringBuilder sb, String type, boolean enabled, boolean caseSensitive)
-  {
+  private static void appendMetadataSettings(StringBuilder sb, String type, boolean enabled, boolean caseSensitive) {
     sb.append("\t").append(type).append(".").append(XML_ENABLED).append("=").append(enabled).append("\n");
     sb.append("\t").append(type).append(".").append(XML_CASE_SENSITIVE).append("=").append(caseSensitive).append("\n");
   }
 
-  static List<String> split(String s)
-  {
+  static List<String> split(String s) {
     List<String> out = new ArrayList<>();
-    if (s != null && !s.isEmpty())
-    {
+    if (s != null && !s.isEmpty()) {
       String[] vs = SEPARATOR_PATTERN.split(s);
-      for (String v : vs)
-      {
-        if (!v.isEmpty())
-        {
+      for (String v : vs) {
+        if (!v.isEmpty()) {
           out.add(v);
         }
       }

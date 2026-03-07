@@ -5,8 +5,7 @@ import com.sanwaf.log.Logger;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public final class ItemFactory
-{
+public final class ItemFactory {
   static final String INTEGER = "i";
   static final String INTEGER_DELIMITED = "i{";
   static final String NUMERIC = "n";
@@ -42,24 +41,19 @@ public final class ItemFactory
 
   private static final Pattern WHITESPACE_RUN = Pattern.compile("\\s+");
 
-  private ItemFactory()
-  {
+  private ItemFactory() {
     // no instances allowed
   }
 
-  static Item parseItem(Xml xml, Logger logger)
-  {
+  static Item parseItem(Xml xml, Logger logger) {
     return parseItem(null, xml, null, false, logger);
   }
 
-  static Item parseItem(Shield shield, Xml xml, boolean includeEndpointAttributes, com.sanwaf.log.Logger logger)
-  {
+  static Item parseItem(Shield shield, Xml xml, boolean includeEndpointAttributes, com.sanwaf.log.Logger logger) {
     return parseItem(shield, xml, null, includeEndpointAttributes, logger);
   }
 
-  static Item parseItem(Shield shield, Xml xml, String nameOverride,
-      boolean includeEndpointAttributes, com.sanwaf.log.Logger logger)
-  {
+  static Item parseItem(Shield shield, Xml xml, String nameOverride, boolean includeEndpointAttributes, com.sanwaf.log.Logger logger) {
     String name = nameOverride != null ? nameOverride : xml.get(XML_ITEM_NAME);
     Modes mode = Modes.getMode(xml.get(XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
     String display = xml.get(XML_ITEM_DISPLAY);
@@ -71,32 +65,25 @@ public final class ItemFactory
 
     int max = Integer.MAX_VALUE;
     int min = 0;
-    if (!sMax.isEmpty())
-    {
+    if (!sMax.isEmpty()) {
       max = Shield.parseInt(sMax, Integer.MAX_VALUE);
     }
-    if (!sMin.isEmpty())
-    {
+    if (!sMin.isEmpty()) {
       min = Shield.parseInt(sMin, 0);
     }
-    if (max == -1)
-    {
+    if (max == -1) {
       max = Integer.MAX_VALUE;
     }
-    if (min == -1)
-    {
+    if (min == -1) {
       min = Integer.MIN_VALUE;
     }
-    if (min < -1)
-    {
+    if (min < -1) {
       min = 0;
     }
-    if (display.contains(":::"))
-    {
+    if (display.contains(":::")) {
       display = name;
     }
-    if (type.contains("{"))
-    {
+    if (type.contains("{")) {
       type = ensureComplexTypeFormat(type);
     }
 
@@ -104,15 +91,13 @@ public final class ItemFactory
 
     double maxValue = Integer.MAX_VALUE;
     String sMaxVal = xml.get(XML_ITEM_MAX_VAL);
-    if (!sMaxVal.isEmpty())
-    {
+    if (!sMaxVal.isEmpty()) {
       maxValue = Shield.parseDouble(sMaxVal, Integer.MAX_VALUE);
     }
 
     double minValue = Integer.MIN_VALUE;
     String sMinVal = xml.get(XML_ITEM_MIN_VAL);
-    if (!sMinVal.isEmpty())
-    {
+    if (!sMinVal.isEmpty()) {
       minValue = Shield.parseDouble(sMinVal, Integer.MIN_VALUE);
     }
 
@@ -120,21 +105,17 @@ public final class ItemFactory
 
     String related = null;
     RelationValidator.Block[] relatedBlocks = null;
-    if (includeEndpointAttributes)
-    {
+    if (includeEndpointAttributes) {
       related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
       relatedBlocks = RelationValidator.parseRelation(related);
     }
 
-    return getNewItem(new ItemData(shield, name, mode, display, type, msg, uri, max, min,
-        logger, required, maxValue, minValue, maskError, related, relatedBlocks));
+    return getNewItem(new ItemData(shield, name, mode, display, type, msg, uri, max, min, logger, required, maxValue, minValue, maskError, related, relatedBlocks));
   }
 
-  private static String removeRelatedSpace(String related)
-  {
+  private static String removeRelatedSpace(String related) {
     related = related.trim();
-    if (related.isEmpty())
-    {
+    if (related.isEmpty()) {
       return related;
     }
     related = WHITESPACE_RUN.matcher(related).replaceAll(" ");
@@ -146,16 +127,13 @@ public final class ItemFactory
     return related;
   }
 
-  static Item getNewItem(ItemData id)
-  {
+  static Item getNewItem(ItemData id) {
     String t = id.type.toLowerCase();
     int pos = t.indexOf(ItemFactory.SEP_START);
-    if (pos > 0)
-    {
+    if (pos > 0) {
       t = t.substring(0, pos + ItemFactory.SEP_START.length());
     }
-    switch (t)
-    {
+    switch (t) {
     case NUMERIC:
       return new ItemNumeric(id, false);
     case OPEN:
@@ -168,8 +146,7 @@ public final class ItemFactory
       return new ItemChar(id);
     }
 
-    switch (t)
-    {
+    switch (t) {
     case NUMERIC_DELIMITED:
       return new ItemNumericDelimited(id, false);
     case INTEGER_DELIMITED:
@@ -180,8 +157,7 @@ public final class ItemFactory
     case INLINE_REGEX:
       return new ItemRegex(id);
     case JAVA:
-      if (id.shield == null)
-      {
+      if (id.shield == null) {
         return new ItemString(id);
       }
       return new ItemJava(id);
@@ -195,10 +171,8 @@ public final class ItemFactory
     return new ItemString(id);
   }
 
-  private static String ensureComplexTypeFormat(String type)
-  {
-    if (!type.endsWith(ItemFactory.SEP_END))
-    {
+  private static String ensureComplexTypeFormat(String type) {
+    if (!type.endsWith(ItemFactory.SEP_END)) {
       return type + ItemFactory.SEP_END;
     }
     return type;
@@ -226,8 +200,7 @@ public final class ItemFactory
   static final String XML_ERROR_MSG_PLACEHOLDER1 = "{0}";
   static final String XML_ERROR_MSG_PLACEHOLDER2 = "{1}";
 
-  static void setErrorMessages(Map<String, String> map, Xml xmlString)
-  {
+  static void setErrorMessages(Map<String, String> map, Xml xmlString) {
     Xml xml = new Xml(xmlString.get(XML_ERROR_MSG));
     map.put(String.valueOf(Types.ALPHANUMERIC), xml.get(XML_ERROR_MSG_ALPHANUMERIC));
     map.put(String.valueOf(Types.ALPHANUMERIC_AND_MORE), xml.get(XML_ERROR_MSG_ALPHANUMERIC_AND_MORE));
@@ -248,4 +221,3 @@ public final class ItemFactory
   }
 
 }
-

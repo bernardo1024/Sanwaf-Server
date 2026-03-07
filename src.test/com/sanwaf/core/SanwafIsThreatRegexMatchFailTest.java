@@ -12,29 +12,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class SanwafIsThreatRegexMatchFailTest
-{
+public class SanwafIsThreatRegexMatchFailTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-isThreatRegexMatchFail.xml");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testRegex()
-  {
+  public void testRegex() {
     assertFalse(sanwaf.isThreat("foobar"));
     assertTrue(sanwaf.isThreat("foo1bar"));
   }
 
 }
-

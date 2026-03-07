@@ -12,26 +12,20 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class RelatedErrMsgTest
-{
+public class RelatedErrMsgTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf();
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testSimpleRelatedErrMsgContainsParentName()
-  {
+  public void testSimpleRelatedErrMsgContainsParentName() {
     // related-simple-child <related>related-simple-parent</related>
     // parent has value, child empty => threat with "required when" message
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -46,8 +40,7 @@ public class RelatedErrMsgTest
   }
 
   @Test
-  public void testSimpleOrRelatedErrMsgContainsParentName()
-  {
+  public void testSimpleOrRelatedErrMsgContainsParentName() {
     // related-simple-or-child <related>related-simple-or-parent:aaa||bbb</related>
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/test.jsp");
@@ -61,9 +54,9 @@ public class RelatedErrMsgTest
   }
 
   @Test
-  public void testOrRelatedErrMsgContainsParentName()
-  {
-    // related-or-child <related>(related-or-parent1:aaa||bbb)||(related-or-parent2:ccc||ddd)</related>
+  public void testOrRelatedErrMsgContainsParentName() {
+    // related-or-child
+    // <related>(related-or-parent1:aaa||bbb)||(related-or-parent2:ccc||ddd)</related>
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/test.jsp");
     req.addParameter("related-or-child", "");
@@ -77,9 +70,9 @@ public class RelatedErrMsgTest
   }
 
   @Test
-  public void testAndOrRelatedErrMsgShowsGenericMessage()
-  {
-    // related-and-or-child <related>(related-and-or-parent1:aaa||bbb)||(related-and-or-parent2:ccc||ddd)&&(related-and-or-parent3:eee||fff)</related>
+  public void testAndOrRelatedErrMsgShowsGenericMessage() {
+    // related-and-or-child
+    // <related>(related-and-or-parent1:aaa||bbb)||(related-and-or-parent2:ccc||ddd)&&(related-and-or-parent3:eee||fff)</related>
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/test.jsp");
     req.addParameter("related-and-or-child", "");
@@ -93,8 +86,7 @@ public class RelatedErrMsgTest
   }
 
   @Test
-  public void testNoThreatProducesNoErrMsg()
-  {
+  public void testNoThreatProducesNoErrMsg() {
     // child has a value => no threat, no error
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/test.jsp");
@@ -105,9 +97,9 @@ public class RelatedErrMsgTest
   }
 
   @Test
-  public void testParentValueRelatedErrMsgContainsParentName()
-  {
-    // related-simple-or-no-parent-child <related>related-simple-or-no-parent-parent:Yes</related>
+  public void testParentValueRelatedErrMsgContainsParentName() {
+    // related-simple-or-no-parent-child
+    // <related>related-simple-or-no-parent-parent:Yes</related>
     // parent equals "Yes", child empty => threat
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/test.jsp");

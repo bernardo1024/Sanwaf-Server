@@ -11,29 +11,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class AaSimpleTest
-{
+public class AaSimpleTest {
   static Sanwaf sanwaf;
 
   @BeforeAll
-  public static void setUpClass()
-  {
-    try
-    {
+  public static void setUpClass() {
+    try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-AaSimpleTest.xml");
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       fail();
     }
   }
 
   @Test
-  public void testEndpointDetectAll()
-  {
+  public void testEndpointDetectAll() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/sanwaf-AaSimpleTest.xml");
-    //noinspection SpellCheckingInspection
+    // noinspection SpellCheckingInspection
     request.addParameter("estring_DETECT_ALL", "sDETECTALL");
     assertFalse(sanwaf.isThreatDetected(request, true, true));
     String s = Sanwaf.getDetects(request);
@@ -41,4 +35,3 @@ public class AaSimpleTest
     assertEquals(1, GetAllErrorsTest.getItemCount(s, "\"item\":{\"name\":\""));
   }
 }
-
