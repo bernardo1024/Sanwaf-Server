@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@SuppressWarnings("SpellCheckingInspection")
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class MultiDimentionalyParmsTest {
   static Sanwaf sanwaf;
@@ -34,7 +35,7 @@ public class MultiDimentionalyParmsTest {
   }
 
   @Test
-  public void testVariablenumericDelimited() {
+  public void testVariableNumericDelimited() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("a['1'].b['2']", "1234567890,0987654321");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -53,7 +54,7 @@ public class MultiDimentionalyParmsTest {
   }
 
   @Test
-  public void testVariablenumeric() {
+  public void testVariableNumeric() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("b[1].c[2]", "1234567890");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -72,7 +73,7 @@ public class MultiDimentionalyParmsTest {
   }
 
   @Test
-  public void testVariablenumeric2() {
+  public void testVariableNumeric2() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo1", "1234567890");
     assertFalse(sanwaf.isThreatDetected(r));
@@ -106,7 +107,7 @@ public class MultiDimentionalyParmsTest {
   }
 
   @Test
-  public void testVariableAlpahnumeric() {
+  public void testVariableAlphaNumeric() {
     // <item>d(*).e(*)=a(6,10)</item>
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("d(1).e(2)", "12345abcde");
@@ -148,7 +149,7 @@ public class MultiDimentionalyParmsTest {
   }
 
   @Test
-  public void testVariablenumericInvalidFormat() {
+  public void testVariableNumericInvalidFormat() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo((0)", "1234567890");
     r.addParameter("foo[[0]", "1234567890");
@@ -158,7 +159,7 @@ public class MultiDimentionalyParmsTest {
   }
 
   @Test
-  public void testVariablenumericArray() {
+  public void testVariableNumericArray() {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo0", "1234567890");
     r.addParameter("foo1", "1234567890");
@@ -183,7 +184,7 @@ public class MultiDimentionalyParmsTest {
     UnitTestUtil.setField(meta, "enabled", true);
     Map<String, Set<String>> mutableIndex = new HashMap<>();
     Set<String> fooSet = new LinkedHashSet<>();
-    fooSet.add(Metadata.INDEX_PARM_MARKER + "foo");
+    fooSet.add(Metadata.INDEX_PARAM_MARKER + "foo");
     mutableIndex.put("f", fooSet);
     UnitTestUtil.setField(meta, "index", Collections.unmodifiableMap(mutableIndex));
     UnitTestUtil.setField(sh, "parameters", meta);

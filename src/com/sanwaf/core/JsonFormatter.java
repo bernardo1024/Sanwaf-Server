@@ -9,7 +9,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Utility class that builds JSON-formatted error and log messages for
+ * Sanwaf validation results.
+ *
+ * <p>All methods are static. The class also provides low-level JSON string
+ * encoding that escapes special characters, control codes, and Unicode line
+ * separators.
+ */
 final class JsonFormatter {
+  /**
+   * Pre-computed {@code \\u00xx} escape sequences for ASCII control characters
+   * (code points 0x00 through 0x1F).
+   */
   private static final String[] CTRL_UNICODE_ESCAPES = new String[0x20];
 
   static {
@@ -19,9 +31,23 @@ final class JsonFormatter {
     }
   }
 
+  /** Prevents instantiation. */
   private JsonFormatter() {
   }
 
+  /**
+   * Formats and records a strict-mode validation error.
+   *
+   * <p>The error is formatted as JSON and optionally logged. It is also
+   * appended to the request attribute identified by
+   * {@link Sanwaf#ATT_LOG_ERROR}.
+   *
+   * @param value  the offending parameter value
+   * @param req    the current servlet request
+   * @param logger the logger instance for error output
+   * @param log    {@code true} to write to the logger in addition to the
+   *               request attribute
+   */
   static void handleStrictError(String value, ServletRequest req, Logger logger, boolean log) {
     String json = formatStrictErrorJson(value);
     if (log && logger.isErrorEnabled()) {
@@ -30,6 +56,12 @@ final class JsonFormatter {
     appendAttribute(Sanwaf.ATT_LOG_ERROR, json, req);
   }
 
+  /**
+   * Builds a JSON string representing a strict-mode validation error.
+   *
+   * @param value the offending parameter value (truncated to 100 chars in output)
+   * @return the JSON error string
+   */
   static String formatStrictErrorJson(String value) {
     StringBuilder sb = new StringBuilder(256);
     sb.append("{\"item\":{\"name\":\"\"");
@@ -52,6 +84,16 @@ final class JsonFormatter {
     return sb.toString();
   }
 
+  /**
+   * Appends a value to a {@link Set} stored as a request attribute.
+   *
+   * <p>If the attribute does not yet exist, a new {@link LinkedHashSet} is
+   * created and set on the request.
+   *
+   * @param att   the attribute name
+   * @param value the value to add to the set
+   * @param req   the servlet request; if {@code null} the call is a no-op
+   */
   static void appendAttribute(String att, String value, ServletRequest req) {
     if (req == null) {
       return;
@@ -70,26 +112,47 @@ final class JsonFormatter {
     set.add(value);
   }
 
+  /**
+   * Serialises a full validation-error report for an {@link Item} as JSON.
+   *
+   * <p>When {@code verbose} is {@code true} the output includes shield
+   * metadata, sample error points, and detailed item properties.
+   *
+   * @param item          the item that failed validation
+   * @param value         the offending parameter value
+   * @param thisMode      the effective mode for this failure (may differ from
+   *                      the item's configured mode)
+   * @param req           the current servlet request; used for transaction ID,
+   *                      IP, and referer
+   * @param verbose       {@code true} to include shield info and item properties
+   * @param relatedErrMsg additional error text from related-field validation;
+   *                      may be {@code null}
+   * @param errorPoints   pre-computed error points, or {@code null} to compute
+   *                      them on the fly
+   * @return the JSON error string
+   */
   static String toJson(Item item, String value, Modes thisMode, ServletRequest req, boolean verbose, String relatedErrMsg, List<Point> errorPoints) {
     StringBuilder sb = new StringBuilder(512);
     sb.append("{");
 
     if (req != null) {
-      HttpServletRequest hreq = (HttpServletRequest) req;
-      Object transId = hreq.getAttribute(Sanwaf.ATT_TRANS_ID);
+      HttpServletRequest httpReq = (HttpServletRequest) req;
+      Object transId = httpReq.getAttribute(Sanwaf.ATT_TRANS_ID);
       if (transId == null) {
         transId = UUID.randomUUID().toString();
-        hreq.setAttribute(Sanwaf.ATT_TRANS_ID, transId);
+        httpReq.setAttribute(Sanwaf.ATT_TRANS_ID, transId);
       }
+      //noinspection SpellCheckingInspection
       sb.append("\"transid\":\"").append(transId).append("\"");
-      sb.append(",\"ip\":\"").append(hreq.getRemoteAddr()).append("\"");
-      sb.append(",\"referer\":\"").append(jsonEncode(hreq.getHeader("referer"))).append("\",");
+      sb.append(",\"ip\":\"").append(httpReq.getRemoteAddr()).append("\"");
+      sb.append(",\"referer\":\"").append(jsonEncode(httpReq.getHeader("referer"))).append("\",");
     }
 
     if (item.shield != null && verbose) {
       Sanwaf.SanwafConfig c = item.shield.sanwaf.config;
       sb.append("\"shield\":{\"name\":\"").append(item.shield.name).append("\"");
       sb.append(",\"mode\":\"").append(item.shield.mode).append("\"");
+      //noinspection SpellCheckingInspection
       sb.append(",\"appversion\":\"").append(c != null ? c.securedAppVersion : "").append("\"");
       sb.append("},");
     }
@@ -186,6 +249,7 @@ final class JsonFormatter {
       sb.append(",\"req\":\"").append(item.required).append("\"");
       sb.append(",\"maxvalue\":\"").append(item.maxValue).append("\"");
       sb.append(",\"minvalue\":\"").append(item.minValue).append("\"");
+      //noinspection SpellCheckingInspection
       sb.append(",\"maskerr\":\"").append(jsonEncode(item.maskError)).append("\"");
       sb.append(",\"related\":\"").append(jsonEncode(item.related)).append("\"");
       String s = item.getProperties();
@@ -198,10 +262,37 @@ final class JsonFormatter {
     return sb.toString();
   }
 
+  /**
+   * Resolves the error message for an item using the item's type as the
+   * error-message key.
+   *
+   * @param item   the item whose error message is needed
+   * @param req    the current servlet request
+   * @param shield the shield that owns the item
+   * @return the resolved, possibly item-modified, error message
+   */
   static String getErrorMessage(Item item, ServletRequest req, Shield shield) {
     return getErrorMessage(item, req, shield, null);
   }
 
+  /**
+   * Resolves the error message for an item.
+   *
+   * <p>Resolution order:
+   * <ol>
+   *   <li>Item-level custom message ({@code item.msg})</li>
+   *   <li>Shield-level message for the given key</li>
+   *   <li>Global message for the given key</li>
+   *   <li>Item's default error message</li>
+   * </ol>
+   *
+   * @param item        the item whose error message is needed
+   * @param req         the current servlet request
+   * @param shield      the shield that owns the item
+   * @param errorMsgKey the message key to look up; if {@code null}, the item's
+   *                    type name is used
+   * @return the resolved, possibly item-modified, error message
+   */
   static String getErrorMessage(Item item, ServletRequest req, Shield shield, String errorMsgKey) {
     String err = null;
     if (item.msg != null && !item.msg.isEmpty()) {
@@ -225,6 +316,14 @@ final class JsonFormatter {
     return item.modifyErrorMsg(req, err);
   }
 
+  /**
+   * Substitutes min/max placeholders in an invalid-length error message.
+   *
+   * @param errorMsg the error message template containing placeholders
+   * @param min      the minimum allowed length
+   * @param max      the maximum allowed length
+   * @return the message with placeholders replaced by actual values
+   */
   static String modifyInvalidLengthErrorMsg(String errorMsg, int min, int max) {
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
@@ -239,6 +338,12 @@ final class JsonFormatter {
     return errorMsg;
   }
 
+  /**
+   * JSON-encodes a string by escaping special and control characters.
+   *
+   * @param s the string to encode; may be {@code null}
+   * @return the encoded string, or an empty string if {@code s} is {@code null}
+   */
   static String jsonEncode(String s) {
     if (s == null) {
       return "";
@@ -257,6 +362,18 @@ final class JsonFormatter {
     return jsonEncodeLen(s, Math.min(s.length(), 100));
   }
 
+  /**
+   * JSON-encodes up to {@code len} characters of the given string.
+   *
+   * <p>Escapes backslash, double-quote, forward-slash, common whitespace
+   * escapes, ASCII control characters (as {@code \\u00xx}), and Unicode
+   * line/paragraph separators.
+   *
+   * @param s   the string to encode
+   * @param len the number of characters to process (must not exceed
+   *            {@code s.length()})
+   * @return the JSON-safe encoded string
+   */
   private static String jsonEncodeLen(String s, int len) {
     StringBuilder sb = null;
     for (int i = 0; i < len; i++) {

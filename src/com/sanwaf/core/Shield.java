@@ -18,6 +18,13 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+/**
+ * A named collection of security rules that inspects HTTP request parameters,
+ * headers, and cookies for threats. Each Shield is configured from an XML block
+ * and holds regex patterns, item definitions, error messages, and optional
+ * endpoint-specific metadata. A Shield may delegate to a {@link #childShield}
+ * when a value falls outside its configured length bounds.
+ */
 final class Shield {
   private static final String STRICT_PARAMETER_DETECTED = "URI Strict Parameter Error - Unknown Parameter Detected";
   private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
@@ -47,6 +54,15 @@ final class Shield {
   final boolean endpointsCaseSensitive;
   final Map<String, Metadata> endpointParameters;
 
+  /**
+   * Constructs a Shield by parsing its configuration from XML.
+   *
+   * @param sanwaf    the parent Sanwaf instance
+   * @param xml       the root XML document (used to resolve child shields)
+   * @param shieldXml the XML block specific to this shield
+   * @param logger    logger for startup and runtime messages
+   * @param verbose   whether to log detailed startup information
+   */
   Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger, boolean verbose) {
     this.sanwaf = sanwaf;
     this.logger = logger;
@@ -132,11 +148,31 @@ final class Shield {
     logStartup(verbose);
   }
 
+  /**
+   * Scans the request for threats across endpoints, parameters, headers, and
+   * cookies.
+   *
+   * @param req         the servlet request to inspect
+   * @param doAllBlocks if {@code true}, continues scanning after the first
+   *                    threat to collect all violations; otherwise short-circuits
+   * @param log         whether to log detected threats
+   * @return {@code true} if at least one threat was detected
+   */
   boolean threatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     return ((endpointsEnabled && endpointsThreatDetected(req, doAllBlocks, log)) || (parameters.enabled && parameterThreatDetected(req, doAllBlocks, log))
         || (headers.enabled && headerThreatDetected(req, doAllBlocks, log)) || (cookies.enabled && cookieThreatDetected(req, doAllBlocks, log)));
   }
 
+  /**
+   * Checks endpoint-specific items for threats. If the endpoint enforces strict
+   * mode, unknown parameters are flagged before item-level scanning begins.
+   *
+   * @param req         the servlet request to inspect
+   * @param doAllBlocks if {@code true}, collects all violations instead of
+   *                    short-circuiting
+   * @param log         whether to log detected threats
+   * @return {@code true} if at least one threat was detected
+   */
   private boolean endpointsThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     HttpServletRequest hreq = (HttpServletRequest) req;
     String uri = hreq.getRequestURI();
@@ -175,6 +211,15 @@ final class Shield {
     return threat;
   }
 
+  /**
+   * Scans all request parameters against this shield's parameter metadata.
+   *
+   * @param req         the servlet request to inspect
+   * @param doAllBlocks if {@code true}, collects all violations instead of
+   *                    short-circuiting
+   * @param log         whether to log detected threats
+   * @return {@code true} if at least one threat was detected
+   */
   private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     boolean threat = false;
     Enumeration<?> names = req.getParameterNames();
@@ -192,13 +237,22 @@ final class Shield {
     return threat;
   }
 
+  /**
+   * Scans all request headers against this shield's header metadata.
+   *
+   * @param req         the servlet request to inspect
+   * @param doAllBlocks if {@code true}, collects all violations instead of
+   *                    short-circuiting
+   * @param log         whether to log detected threats
+   * @return {@code true} if at least one threat was detected
+   */
   private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
-    HttpServletRequest hreq = (HttpServletRequest) req;
+    HttpServletRequest httpReq = (HttpServletRequest) req;
     boolean threat = false;
-    Enumeration<String> names = hreq.getHeaderNames();
+    Enumeration<String> names = httpReq.getHeaderNames();
     while (names.hasMoreElements()) {
       String name = names.nextElement();
-      Enumeration<String> values = hreq.getHeaders(name);
+      Enumeration<String> values = httpReq.getHeaders(name);
       while (values.hasMoreElements()) {
         if (threat(req, headers, name, values.nextElement(), false, doAllBlocks, log)) {
           if (!doAllBlocks) {
@@ -211,6 +265,15 @@ final class Shield {
     return threat;
   }
 
+  /**
+   * Scans all request cookies against this shield's cookie metadata.
+   *
+   * @param req         the servlet request to inspect
+   * @param doAllBlocks if {@code true}, collects all violations instead of
+   *                    short-circuiting
+   * @param log         whether to log detected threats
+   * @return {@code true} if at least one threat was detected
+   */
   private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     boolean threat = false;
     Cookie[] cookieArray = ((HttpServletRequest) req).getCookies();
@@ -228,19 +291,59 @@ final class Shield {
     return threat;
   }
 
+  /**
+   * Tests a standalone value for threats using default string-type validation.
+   *
+   * @param v   the value to test
+   * @param log whether to log a detected threat
+   * @return {@code true} if the value is a threat
+   */
   boolean threat(String v, boolean log) {
     return threat(null, null, "", v, false, false, log);
   }
 
-  // Convenience overload: assumes isEndpoint=false and log=false
+  /**
+   * Convenience overload that assumes {@code isEndpoint=false} and
+   * {@code log=false}.
+   *
+   * @param req   the servlet request (may be {@code null})
+   * @param meta  metadata containing item definitions
+   * @param key   the parameter/header/cookie name
+   * @param value the value to test
+   * @return {@code true} if the value is a threat
+   */
   boolean threat(ServletRequest req, Metadata meta, String key, String value) {
     return threat(req, meta, key, value, false, false, false);
   }
 
+  /**
+   * Tests a value for threats within a request context, using default
+   * string-type validation.
+   *
+   * @param req   the servlet request
+   * @param value the value to test
+   * @param log   whether to log a detected threat
+   * @return {@code true} if the value is a threat
+   */
   boolean threat(ServletRequest req, String value, boolean log) {
     return threat(req, null, "", value, false, false, log);
   }
 
+  /**
+   * Core threat-detection method. Resolves the {@link Item} for the given key,
+   * validates length bounds, required fields, related-field constraints, and
+   * item-specific error rules. Delegates to the child shield when the value
+   * falls outside this shield's length range.
+   *
+   * @param req         the servlet request (may be {@code null})
+   * @param meta        metadata containing item definitions (may be {@code null})
+   * @param key         the parameter/header/cookie name
+   * @param value       the value to test
+   * @param isEndpoint  whether this check originates from endpoint processing
+   * @param doAllBlocks if {@code true}, continues after first error
+   * @param log         whether to log a detected threat
+   * @return {@code true} if the value is a threat
+   */
   boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean doAllBlocks, boolean log) {
     if (value == null) {
       return false;
@@ -264,9 +367,9 @@ final class Shield {
     }
 
     if (item.related != null && !item.related.isEmpty()) {
-      String relmsg = item.isRelateValid(value, req, meta);
-      if (relmsg != null) {
-        return item.handleMode(value, req, item.mode, log, doAllBlocks, relmsg);
+      String relMsg = item.isRelateValid(value, req, meta);
+      if (relMsg != null) {
+        return item.handleMode(value, req, item.mode, log, doAllBlocks, relMsg);
       }
     }
 
@@ -276,6 +379,14 @@ final class Shield {
     return false;
   }
 
+  /**
+   * Looks up an {@link Item} by key, falling back to the metadata wildcard
+   * index when no direct match is found.
+   *
+   * @param meta the metadata to search
+   * @param key  the parameter/header/cookie name
+   * @return the matching item, or {@code null} if none
+   */
   private Item getItemFromMetaOrIndex(Metadata meta, String key) {
     Item item = getItemFromMetadata(meta, key);
     if (item == null) {
@@ -288,6 +399,14 @@ final class Shield {
     return item;
   }
 
+  /**
+   * Delegates threat detection to the child shield, if one is configured.
+   *
+   * @param req   the servlet request (may be {@code null})
+   * @param value the value to test
+   * @param log   whether to log a detected threat
+   * @return {@code true} if the child shield detects a threat
+   */
   private boolean handleChildShield(ServletRequest req, String value, boolean log) {
     if (childShield != null) {
       if (req == null) {
@@ -299,6 +418,15 @@ final class Shield {
     return false;
   }
 
+  /**
+   * Retrieves an {@link Item} from metadata, falling back to a default
+   * string item when {@link #regexAlways} is enabled and the key is not
+   * excluded.
+   *
+   * @param meta the metadata to search
+   * @param key  the parameter/header/cookie name
+   * @return the matching item, or {@code null} if the key is not secured
+   */
   private Item getItemFromMetadata(Metadata meta, String key) {
     Item item;
     item = getItem(meta, key);
@@ -308,6 +436,15 @@ final class Shield {
     return item;
   }
 
+  /**
+   * Returns the value of a request attribute (header, cookie, or parameter)
+   * if it is configured as an allow-listed item in this shield.
+   *
+   * @param name the attribute name
+   * @param type the attribute type (HEADER, COOKIE, or PARAMETER)
+   * @param req  the HTTP request
+   * @return the attribute value if allow-listed, or {@code null}
+   */
   String getAllowListedValue(String name, AllowListType type, HttpServletRequest req) {
     if (name == null || type == null || req == null) {
       return null;
@@ -325,6 +462,13 @@ final class Shield {
     }
   }
 
+  /**
+   * Returns the header value if the named header is allow-listed.
+   *
+   * @param name the header name
+   * @param req  the HTTP request
+   * @return the header value, or {@code null} if not allow-listed
+   */
   String getAllowListedHeader(String name, HttpServletRequest req) {
     Item item = getItemFromMetadata(headers, name);
     if (item != null) {
@@ -333,6 +477,13 @@ final class Shield {
     return null;
   }
 
+  /**
+   * Returns the cookie value if the named cookie is allow-listed.
+   *
+   * @param name the cookie name
+   * @param req  the HTTP request
+   * @return the cookie value, or {@code null} if not allow-listed or absent
+   */
   String getAllowListedCookie(String name, HttpServletRequest req) {
     Item item = getItemFromMetadata(cookies, name);
     if (item != null) {
@@ -348,6 +499,13 @@ final class Shield {
     return null;
   }
 
+  /**
+   * Returns the parameter value if the named parameter is allow-listed.
+   *
+   * @param name the parameter name
+   * @param req  the HTTP request
+   * @return the parameter value, or {@code null} if not allow-listed
+   */
   String getAllowListedParameter(String name, HttpServletRequest req) {
     Item item = getItemFromMetadata(parameters, name);
     if (item != null) {
@@ -356,6 +514,13 @@ final class Shield {
     return null;
   }
 
+  /**
+   * Retrieves an {@link Item} from the given metadata by key.
+   *
+   * @param meta the metadata to search
+   * @param key  the item key
+   * @return the matching item, or {@code null} if not found
+   */
   Item getItem(Metadata meta, String key) {
     return meta.getItem(key);
   }
@@ -381,6 +546,17 @@ final class Shield {
   private static final Pattern SEPARATOR_PATTERN = Pattern.compile(SEPARATOR);
   private static final Pattern PIPE_PATTERN = Pattern.compile("\\|");
 
+  /**
+   * Searches the XML document for a child-shield block whose name matches the
+   * given name, and constructs it.
+   *
+   * @param sanwaf          the parent Sanwaf instance
+   * @param xml             the root XML document
+   * @param childShieldName the name of the child shield to find
+   * @param logger          logger for startup messages
+   * @param verbose         whether to log detailed startup information
+   * @return the matching child Shield, or {@code null} if not found
+   */
   private static Shield findChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger, boolean verbose) {
     String[] children = xml.getAll(XML_CHILD_SHIELD);
     for (String child : children) {
@@ -393,6 +569,13 @@ final class Shield {
     return null;
   }
 
+  /**
+   * Parses the exclusion list for the "force string patterns" (regexAlways)
+   * feature from the given XML block.
+   *
+   * @param alwaysBlockXml the XML block containing exclusion items
+   * @return a set of parameter names to exclude from forced regex scanning
+   */
   private static Set<String> loadRegexExclusions(Xml alwaysBlockXml) {
     Set<String> exclusions = new LinkedHashSet<>();
     String exclusionsBlock = alwaysBlockXml.get(XML_REGEX_ALWAYS_REGEX_EXCLUSIONS);
@@ -405,6 +588,16 @@ final class Shield {
     return exclusions;
   }
 
+  /**
+   * Loads both standard (string) and custom regex patterns from the
+   * regex-config XML block, populating the block and detect maps.
+   *
+   * @param xml                     the regex-config XML block
+   * @param rulePatterns            destination for standard block-mode patterns
+   * @param customRulePatterns      destination for custom block-mode patterns
+   * @param rulePatternsDetect      destination for standard detect-mode patterns
+   * @param customRulePatternsDetect destination for custom detect-mode patterns
+   */
   private void loadPatterns(Xml xml, Map<String, Rule> rulePatterns, Map<String, Rule> customRulePatterns, Map<String, Rule> rulePatternsDetect, Map<String, Rule> customRulePatternsDetect) {
     String autoBlock = xml.get(XML_REGEX_PATTERNS_AUTO);
     Xml autoBlockXml = new Xml(autoBlock);
@@ -416,6 +609,16 @@ final class Shield {
     setRulePattern(items, customRulePatterns, customRulePatternsDetect, "pass");
   }
 
+  /**
+   * Parses individual regex item XML strings into {@link Rule} objects and
+   * files them into the appropriate block or detect map based on mode.
+   *
+   * @param items          raw XML item strings to parse
+   * @param patterns       destination for block-mode rules
+   * @param patternsDetect destination for detect-mode rules
+   * @param defaultMatch   default match behavior ("fail" or "pass") when not
+   *                       specified in the item
+   */
   private void setRulePattern(String[] items, Map<String, Rule> patterns, Map<String, Rule> patternsDetect, String defaultMatch) {
     for (String item : items) {
       Xml itemBlockXml = new Xml(item);
@@ -449,6 +652,14 @@ final class Shield {
     }
   }
 
+  /**
+   * Resolves a {@code file=<path>} or {@code file=<path>|<key>} reference
+   * to regex content. Loads the file as XML and returns either the full
+   * content or the value of a specific key.
+   *
+   * @param xml the file reference string (e.g., {@code file=patterns.xml|xss})
+   * @return the resolved regex string, or {@code null} on failure
+   */
   private String getXmlFileFile(String xml) {
     String filename = xml.substring(REGEX_FILE_MARKER.length());
     String filekey = null;
@@ -478,6 +689,12 @@ final class Shield {
     return null;
   }
 
+  /**
+   * Logs shield configuration at startup. When verbose, includes settings,
+   * regex patterns, secured items, and endpoints.
+   *
+   * @param verbose whether to include detailed configuration in the log
+   */
   private void logStartup(boolean verbose) {
     if (!logger.isInfoEnabled()) {
       return;
@@ -497,7 +714,7 @@ final class Shield {
       appendMetadataSettings(sb, Metadata.XML_COOKIES, cookies.enabled, cookies.caseSensitive);
       appendMetadataSettings(sb, Metadata.XML_HEADERS, headers.enabled, headers.caseSensitive);
 
-      sb.append("\nStringRegexs:\n");
+      sb.append("\nStringRegexes:\n");
       appendRules(sb, rulePatterns);
       appendRules(sb, rulePatternsDetect);
 
@@ -526,6 +743,12 @@ final class Shield {
     logger.info(sb.toString());
   }
 
+  /**
+   * Appends formatted rule entries to the log output buffer.
+   *
+   * @param sb    the string builder to append to
+   * @param rules the rules to format
+   */
   private static void appendRules(StringBuilder sb, Map<String, Rule> rules) {
     for (Map.Entry<String, Rule> e : rules.entrySet()) {
       sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
@@ -563,6 +786,14 @@ final class Shield {
     return true;
   }
 
+  /**
+   * Returns {@code true} if the value contains no characters that are
+   * significant to XSS attack patterns (e.g., {@code <}, {@code >},
+   * {@code %}, quotes, braces). Used as a fast-path to skip regex scanning.
+   *
+   * @param value the string to inspect
+   * @return {@code true} if no XSS-relevant characters are present
+   */
   static boolean containsNoXssRelevantChar(String value) {
     int len = value.length();
     for (int i = 0; i < len; i++) {
@@ -591,6 +822,13 @@ final class Shield {
     return true;
   }
 
+  /**
+   * Parses a string as an integer, returning a default value on failure.
+   *
+   * @param s the string to parse
+   * @param d the default value if parsing fails
+   * @return the parsed integer, or {@code d} if {@code s} is not a valid integer
+   */
   static int parseInt(String s, int d) {
     try {
       return Integer.parseInt(s);
@@ -599,6 +837,13 @@ final class Shield {
     }
   }
 
+  /**
+   * Parses a string as a double, returning a default value on failure.
+   *
+   * @param s the string to parse
+   * @param d the default value if parsing fails
+   * @return the parsed double, or {@code d} if {@code s} is not a valid double
+   */
   static double parseDouble(String s, double d) {
     try {
       return Double.parseDouble(s);
@@ -607,20 +852,48 @@ final class Shield {
     }
   }
 
+  /**
+   * Appends formatted endpoint information to the log output buffer.
+   *
+   * @param endpointParameters the endpoint metadata map to format
+   * @param sb                 the string builder to append to
+   */
   static void appendEndpoints(Map<String, Metadata> endpointParameters, StringBuilder sb) {
     appendItemToSb(sb, endpointParameters);
   }
 
+  /**
+   * Appends all items from each metadata entry in the map to the string
+   * builder for logging.
+   *
+   * @param sb  the string builder to append to
+   * @param map the endpoint metadata map
+   */
   private static void appendItemToSb(StringBuilder sb, Map<String, Metadata> map) {
     for (Map.Entry<String, Metadata> pair : map.entrySet()) {
       appendPItemMapToSB(pair.getValue().items, sb, "\t", pair.getKey()); // "\t" = log indentation prefix
     }
   }
 
+  /**
+   * Appends item map entries to the string builder with the given label.
+   *
+   * @param map   the items to format
+   * @param sb    the string builder to append to
+   * @param label the section label
+   */
   static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label) {
     appendPItemMapToSB(map, sb, label, "");
   }
 
+  /**
+   * Appends item map entries to the string builder with label and suffix.
+   *
+   * @param map         the items to format
+   * @param sb          the string builder to append to
+   * @param label       the section label prefix
+   * @param labelSuffix additional text appended to the label
+   */
   static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label, String labelSuffix) {
     sb.append(label).append(labelSuffix);
     if (map != null && !map.isEmpty()) {
@@ -631,11 +904,27 @@ final class Shield {
     sb.append("\n");
   }
 
+  /**
+   * Appends enabled and case-sensitivity settings for a metadata type to the
+   * log output buffer.
+   *
+   * @param sb            the string builder to append to
+   * @param type          the metadata type name (e.g., "parameters")
+   * @param enabled       whether the type is enabled
+   * @param caseSensitive whether the type uses case-sensitive matching
+   */
   private static void appendMetadataSettings(StringBuilder sb, String type, boolean enabled, boolean caseSensitive) {
     sb.append("\t").append(type).append(".").append(XML_ENABLED).append("=").append(enabled).append("\n");
     sb.append("\t").append(type).append(".").append(XML_CASE_SENSITIVE).append("=").append(caseSensitive).append("\n");
   }
 
+  /**
+   * Splits a string on the {@value #SEPARATOR} delimiter, discarding empty
+   * segments.
+   *
+   * @param s the string to split (may be {@code null} or empty)
+   * @return a list of non-empty segments
+   */
   static List<String> split(String s) {
     List<String> out = new ArrayList<>();
     if (s != null && !s.isEmpty()) {
