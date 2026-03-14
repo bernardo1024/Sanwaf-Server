@@ -1,164 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.sanwaf</groupId>
-	<artifactId>sanwaf</artifactId>
-	<packaging>jar</packaging>
-	<name>Sanwaf-Server</name>
-	<version>0.2.16</version>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.sanwaf</groupId>
+    <artifactId>sanwaf</artifactId>
+    <packaging>jar</packaging>
+    <name>Sanwaf-Server</name>
+    <version>0.2.17</version>
 
-	<prerequisites>
-		<maven>3.0</maven>
-	</prerequisites>
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
 
-	<properties>
-		<!-- only 1 dependency used directy by sanwaf -->
-		<jakarta.version>6.0.0</jakarta.version>
+    <properties>
+        <!-- only 1 dependency used directly by sanwaf -->
+        <jakarta.version>6.0.0</jakarta.version>
 
-		<maven.version>3.5</maven.version>
-		<compiler.source>1.8</compiler.source>
-		<!-- set your target jdk version here. 
-			 note: tests will fail unless using JDK 17 (spring 6)
-			 to compile for jdk 11, set target below to 11
-			 then either comment out the "testResources" section below or 
-			 from the command line: "mvn install -Dmaven.test.skip=true"  -->
-		<compiler.target>17</compiler.target>
-		<compiler.depecation>false</compiler.depecation>
-		<complier.warnings>false</complier.warnings>
+        <maven.version>3.15.0</maven.version>
+        <compiler.source>1.8</compiler.source>
+        <!-- set your target jdk version here.
+             note: tests will fail unless using JDK 17 (spring 6)
+             to compile for jdk 11, set target below to 11
+             then either comment out the "testResources" section below or
+             from the command line: "mvn install -Dmaven.test.skip=true"  -->
+        <compiler.target>17</compiler.target>
+        <compiler.deprecation>false</compiler.deprecation>
+        <compiler.warnings>false</compiler.warnings>
 
-		<!-- tests & code coverage -->
-		<junit.version>4.13.1</junit.version>
-		<surefire.version>3.2.1</surefire.version>
-		<surefire.forkcount>0</surefire.forkcount>
-		<surefire.reuseforks>true</surefire.reuseforks>
-		<mockito.version>1.10.19</mockito.version>
-		<powermock.version>1.7.4</powermock.version>
-		<spring.version>6.0.0</spring.version>
-		<!--<jacoco.version>0.7.1.201405082137</jacoco.version>-->
-		<jacoco.version>0.8.8</jacoco.version>
-		
-		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-	</properties>
+        <!-- tests & code coverage -->
+        <junit.version>5.10.5</junit.version>
+        <surefire.version>3.2.1</surefire.version>
+        <surefire.forkcount>0</surefire.forkcount>
+        <surefire.reuseforks>true</surefire.reuseforks>
+        <spring.version>6.0.23</spring.version>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>${jakarta.version}</version>
-			<scope>provided</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!--for unit tests-->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>${mockito.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<version>${powermock.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>${powermock.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <!--for unit tests-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<resources>
-		    <resource>
-		        <directory>src/resources</directory>
-			</resource>
-		</resources>
-		<testSourceDirectory>src.test</testSourceDirectory>
-		<testResources>
-		   <testResource>
-		        <directory>src.test/resources</directory>
-		    </testResource>
-		</testResources>
-		
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven.version}</version>
-					<configuration>
-						<source>${compiler.source}</source>
-						<target>${compiler.target}</target>
-						<showDeprecation>${compiler.deprecation}</showDeprecation>
-						<showWarnings>${compiler.warnings}</showWarnings>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${surefire.version}</version>
-					<configuration>
-						<forkCount>${surefire.forkcount}</forkCount>
-						<reuseForks>${surefire.reuseforks}</reuseForks>
-						<additionalClasspathElements>
-							<additionalClasspathElement>${basedir}/classes</additionalClasspathElement>
-							<additionalClasspathElement>${basedir}</additionalClasspathElement>
-						</additionalClasspathElements>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.apache.maven.surefire</groupId>
-							<artifactId>surefire-junit47</artifactId>
-							<version>${surefire.version}</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-				<plugin>
-				    <groupId>org.jacoco</groupId>
-				    <artifactId>jacoco-maven-plugin</artifactId>
-				    <version>${jacoco.version}</version>
-				    <executions>
-				        <execution>
-				            <id>default-prepare-agent</id>
-				            <goals>
-				                <goal>prepare-agent</goal>
-				            </goals>
-				        </execution>
-				        <execution>
-				            <id>default-report</id>
-				            <phase>prepare-package</phase>
-				            <goals>
-				                <goal>report</goal>
-				            </goals>
-				        </execution>
-				        <execution>
-				            <id>default-check</id>
-				            <goals>
-				                <goal>check</goal>
-				            </goals>
-				        </execution>
-				    </executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+        <!--for JMH benchmarks-->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.37</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.37</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/resources</directory>
+            </resource>
+        </resources>
+        <testSourceDirectory>src.test</testSourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>src.test/resources</directory>
+            </testResource>
+        </testResources>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.version}</version>
+                    <configuration>
+                        <source>${compiler.source}</source>
+                        <target>${compiler.target}</target>
+                        <useIncrementalCompilation>false</useIncrementalCompilation>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire.version}</version>
+                    <configuration>
+                        <forkCount>${surefire.forkcount}</forkCount>
+                        <reuseForks>${surefire.reuseforks}</reuseForks>
+                        <excludes>
+                            <exclude>**/benchmark/*.java</exclude>
+                        </excludes>
+                        <additionalClasspathElements>
+                            <additionalClasspathElement>${basedir}/classes</additionalClasspathElement>
+                            <additionalClasspathElement>${basedir}</additionalClasspathElement>
+                        </additionalClasspathElements>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
 

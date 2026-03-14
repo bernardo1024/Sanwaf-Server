@@ -1,35 +1,33 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AlwaysPerformRegexTest {
   static Sanwaf sanwaf;
-  static Shield shield;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-verboseRegexAlways.xml");
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
   @Test
-  public void testRegexAlways() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testRegexAlways() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("StringExcluded", "<script>alert(1)</script>");
-    Boolean result = sanwaf.isThreatDetected(request);
-    assertTrue(result.equals(false));
+    boolean result = sanwaf.isThreatDetected(request);
+    assertFalse(result);
 
     request = new MockHttpServletRequest();
     request.addParameter("foobar", "<script>alert(1)</script>");
@@ -37,4 +35,3 @@ public class AlwaysPerformRegexTest {
     assertTrue(result);
   }
 }
-

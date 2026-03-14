@@ -1,42 +1,37 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ReduceXmlTest {
   static Sanwaf sanwaf;
-  static Shield shield;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-reduced.xml");
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
   @Test
-  public void numericTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void numericTest() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("Numeric", "abc123");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
 
     request = new MockHttpServletRequest();
     request.addParameter("Numeric", "12345");
     result = sanwaf.isThreatDetected(request);
-    assertTrue(!result);
+    assertFalse(result);
   }
 }
-

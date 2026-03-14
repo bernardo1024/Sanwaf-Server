@@ -1,154 +1,200 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
+<!--suppress ALL -->
 <sanwaf>
-	<global-settings>
-		<enabled>true</enabled>
-		<verbose>false</verbose>
-		<app.version>=${Your_Application_Release_Version}</app.version>	
-		<errorHandling>
-			<provideTrackId>true</provideTrackId>
-			<provideErrors>true</provideErrors>
-		</errorHandling>
-		<errorMessages>
-			<numeric><![CDATA[  Numeric error msg]]></numeric>
-			<numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
-			<alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
-			<alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
-			<char><![CDATA[  Character error msg]]></char>
-			<string><![CDATA[  String error msg]]></string>
-			<regex><![CDATA[  Regex error msg]]></regex>
-			<java><![CDATA[  Java error msg]]></java>
-			<constant><![CDATA[  Constant error msg {0}]]></constant>
-      <format><![CDATA[{0} format error]]></format>
-      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
-      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
-      <required><![CDATA[  <br/>Is a Required field]]></required>
-		</errorMessages>
-	</global-settings>
-	
-	<shields>
-		<shield>
-      <shield-settings>
-				<name>XSS</name>
-				<minLen>1</minLen>
-				<maxLen>9999</maxLen>
-				<errorMessages>
-					<numeric><![CDATA[  XSS CUSTOM Numeric error msg]]></numeric>
-					<numericDelimited><![CDATA[  XSS CUSTOM Numeric delimited error msg {0}]]></numericDelimited>
-					<alphanumeric><![CDATA[  XSS CUSTOM Alphanumeric error msg]]></alphanumeric>
-					<alphanumericAndMore><![CDATA[  XSS CUSTOM Alphanumeric and more error msg {0}]]></alphanumericAndMore>
-					<char><![CDATA[  XSS CUSTOM Character error msg]]></char>
-					<string><![CDATA[  XSS CUSTOM String error msg]]></string>
-					<regex><![CDATA[  XSS CUSTOM Regex error msg]]></regex>
-					<java><![CDATA[  XSS CUSTOM Java error msg]]></java>
-					<constant><![CDATA[  XSS CUSTOM Constant error msg {0}]]></constant>
-          <format><![CDATA[ XSS CUSTOM Format error msg {0}]]></format>
-          <dependentFormat><![CDATA[ XSS CUSTOM Dependent Format error msg {0}]]></dependentFormat>
-          <invalidLength><![CDATA[ XSS CUSTOM Invalid Length error msg {0} and {1}]]></invalidLength>
-          <required><![CDATA[ XSS CUSTOM Required error msg]]></required>
-				</errorMessages>
-      </shield-settings>
-			<regex-config>
-				<minLen>5</minLen>
-				<forceStringPatterns>
-					<enabled>false</enabled>
-					<exclusions></exclusions>
-				</forceStringPatterns>
-				<stringPatterns>
-					<item>
-						<key>javascriptExpression</key>
-						<value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
-					</item>
-					<item>
-						<key>xss-form-elements</key>
-						<value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
-					</item>
-				</stringPatterns>
-				<customPatterns>
-					<item>
-						<key>date</key>
-						<value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
-					</item>
-				</customPatterns>
-			</regex-config>
-			<metadata>
-				<enabled>
-					<parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</enabled>
-				<caseSensitive>
-					<parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</caseSensitive>
-				<secured>
-					<parameters>
-						<item><name>Numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>NumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>Alphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>AlphanumericAndMore</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>AlphanumericAndMoreSpecialChars</name><type>a{\s\t\n\r}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>String</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>Char</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>Constant</name><type>k{foo,bar,far}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>Regex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>Java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>Format</name><type>f{###-###-####}</type><max></max><min></min><msg></msg><uri></uri></item>
-					</parameters>
-					<headers>
-						<item><name>aHeaderNumber</name><type>n</type></item>
-					</headers>
-					<cookies>
-						<item><name>aCookieNumber</name><type>n</type></item>
-					</cookies>
-				</secured>
-			</metadata>
-		</shield>
-		<shield>
-      <shield-settings>
-				<name>BadPlaceholders</name>
-				<minLen>1</minLen>
-				<maxLen>9999</maxLen>
-				<errorMessages>
-					<numericDelimited> Contains non-numeric characters. Number can be delimited by the "0" character.</numericDelimited>
-					<alphanumericAndMore> Contains non-alphanumeric-more. More characters are [0].</alphanumericAndMore>
-				</errorMessages>
-      </shield-settings>
-			<regex-config>
-				<minLen>5</minLen>
-				<forceStringPatterns>
-					<enabled>false</enabled>
-					<exclusions></exclusions>
-				</forceStringPatterns>
-				<stringPatterns>
-					<item>
-						<key>javascriptExpression</key>
-						<value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
-					</item>
-					<item>
-						<key>xss</key>
-						<value><![CDATA[<(|\/|[^\/>][^>]+|\/[^>][^>]+)>]]></value>
-					</item>
-				</stringPatterns>
-				<customPatterns>
-				</customPatterns>
-			</regex-config>
-			<metadata>
-				<enabled>
-					<parameters>true</parameters>
-				</enabled>
-				<caseSensitive>
-					<parameters>true</parameters>
-				</caseSensitive>
-				<secured>
-					<parameters>
-						<item><name>NumericDelimitedBadPlaceholder</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>AlphanumericAndMoreBadPlaceholder</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
-					</parameters>
-				</secured>
-			</metadata>
-		</shield>
-	</shields>
+    <global-settings>
+        <enabled>true</enabled>
+        <verbose>false</verbose>
+        <app.version>=${Your_Application_Release_Version}</app.version>
+        <errorHandling>
+            <provideTrackId>true</provideTrackId>
+            <provideErrors>true</provideErrors>
+        </errorHandling>
+        <errorMessages>
+            <numeric><![CDATA[  Numeric error msg]]></numeric>
+            <numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
+            <alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
+            <alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
+            <char><![CDATA[  Character error msg]]></char>
+            <string><![CDATA[  String error msg]]></string>
+            <regex><![CDATA[  Regex error msg]]></regex>
+            <java><![CDATA[  Java error msg]]></java>
+            <constant><![CDATA[  Constant error msg {0}]]></constant>
+            <format><![CDATA[{0} format error]]></format>
+            <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
+            <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+            <required><![CDATA[  <br/>Is a Required field]]></required>
+        </errorMessages>
+    </global-settings>
+
+    <shields>
+        <shield>
+            <shield-settings>
+                <name>XSS</name>
+                <minLen>1</minLen>
+                <maxLen>9999</maxLen>
+                <errorMessages>
+                    <numeric><![CDATA[  XSS CUSTOM Numeric error msg]]></numeric>
+                    <numericDelimited><![CDATA[  XSS CUSTOM Numeric delimited error msg {0}]]></numericDelimited>
+                    <alphanumeric><![CDATA[  XSS CUSTOM Alphanumeric error msg]]></alphanumeric>
+                    <alphanumericAndMore>
+                        <![CDATA[  XSS CUSTOM Alphanumeric and more error msg {0}]]></alphanumericAndMore>
+                    <char><![CDATA[  XSS CUSTOM Character error msg]]></char>
+                    <string><![CDATA[  XSS CUSTOM String error msg]]></string>
+                    <regex><![CDATA[  XSS CUSTOM Regex error msg]]></regex>
+                    <java><![CDATA[  XSS CUSTOM Java error msg]]></java>
+                    <constant><![CDATA[  XSS CUSTOM Constant error msg {0}]]></constant>
+                    <format><![CDATA[ XSS CUSTOM Format error msg {0}]]></format>
+                    <dependentFormat><![CDATA[ XSS CUSTOM Dependent Format error msg {0}]]></dependentFormat>
+                    <invalidLength><![CDATA[ XSS CUSTOM Invalid Length error msg {0} and {1}]]></invalidLength>
+                    <required><![CDATA[ XSS CUSTOM Required error msg]]></required>
+                </errorMessages>
+            </shield-settings>
+            <regex-config>
+                <minLen>5</minLen>
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                </forceStringPatterns>
+                <stringPatterns>
+                    <item>
+                        <key>javascriptExpression</key>
+                        <value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
+                    </item>
+                    <item>
+                        <key>xss-form-elements</key>
+                        <value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
+                    </item>
+                </stringPatterns>
+                <customPatterns>
+                    <item>
+                        <key>date</key>
+                        <value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
+                    </item>
+                </customPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </enabled>
+                <caseSensitive>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>Numeric</name>
+                            <type>n</type>
+                        </item>
+                        <item>
+                            <name>NumericDelimited</name>
+                            <type>n{,}</type>
+                        </item>
+                        <item>
+                            <name>Alphanumeric</name>
+                            <type>a</type>
+                        </item>
+                        <item>
+                            <name>AlphanumericAndMore</name>
+                            <type>a{? :}</type>
+                        </item>
+                        <item>
+                            <name>AlphanumericAndMoreSpecialChars</name>
+                            <type>a{\s\t\n\r}</type>
+                        </item>
+                        <item>
+                            <name>String</name>
+                            <type>s</type>
+                        </item>
+                        <item>
+                            <name>Char</name>
+                            <type>c</type>
+                        </item>
+                        <item>
+                            <name>Constant</name>
+                            <type>k{foo,bar,far}</type>
+                        </item>
+                        <item>
+                            <name>Regex</name>
+                            <type>r{date}</type>
+                        </item>
+                        <item>
+                            <name>Java</name>
+                            <type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type>
+                        </item>
+                        <item>
+                            <name>Format</name>
+                            <type>f{###-###-####}</type>
+                        </item>
+                    </parameters>
+                    <headers>
+                        <item>
+                            <name>aHeaderNumber</name>
+                            <type>n</type>
+                        </item>
+                    </headers>
+                    <cookies>
+                        <item>
+                            <name>aCookieNumber</name>
+                            <type>n</type>
+                        </item>
+                    </cookies>
+                </secured>
+            </metadata>
+        </shield>
+        <shield>
+            <shield-settings>
+                <name>BadPlaceholders</name>
+                <minLen>1</minLen>
+                <maxLen>9999</maxLen>
+                <errorMessages>
+                    <numericDelimited>Contains non-numeric characters. Number can be delimited by the "0" character.
+                    </numericDelimited>
+                    <alphanumericAndMore>Contains non-alphanumeric-more. More characters are [0].</alphanumericAndMore>
+                </errorMessages>
+            </shield-settings>
+            <regex-config>
+                <minLen>5</minLen>
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                </forceStringPatterns>
+                <stringPatterns>
+                    <item>
+                        <key>javascriptExpression</key>
+                        <value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
+                    </item>
+                    <item>
+                        <key>xss</key>
+                        <value><![CDATA[<(|\/|[^\/>][^>]+|\/[^>][^>]+)>]]></value>
+                    </item>
+                </stringPatterns>
+                <customPatterns>
+                </customPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <parameters>true</parameters>
+                </enabled>
+                <caseSensitive>
+                    <parameters>true</parameters>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>NumericDelimitedBadPlaceholder</name>
+                            <type>n{,}</type>
+                        </item>
+                        <item>
+                            <name>AlphanumericAndMoreBadPlaceholder</name>
+                            <type>a{? :}</type>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+    </shields>
 </sanwaf>
 

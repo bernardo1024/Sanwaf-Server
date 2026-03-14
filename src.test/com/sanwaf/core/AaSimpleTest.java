@@ -1,24 +1,25 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AaSimpleTest {
   static Sanwaf sanwaf;
-  static Shield shield;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-AaSimpleTest.xml");
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -26,12 +27,11 @@ public class AaSimpleTest {
   public void testEndpointDetectAll() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/sanwaf-AaSimpleTest.xml");
+    // noinspection SpellCheckingInspection
     request.addParameter("estring_DETECT_ALL", "sDETECTALL");
-    assertTrue(!sanwaf.isThreatDetected(request, true, true));
+    assertFalse(sanwaf.isThreatDetected(request, true, true));
     String s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_DETECT_ALL\""));
-    assertTrue(GetAllErrorsTest.getItemCount(s, "\"item\":{\"name\":\"") == 1);
+    assertEquals(1, GetAllErrorsTest.getItemCount(s, "\"item\":{\"name\":\""));
   }
-
 }
-

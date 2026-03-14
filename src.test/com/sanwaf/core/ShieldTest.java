@@ -1,25 +1,24 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
-import jakarta.servlet.http.Cookie;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ShieldTest {
   static Sanwaf sanwaf;
   static Shield shield;
   static String breakMaxSizeString = null;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf();
@@ -32,79 +31,89 @@ public class ShieldTest {
       }
       breakMaxSizeString = sb.toString();
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
   @Test
   public void testXssTooBig() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, "String", breakMaxSizeString, false, false);
-    assertEquals(false, b);
+    boolean b = shield.threat(req, shield.parameters, "String", breakMaxSizeString);
+    assertFalse(b);
   }
 
   @Test
   public void testNullKeyValue() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, null, "<script>alert(1)</script>", false, false);
-    assertEquals(false, b);
-    b = shield.threat(req, shield.parameters, "String", null, false, false);
-    assertEquals(false, b);
+    boolean b = shield.threat(req, shield.parameters, null, "<script>alert(1)</script>");
+    assertFalse(b);
+    shield.threat(req, shield.parameters, "String", null);
   }
 
   @Test
   public void testUnprotectedParameter() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, "foobarNotInParmStore", "<script>alert(1)</script>", false, false);
-    assertEquals(false, b);
+    boolean b = shield.threat(req, shield.parameters, "foobarNotInParmStore", "<script>alert(1)</script>");
+    assertFalse(b);
   }
 
   @Test
   public void testThreatNoMetadata() {
     boolean b = shield.threat("<script>alert(1)</script>", false);
-    assertEquals(true, b);
+    assertTrue(b);
   }
 
   @Test
   public void testMetadataGetFromIndex() {
     String s = shield.parameters.getFromIndex("*foo");
-    assertEquals(null, s);
+    assertNull(s);
 
     s = shield.parameters.getFromIndex("foo*");
-    assertEquals(null, s);
+    assertNull(s);
 
     s = shield.parameters.getFromIndex("foo[*]");
-    assertEquals(null, s);
+    assertNull(s);
 
   }
 
   @Test
   public void disableSanwafTest() {
-    sanwaf.enabled = false;
+    Sanwaf.SanwafConfig saved = sanwaf.config;
+    sanwaf.config = saved.toBuilder().enabled(false).build();
     testNumeric(false);
-    sanwaf.enabled = true;
+    sanwaf.config = saved;
+  }
+
+  @Test
+  public void enableSanwafTest() {
+    Sanwaf.SanwafConfig saved = sanwaf.config;
+    sanwaf.config = saved.toBuilder().enabled(false).build();
+    testNumeric(false);
+    sanwaf.config = saved.toBuilder().enabled(true).build();
+    testNumeric(true);
+    sanwaf.config = saved;
   }
 
   @Test
   public void sanwafInvalidHttpRequestTest() {
     MockHttpServletRequest request = null;
-    assertEquals(false, sanwaf.isThreatDetected(request));
-    assertEquals(false, sanwaf.isThreatDetected(null));
+    assertFalse(sanwaf.isThreatDetected(null));
+    assertFalse(sanwaf.isThreatDetected(null));
   }
 
   @Test
   public void enabledTest() {
-    shield.parameters.enabled = true;
-    shield.headers.enabled = true;
-    shield.cookies.enabled = true;
+    UnitTestUtil.setField(shield.parameters, "enabled", true);
+    UnitTestUtil.setField(shield.headers, "enabled", true);
+    UnitTestUtil.setField(shield.cookies, "enabled", true);
     testNumeric(true);
   }
 
   @Test
   public void disabledTest() {
-    shield.parameters.enabled = false;
-    shield.headers.enabled = false;
-    shield.cookies.enabled = false;
+    UnitTestUtil.setField(shield.parameters, "enabled", false);
+    UnitTestUtil.setField(shield.headers, "enabled", false);
+    UnitTestUtil.setField(shield.cookies, "enabled", false);
     testNumeric(false);
   }
 
@@ -122,4 +131,3 @@ public class ShieldTest {
     assertEquals(isThreat, sanwaf.isThreatDetected(request));
   }
 }
-

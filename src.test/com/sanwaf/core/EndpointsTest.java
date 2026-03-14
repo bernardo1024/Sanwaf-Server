@@ -1,41 +1,37 @@
 package com.sanwaf.core;
 
-import org.junit.Test;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.MethodOrderer;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
-
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class EndpointsTest {
   static Sanwaf sanwaf;
-  static Shield shield;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf();
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
   @Test
-  public void testEndpointChar() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointChar() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("char", "a");
-    Boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    boolean isThreat = sanwaf.isThreatDetected(request);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -45,40 +41,40 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRegex() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRegex() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("endpointRegex", "a");
-    Boolean isThreat = sanwaf.isThreatDetected(request);
+    boolean isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("endpointRegex", "foo@bar.com");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
-  public void testEndpointMaxMinValue() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointMaxMinValue() {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "10");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "100");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "20");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -102,7 +98,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -112,12 +108,12 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRequired() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRequired() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("required", "a");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -127,27 +123,27 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointOpen() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointOpen() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("open", "(123) 456-7890 abz ABZ");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
-  public void testEndpointFormat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointFormat() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "(123) 456-7890 abz ABZ");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "(123) 456-7890 zba ZBA");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -237,7 +233,7 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -247,21 +243,21 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedSimple() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedSimple() {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-child", "aaa");
     request.addParameter("related-simple-parent", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-child", "aaa");
     request.addParameter("related-simple-parent", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -272,35 +268,35 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedInvalidConfig() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedInvalidConfig() {
     // related-invalid-child<related>related-invalid</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-invalid-child", "aaa");
     request.addParameter("related-invalid-parent", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-invalid-child", "aaa");
     request.addParameter("related-invalid-parent", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-invalid-child", "");
     request.addParameter("related-invalid-parent", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/invalid-uri/test.jsp");
     request.addParameter("related-invalid-child", "");
     request.addParameter("related-invalid-parent", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     // related-invalidX-child<related>(related-invalidX1-parent)(related-invalidX2-parent)</related>
     request = new MockHttpServletRequest();
@@ -308,11 +304,11 @@ public class EndpointsTest {
     request.addParameter("related-invalidX-child", "");
     request.addParameter("related-invalidX1-parent", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
-  public void testEndpointRelatedEqualsNoParent() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedEqualsNoParent() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-equals-req-parent", "aaa");
@@ -320,16 +316,16 @@ public class EndpointsTest {
     boolean isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
   }
-  
+
   @Test
-  public void testEndpointRelatedEquals() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedEquals() {
     // related-equals-child<related>related-equals-parent:=</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-equals-child", "aaa");
     request.addParameter("related-equals-parent", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -395,13 +391,13 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedNoParentDefined() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedNoParentDefined() {
     // related-simple-or-no-parent-parent:Yes<
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-or-no-parent-child", "");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -415,25 +411,25 @@ public class EndpointsTest {
     request.addParameter("related-simple-or-no-parent-child", "abcdefg");
     request.addParameter("related-simple-or-no-parent-parent", "Yes");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
-  public void testEndpointRelatedSimpleOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedSimpleOr() {
     // related-simple-or-child<related>related-simple-or-parent:aaa||bbb</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-or-child", "aaa");
     request.addParameter("related-simple-or-parent", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-or-child", "aaa");
     request.addParameter("related-simple-or-parent", "bbb");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -454,11 +450,11 @@ public class EndpointsTest {
     request.addParameter("related-simple-or-child", "aaa");
     request.addParameter("related-simple-or-parent", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
-  public void testEndpointRelatedOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedOr() {
     // related-or-child<related>(related-or-parent1:aaa||bbb)||(related-or-parent2:ccc||ddd)</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -466,7 +462,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "aaa");
     request.addParameter("related-or-parent2", "ccc");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -474,7 +470,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "bbb");
     request.addParameter("related-or-parent2", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -482,7 +478,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "");
     request.addParameter("related-or-parent2", "ccc");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -506,7 +502,7 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "");
     request.addParameter("related-or-parent2", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -514,11 +510,11 @@ public class EndpointsTest {
     request.addParameter("related-or-parent1", "");
     request.addParameter("related-or-parent2", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
   @Test
-  public void testEndpointRelatedAndOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedAndOr() {
     // related-and-or-child<related>(related-and-or-parent1:aaa||bbb)||(related-and-or-parent2:ccc||ddd)&&(related-and-or-parent3:eee|fff)</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -527,7 +523,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "ccc");
     request.addParameter("related-and-or-parent3", "eee");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -536,7 +532,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "");
     request.addParameter("related-and-or-parent3", "eee");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -563,7 +559,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "");
     request.addParameter("related-and-or-parent3", "eee");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -572,7 +568,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "");
     request.addParameter("related-and-or-parent3", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -581,7 +577,7 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parent2", "ccc");
     request.addParameter("related-and-or-parent3", "");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     // related-and-or-childX<related>(related-and-or-parentX1:aaa||bbb)&&(related-and-or-parentX2:ccc||ddd)||(related-and-or-parentX3:eee||fff)||(related-and-or-parentX4)</related>
     request = new MockHttpServletRequest();
@@ -596,13 +592,12 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointRelatedRemoveSpace() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointRelatedRemoveSpace() {
     // <related> ( related-and-or-parentY1 : aaa || bbb ) || (
     // related-and-or-parentY2 : ccc || ddd ) && ( related-and-or-parentY3 : eee
     // || fff ) || ( related-and-or-parentY4 : ggg || hhh ) && (
     // related-and-or-parentY5:iii || jjj ) </related>
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-and-or-childY", "");
     request.addParameter("related-and-or-parentY1", "bbb");
@@ -615,12 +610,10 @@ public class EndpointsTest {
 
   }
 
-  
   @Test
-  public void testEndpointStrictWithLess() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointStrictWithLess() {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLess.jsp");
     request.addParameter("foobar", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
@@ -628,14 +621,14 @@ public class EndpointsTest {
   }
 
   @Test
-  public void testEndpointStrictTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testEndpointStrictTest() {
     // related-simple-child<related>related-simple-parent</related>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("parm1", "aaa");
     request.addParameter("parm2", "aaa");
     boolean isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictTrue.jsp");
@@ -650,7 +643,7 @@ public class EndpointsTest {
     request.addParameter("parm2", "aaa");
     request.addParameter("parm3", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictTrue.jsp");
@@ -668,13 +661,13 @@ public class EndpointsTest {
     request.addParameter("parm3", "aaa");
     request.addParameter("parmEXTRA", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/notstrictNoTag.jsp");
     request.addParameter("foobar", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLess.jsp");
@@ -690,7 +683,7 @@ public class EndpointsTest {
     request.addParameter("parm1", "aaa");
     request.addParameter("parm2", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLess.jsp");
@@ -698,7 +691,7 @@ public class EndpointsTest {
     request.addParameter("parm2", "aaa");
     request.addParameter("parm3", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/strictWithLessWord.jsp");
@@ -714,8 +707,7 @@ public class EndpointsTest {
     request.addParameter("parm1", "aaa");
     request.addParameter("parm2", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(!isThreat);
+    assertFalse(isThreat);
   }
 
 }
-

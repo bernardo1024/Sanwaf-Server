@@ -1,73 +1,74 @@
 package com.sanwaf.core;
 
-import org.junit.Test;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.MethodOrderer;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
-
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class SanwafChildShieldTest {
   static Sanwaf sanwaf;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-childShield.xml");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
   @Test
-  public void testHasChildShield() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testHasChildShield() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss");
-    assertTrue(shield.childShield.name.equals("XSS-CHILD"));
+    Assertions.assertNotNull(shield.childShield);
+    assertEquals("XSS-CHILD", shield.childShield.name);
   }
 
   @Test
-  public void testChildShieldNoMaxViolationThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testChildShieldNoMaxViolationThreat() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "javascript: should pass short string has no javascript: test");
-    Boolean result = sanwaf.isThreatDetected(request);
-    assertTrue(!result);
+    boolean result = sanwaf.isThreatDetected(request);
+    assertFalse(result);
   }
 
   @Test
-  public void testChildShieldMaxViolationThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testChildShieldMaxViolationThreat() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("String", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail");
-    Boolean result = sanwaf.isThreatDetected(request);
+    boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
   }
 
   @Test
-  public void testIsThreatNoMaxViolation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testIsThreatNoMaxViolation() {
     String value = "javascript: should pass short string has no javascript: test";
-    Boolean result = sanwaf.isThreat(value);
-    assertTrue(!result);
+    boolean result = sanwaf.isThreat(value);
+    assertFalse(result);
   }
 
   @Test
-  public void testIsThreatMaxViolation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testIsThreatMaxViolation() {
     String value = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail";
-    Boolean result = sanwaf.isThreat(value);
+    boolean result = sanwaf.isThreat(value);
     assertTrue(result);
   }
 
   @Test
-  public void testHasInvalidChildShield() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void testHasInvalidChildShield() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss-invalid-child-shield");
-    assertTrue(shield.childShield == null);
+    assertNull(shield.childShield);
   }
 
 }
-

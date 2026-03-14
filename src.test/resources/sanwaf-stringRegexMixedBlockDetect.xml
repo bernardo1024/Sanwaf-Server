@@ -1,84 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 
+<!--suppress ALL -->
 <sanwaf>
-  <global-settings>
-    <enabled>true</enabled>
-    <verbose>true</verbose>
-    <app.version>=${yourapp.release.version}</app.version>  
-    <errorHandling>
-      <provideTrackId>true</provideTrackId>
-      <provideErrors>true</provideErrors>
-      <logErrors>true</logErrors>
-      <logErrorsVerbose>true</logErrorsVerbose>
-      <provideDetects>true</provideDetects>
-      <logDetects>true</logDetects>
-      <logDetectsVerbose>true</logDetectsVerbose>
-    </errorHandling>
-    <errorMessages>
-      <numeric><![CDATA[  Numeric error msg]]></numeric>
-      <numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
-      <alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
-      <alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
-      <char><![CDATA[  Character error msg]]></char>
-      <string><![CDATA[  String error msg]]></string>
-      <regex><![CDATA[  Regex error msg]]></regex>
-      <java><![CDATA[  Java error msg]]></java>
-      <constant><![CDATA[  Constant error msg {0}]]></constant>
-      <format><![CDATA[  Failed to conform to format]]></format>
-      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
-      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
-      <required><![CDATA[  <br/>Is a Required field]]></required>
-    </errorMessages>
-  </global-settings>
-  
-  <shields>
-    <shield>
-      <shield-settings>
-        <mode>block</mode>
-        <name>XSS</name>
-        <minLen>2</minLen>
-        <maxLen>9999</maxLen>
-        <child></child>
-      </shield-settings>
-      <regex-config>
-        <minLen>1</minLen>
-        <forceStringPatterns>
-          <enabled>false</enabled>
-        </forceStringPatterns>
-        <stringPatterns>
-          <item>
-            <key>javascriptExpression-BLOCK</key>
-            <mode>block</mode>
-<!--        <match>pass</match> -->
-            <value><![CDATA[(?:BLOCK)]]></value>
-          </item>
-          <item>
-            <key>javascriptExpression-DETECT</key>
-            <mode>detect</mode>
-            <value><![CDATA[(?:DETECT)]]></value>
-          </item>
-          <item>
-            <key>javascriptExpression-DETECT_ALL</key>
-            <mode>detect-all</mode>
-            <value><![CDATA[(?:DETECT_ALL)]]></value>
-          </item>
-        </stringPatterns>
-      </regex-config>
-      <metadata>
-        <enabled>
-          <parameters>true</parameters>
-        </enabled>
-        <caseSensitive>
-          <parameters>true</parameters>
-        </caseSensitive>
-        <secured>
-          <parameters>
-            <item><mode>block</mode><name>string</name><type>s</type></item>
-          </parameters>
-        </secured>
-      </metadata>
-    </shield>
-  </shields>
+    <global-settings>
+        <enabled>true</enabled>
+        <verbose>true</verbose>
+        <app.version>=${yourapp.release.version}</app.version>
+        <errorHandling>
+            <provideTrackId>true</provideTrackId>
+            <provideErrors>true</provideErrors>
+            <logErrors>true</logErrors>
+            <logErrorsVerbose>true</logErrorsVerbose>
+            <provideDetects>true</provideDetects>
+            <logDetects>true</logDetects>
+            <logDetectsVerbose>true</logDetectsVerbose>
+        </errorHandling>
+        <errorMessages>
+            <numeric><![CDATA[  Numeric error msg]]></numeric>
+            <numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
+            <alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
+            <alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
+            <char><![CDATA[  Character error msg]]></char>
+            <string><![CDATA[  String error msg]]></string>
+            <regex><![CDATA[  Regex error msg]]></regex>
+            <java><![CDATA[  Java error msg]]></java>
+            <constant><![CDATA[  Constant error msg {0}]]></constant>
+            <format><![CDATA[  Failed to conform to format]]></format>
+            <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
+            <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+            <required><![CDATA[  <br/>Is a Required field]]></required>
+        </errorMessages>
+    </global-settings>
+
+    <shields>
+        <shield>
+            <shield-settings>
+                <mode>block</mode>
+                <name>XSS</name>
+                <minLen>2</minLen>
+                <maxLen>9999</maxLen>
+            </shield-settings>
+            <regex-config>
+                <minLen>1</minLen>
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                </forceStringPatterns>
+                <stringPatterns>
+                    <item>
+                        <key>javascriptExpression-BLOCK</key>
+                        <mode>block</mode>
+                        <!--        <match>pass</match> -->
+                        <value><![CDATA[(?:BLOCK)]]></value>
+                    </item>
+                    <item>
+                        <key>javascriptExpression-DETECT</key>
+                        <mode>detect</mode>
+                        <value><![CDATA[(?:DETECT)]]></value>
+                    </item>
+                    <item>
+                        <key>javascriptExpression-DETECT_ALL</key>
+                        <mode>detect-all</mode>
+                        <value><![CDATA[(?:DETECT_ALL)]]></value>
+                    </item>
+                </stringPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <parameters>true</parameters>
+                </enabled>
+                <caseSensitive>
+                    <parameters>true</parameters>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <mode>block</mode>
+                            <name>string</name>
+                            <type>s</type>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+    </shields>
 </sanwaf>
 

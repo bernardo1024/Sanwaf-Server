@@ -1,90 +1,64 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AttributesTest {
   static Sanwaf sanwaf;
-  static Shield shield;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-modes.xml");
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   @Test
   public void testAttributesAllOn() {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    setSanwafAtts(true);
+    setSanwafAttributes(true);
     request.addParameter("regexParmNoModeWithRegexDetectMode", "AAAAAAA");
     request.addParameter("regexParmNoModeWithRegexDetectMode", "BBBBBBB");
     request.addParameter("numericdelimited", "aaaaaaaaaa");
     request.addParameter("numericdelimited", "bbbbbbbbbb");
     boolean threat = sanwaf.isThreatDetected(request);
-    assertTrue(!threat);
-    resetSanwafAtts();
+    assertFalse(threat);
+    resetSanwafAttributes();
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   @Test
   public void testAttributesAllOff() {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    setSanwafAtts(false);
+    setSanwafAttributes(false);
     request.addParameter("regexParmNoModeWithRegexDetectMode", "AAAAAAA");
     request.addParameter("regexParmNoModeWithRegexDetectMode", "BBBBBBB");
     request.addParameter("numericdelimited", "aaaaaaaaaa");
     request.addParameter("numericdelimited", "bbbbbbbbbb");
     boolean threat = sanwaf.isThreatDetected(request);
-    assertTrue(!threat);
-    resetSanwafAtts();
+    assertFalse(threat);
+    resetSanwafAttributes();
   }
 
-  static boolean onErrorAddParmDetections = false;
-  static boolean onErrorAddParmErrors = false;
-  static boolean onErrorAddTrackId = false;
-  static boolean onErrorLogParmDetections = false;
-  static boolean onErrorLogParmDetectionsVerbose = false;
-  static boolean onErrorLogParmErrors = false;
-  static boolean onErrorLogParmErrorsVerbose = false;
+  static Sanwaf.SanwafConfig savedConfig;
 
-  private void setSanwafAtts(boolean b) {
-    onErrorAddParmDetections = sanwaf.onErrorAddParmDetections;
-    onErrorAddParmErrors = sanwaf.onErrorAddParmErrors;
-    onErrorAddTrackId = sanwaf.onErrorAddTrackId;
-    onErrorLogParmDetections = sanwaf.onErrorLogParmDetections;
-    onErrorLogParmDetectionsVerbose = sanwaf.onErrorLogParmDetectionsVerbose;
-    onErrorLogParmErrors = sanwaf.onErrorLogParmErrors;
-    onErrorLogParmErrorsVerbose = sanwaf.onErrorLogParmErrorsVerbose;
-    sanwaf.onErrorAddParmDetections = b;
-    sanwaf.onErrorAddParmErrors = b;
-    sanwaf.onErrorAddTrackId = b;
-    sanwaf.onErrorLogParmDetections = b;
-    sanwaf.onErrorLogParmDetectionsVerbose = b;
-    sanwaf.onErrorLogParmErrors = b;
-    sanwaf.onErrorLogParmErrorsVerbose = b;
+  private void setSanwafAttributes(boolean b) {
+    savedConfig = sanwaf.config;
+    sanwaf.config = savedConfig.toBuilder().onErrorAddParmDetections(b).onErrorAddParmErrors(b).onErrorAddTrackId(b).onErrorLogParmDetections(b).onErrorLogParmDetectionsVerbose(b)
+        .onErrorLogParmErrors(b).onErrorLogParmErrorsVerbose(b).build();
   }
 
-  private static void resetSanwafAtts() {
-    sanwaf.onErrorAddParmDetections = onErrorAddParmDetections;
-    sanwaf.onErrorAddParmErrors = onErrorAddParmErrors;
-    sanwaf.onErrorAddTrackId = onErrorAddTrackId;
-    sanwaf.onErrorLogParmDetections = onErrorLogParmDetections;
-    sanwaf.onErrorLogParmDetectionsVerbose = onErrorLogParmDetectionsVerbose;
-    sanwaf.onErrorLogParmErrors = onErrorLogParmErrors;
-    sanwaf.onErrorLogParmErrorsVerbose = onErrorLogParmErrorsVerbose;
+  private static void resetSanwafAttributes() {
+    sanwaf.config = savedConfig;
   }
 
 }
-

@@ -1,37 +1,47 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.sanwaf.log.SimpleLogger;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.sanwaf.log.SimpleLogger;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class OtherClassesTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
 
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
   @Test
   public void TestDefaultContructorParameterItem() {
-    sanwaf.verbose = true;
+    Sanwaf.SanwafConfig cfg = sanwaf.config;
+    sanwaf.config = cfg.toBuilder().verbose(true).build();
     Item pi = new ItemString();
     String s = pi.toString();
     assertTrue(s.contains("\"type\":\"STRING\""));
+  }
+
+  @Test
+  public void testWithVerboseFalse() {
+    Sanwaf.SanwafConfig cfg = sanwaf.config;
+    sanwaf.config = cfg.toBuilder().verbose(false).build();
+    assertFalse(sanwaf.config.verbose);
+    sanwaf.config = cfg;
   }
 
   @Test
@@ -39,17 +49,15 @@ public class OtherClassesTest {
     SimpleLogger logger = new SimpleLogger();
     logger.error("foobar-error");
     logger.info("foobar-info");
-
-    assertTrue(true);
   }
 
   @Test
   public void splitTest() {
     List<String> list = Shield.split(null);
-    assertEquals(true, list.isEmpty());
+    assertTrue(list.isEmpty());
 
     list = Shield.split("");
-    assertEquals(true, list.isEmpty());
+    assertTrue(list.isEmpty());
 
     list = Shield.split("1:::2::::::3");
     assertEquals(3, list.size());
@@ -57,74 +65,98 @@ public class OtherClassesTest {
 
   @Test
   public void jsonEncodeTest() {
-    String s = Metadata.jsonEncode(null);
-    assertEquals(true, s.equals(""));
+    assertEquals("", JsonFormatter.jsonEncode(null));
+
+    // named escapes
+    assertEquals("\\\\", JsonFormatter.jsonEncode("\\"));
+    assertEquals("\\\"", JsonFormatter.jsonEncode("\""));
+    assertEquals("\\/", JsonFormatter.jsonEncode("/"));
+    assertEquals("\\n", JsonFormatter.jsonEncode("\n"));
+    assertEquals("\\r", JsonFormatter.jsonEncode("\r"));
+    assertEquals("\\t", JsonFormatter.jsonEncode("\t"));
+    assertEquals("\\b", JsonFormatter.jsonEncode("\b"));
+    assertEquals("\\f", JsonFormatter.jsonEncode("\f"));
+
+    // control chars via unicode escape
+    assertEquals("\\" + "u0000", JsonFormatter.jsonEncode("\u0000"));
+    assertEquals("\\" + "u001f", JsonFormatter.jsonEncode("\u001f"));
+
+    // Unicode line/paragraph separators
+    assertEquals("\\" + "u2028", JsonFormatter.jsonEncode("\u2028"));
+    assertEquals("\\" + "u2029", JsonFormatter.jsonEncode("\u2029"));
+
+    // clean string passthrough (no allocation)
+    String clean = "hello world 123";
+    assertEquals(clean, JsonFormatter.jsonEncode(clean));
+
+    // mixed content
+    assertEquals("a\\nb\\\\c", JsonFormatter.jsonEncode("a\nb\\c"));
   }
 
   @Test
   public void parseIntTest() {
     int i = Shield.parseInt("12345", -123);
-    assertEquals(true, i == 12345);
+    assertEquals(12345, i);
     i = Shield.parseInt("123abc", -123);
-    assertEquals(true, i == -123);
+    assertEquals(-123, i);
   }
 
   @Test
   public void isNotAlphanumericTest() {
     char c = 0x29;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x7b;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x3b;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x3c;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x5b;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x5c;
-    assertEquals(true, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertTrue(Metadata.isNotAlphanumeric(String.valueOf(c)));
 
     c = 0x31;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x39;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x41;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x59;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x61;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
     c = 0x79;
-    assertEquals(false, Metadata.isNotAlphanumeric(String.valueOf(c)));
+    assertFalse(Metadata.isNotAlphanumeric(String.valueOf(c)));
   }
 
   @Test
   public void isCharAlphanumericTest() {
     char c = 0x29;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x7b;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x3b;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x3c;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x5b;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x5c;
-    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertTrue(ItemAlphanumeric.isNotAlphanumeric(c));
 
     c = 0x31;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x39;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x41;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x59;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x61;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x79;
-    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
+    assertFalse(ItemAlphanumeric.isNotAlphanumeric(c));
   }
 
   @Test
@@ -145,8 +177,7 @@ public class OtherClassesTest {
 
   @Test
   public void stripXmlCommentsTest() {
-    assert (Xml.stripXmlComments("").equals(""));
-    assert (Xml.stripXmlComments(null).equals(""));
+    assert (Xml.stripXmlComments("").isEmpty());
+    assert (Xml.stripXmlComments(null).isEmpty());
   }
 }
-

@@ -1,30 +1,27 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class DatatypeXssPayloadsTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
-  static int iterations = 1;
-  static boolean doHex = true;
-  static boolean logErrors = true;
+  static final int iterations = 1;
+  static final boolean doHex = true;
+  static final boolean logErrors = true;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf();
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -34,4 +31,3 @@ public class DatatypeXssPayloadsTest {
     UnitTestUtil.log("XSS-SanWaf", result);
   }
 }
-

@@ -1,42 +1,74 @@
 package com.sanwaf.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Abstract base class for all Sanwaf validation item types.
+ *
+ * <p>Each concrete subclass (e.g. {@code ItemNumeric}, {@code ItemString},
+ * {@code ItemRegex}) implements type-specific validation logic via the
+ * {@link #inError}, {@link #getErrorPoints}, and {@link #getType} template
+ * methods. Common behaviour such as size checking, URI filtering, mode
+ * handling, and related-field validation lives here in the base class.
+ *
+ * <p>Instances are created by {@link ItemFactory#getNewItem(ItemData)}.
+ */
 abstract class Item {
-  static final String INVALID_SIZE = "Invalid Size";
-  static final String INVALID_URI = "Invalid URI";
+  /** Logger used for recording validation errors and detections. */
   com.sanwaf.log.Logger logger;
+  /** Parameter name this item validates. */
   String name;
+  /** Human-readable display name used in error messages. */
   String display;
+  /** Shield that owns this item. */
   Shield shield;
+  /** Maximum allowed character length of the parameter value. */
   int max = Integer.MAX_VALUE;
+  /** Minimum allowed character length of the parameter value. */
   int min = 0;
+  /** Maximum allowed numeric value (for numeric types). */
   double maxValue;
+  /** Minimum allowed numeric value (for numeric types). */
   double minValue;
+  /** Custom error message; {@code null} to use the shield-level default. */
   String msg = null;
-  String[] uri = null;
+  /** Set of URI paths this item applies to; {@code null} means all URIs. */
+  Set<String> uriSet = null;
+  /** Validation mode (BLOCK, DETECT, or DISABLED). */
   Modes mode = Modes.BLOCK;
+  /** Whether a non-empty value is required. */
   boolean required = false;
+  /** Raw related-field validation expression. */
   String related;
-  String relatedErrMsg;
+  /** Parsed related-field validation blocks. */
+  RelationValidator.Block[] relatedBlocks;
+  /** Mask applied to the parameter value in error output. */
   String maskError = "";
 
+  /**
+   * Default no-arg constructor for subclass use.
+   */
   Item() {
   }
 
+  /**
+   * Constructs an item from parsed configuration data.
+   *
+   * @param id item configuration holder
+   */
   Item(ItemData id) {
     name = id.name;
     mode = id.mode;
     shield = id.shield;
-    if (shield != null) {
-      logger = id.shield.logger;
-    }
+    logger = id.logger;
 
-    if (id.display.length() == 0) {
+    if (id.display.isEmpty()) {
       display = name;
     } else {
       display = id.display;
@@ -45,407 +77,273 @@ abstract class Item {
     min = id.min;
     msg = id.msg;
     setUri(id.uri);
+    required = id.required;
+    maxValue = id.maxValue;
+    minValue = id.minValue;
+    maskError = id.maskError;
+    related = id.related;
+    relatedBlocks = id.relatedBlocks;
   }
 
-  // implemented by Types
+  /**
+   * Validates a parameter value according to this item's type rules.
+   *
+   * @param req         the servlet request
+   * @param shield      the shield performing the validation
+   * @param value       the parameter value to validate
+   * @param doAllBlocks {@code true} to evaluate all blocks (for error-point
+   *                    collection), {@code false} to fail fast
+   * @param log         {@code true} to log errors/detections
+   * @return {@code true} if the value is invalid
+   */
   abstract boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks, boolean log);
 
+  /**
+   * Returns the character-level error points within the given value.
+   *
+   * @param shield the shield performing the validation
+   * @param value  the parameter value to inspect
+   * @return list of {@link Point} instances identifying error positions,
+   *         or an empty list if none
+   */
   abstract List<Point> getErrorPoints(Shield shield, String value);
 
+  /**
+   * Returns the {@link Types} enum constant for this item subclass.
+   *
+   * @return the validation type
+   */
   abstract Types getType();
 
-  // evaluate the mode, URI & size. The method returns null if no definitive
-  // results was found and caller continues validation
-  ModeError isModeError(ServletRequest req, String value) {
-    ModeError me = new ModeError(false);
-    if (mode == Modes.DISABLED) {
-      return me;
-    } else if (!isUriValid(req)) {
-      me.error = true;
-      me.isUri = true;
-    } else if (isSizeError(value)) {
-      me.error = true;
-      me.isSize = true;
-    } else {
-      return null;
-    }
-    return me;
+  /**
+   * Checks pre-validation conditions that short-circuit type-specific logic.
+   *
+   * <p>Returns {@code true} (skip further validation) when the item is
+   * disabled, the request URI does not match, or the value violates
+   * size constraints.
+   *
+   * @param req   the servlet request
+   * @param value the parameter value
+   * @return {@code true} if a pre-validation condition is met
+   */
+  boolean hasPreValidationError(ServletRequest req, String value) {
+    return mode == Modes.DISABLED || isUriInvalid(req) || isSizeError(value);
   }
 
-  boolean isUriValid(ServletRequest req) {
-    if (uri == null || req == null) {
-      return true;
+  /**
+   * Checks whether the request URI is outside this item's allowed URI set.
+   *
+   * @param req the servlet request
+   * @return {@code true} if the request URI is not in the allowed set,
+   *         {@code false} if no URI restriction is configured or the URI matches
+   */
+  boolean isUriInvalid(ServletRequest req) {
+    if (uriSet == null || req == null) {
+      return false;
     }
     String reqUri = ((HttpServletRequest) req).getRequestURI();
-    for (String u : uri) {
-      if (u.equals(reqUri)) {
-        return true;
-      }
-    }
-    return false;
+    return !uriSet.contains(reqUri);
   }
 
+  /**
+   * Checks whether the value length violates min/max constraints.
+   *
+   * <p>Empty or {@code null} values are allowed when {@link #required} is
+   * {@code false}; otherwise a {@code null} value is always an error.
+   *
+   * @param value the parameter value
+   * @return {@code true} if the value length is out of bounds
+   */
   boolean isSizeError(String value) {
-    if (!required && (value == null || value.length() == 0)) {
+    if (!required && (value == null || value.isEmpty())) {
       return false;
+    }
+    if (value == null) {
+      return true;
     }
     return (value.length() < min || value.length() > max);
   }
 
+  /**
+   * Hook for subclasses to customise the error message before it is returned.
+   *
+   * <p>The default implementation returns the message unchanged.
+   *
+   * @param req      the servlet request
+   * @param errorMsg the original error message
+   * @return the (possibly modified) error message
+   */
   String modifyErrorMsg(ServletRequest req, String errorMsg) {
     return errorMsg;
   }
 
+  /**
+   * Replaces the first {@code {0}} placeholder in an error message.
+   *
+   * @param errorMsg    the error message template
+   * @param replacement the value to substitute for the placeholder
+   * @return the message with the placeholder replaced, or the original message
+   *         if no placeholder is found
+   */
+  static String replacePlaceholder(String errorMsg, String replacement) {
+    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
+    if (i >= 0) {
+      int pLen = ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length();
+      return errorMsg.substring(0, i) + replacement + errorMsg.substring(i + pLen);
+    }
+    return errorMsg;
+  }
+
+  /**
+   * Parses a separator-delimited URI string and populates {@link #uriSet}.
+   *
+   * @param uriString the raw URI string from configuration, or {@code null}
+   */
   private void setUri(String uriString) {
-    if (uriString != null && uriString.length() > 0) {
-      uri = uriString.split(Shield.SEPARATOR);
+    if (uriString != null && !uriString.isEmpty()) {
+      String[] parts = uriString.split(Shield.SEPARATOR);
+      uriSet = new HashSet<>(parts.length * 2);
+      Collections.addAll(uriSet, parts);
     }
   }
 
-  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log) {
-    return handleMode(err, value, req, action, log, false);
+  /**
+   * Handles mode-based logging/attribute-setting after a validation failure.
+   *
+   * <p>Convenience overload that delegates to
+   * {@link #handleMode(String, ServletRequest, Modes, boolean, boolean, String, List)}.
+   *
+   * @param value  the parameter value
+   * @param req    the servlet request
+   * @param action the current mode (BLOCK, DETECT, or DISABLED)
+   * @param log    {@code true} to enable logging
+   */
+  void handleMode(String value, ServletRequest req, Modes action, boolean log) {
+    handleMode(value, req, action, log, false, null, null);
   }
 
-  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks) {
-    if (!err || Modes.DISABLED == action) {
+  /**
+   * Handles mode-based logging/attribute-setting with error points.
+   *
+   * @param value       the parameter value
+   * @param req         the servlet request
+   * @param action      the current mode
+   * @param log         {@code true} to enable logging
+   * @param errorPoints character-level error positions, or {@code null}
+   */
+  void handleMode(String value, ServletRequest req, Modes action, boolean log, List<Point> errorPoints) {
+    handleMode(value, req, action, log, false, null, errorPoints);
+  }
+
+  /**
+   * Handles mode-based logging/attribute-setting with related error message.
+   *
+   * @param value         the parameter value
+   * @param req           the servlet request
+   * @param action        the current mode
+   * @param log           {@code true} to enable logging
+   * @param doAllBlocks   {@code true} to evaluate all blocks
+   * @param relatedErrMsg related-field validation error message, or {@code null}
+   * @return {@code true} if the mode is BLOCK and the request should be blocked
+   */
+  boolean handleMode(String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks, String relatedErrMsg) {
+    return handleMode(value, req, action, log, doAllBlocks, relatedErrMsg, null);
+  }
+
+  /**
+   * Core mode handler that logs validation failures and/or sets request
+   * attributes depending on the configured {@link Modes mode}.
+   *
+   * <p>In BLOCK mode the failure is logged as an error and the method returns
+   * {@code true} to signal that the request should be rejected. In DETECT mode
+   * the failure is logged as a warning and the method returns {@code false}.
+   *
+   * @param value         the parameter value
+   * @param req           the servlet request
+   * @param action        the current mode
+   * @param log           {@code true} to enable logging
+   * @param doAllBlocks   {@code true} to evaluate all blocks
+   * @param relatedErrMsg related-field validation error message, or {@code null}
+   * @param errorPoints   character-level error positions, or {@code null}
+   * @return {@code true} if the mode is BLOCK and the request should be blocked
+   */
+  boolean handleMode(String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks, String relatedErrMsg, List<Point> errorPoints) {
+    if (Modes.DISABLED == action) {
       return false;
     }
+    Sanwaf.SanwafConfig cfg = (shield != null) ? shield.sanwaf.config : null;
     if (Modes.BLOCK == mode) {
-      if (logger != null && log && !doAllBlocks && (shield == null || shield.sanwaf.onErrorLogParmErrors)) {
-        logger.error(toJson(value, mode, req, true));
+      boolean doLog = logger != null && log && !doAllBlocks && (cfg == null || cfg.onErrorLogParmErrors) && logger.isErrorEnabled();
+      boolean doAttr = req != null && (cfg == null || cfg.onErrorAddParmErrors);
+      if (doLog || doAttr) {
+        String json = JsonFormatter.toJson(this, value, mode, req, true, relatedErrMsg, errorPoints);
+        if (doLog) {
+          logger.error(json);
+        }
+        if (doAttr) {
+          JsonFormatter.appendAttribute(Sanwaf.ATT_LOG_ERROR, json, req);
+        }
       }
-      if ((shield == null || shield.sanwaf.onErrorAddParmErrors)) {
-        appendAttribute(Sanwaf.ATT_LOG_ERROR, toJson(value, mode, req, true), req);
-      }
-      return err;
+      return true;
     } else {
-      // DO DETECTS
-      if (logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections)) {
-        logger.warn(toJson(value, mode, req, true));
-      }
-      if ((shield == null || shield.sanwaf.onErrorAddParmDetections)) {
-        appendAttribute(Sanwaf.ATT_LOG_DETECT, toJson(value, mode, req, true), req);
+      // DETECTS
+      boolean doLog = logger != null && log && (cfg == null || cfg.onErrorLogParmDetections) && logger.isWarnEnabled();
+      boolean doAttr = req != null && (cfg == null || cfg.onErrorAddParmDetections);
+      if (doLog || doAttr) {
+        String json = JsonFormatter.toJson(this, value, mode, req, true, relatedErrMsg, errorPoints);
+        if (doLog) {
+          logger.warn(json);
+        }
+        if (doAttr) {
+          JsonFormatter.appendAttribute(Sanwaf.ATT_LOG_DETECT, json, req);
+        }
       }
     }
     return false;
   }
 
-  static boolean handleStrictError(String value, ServletRequest req, com.sanwaf.log.Logger logger, boolean log) {
-    ItemStrict item = new ItemStrict(value);
-    if (log) {
-      logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
-    }
-    appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true), req);
-    return true;
-  }
-
-  static void appendAttribute(String att, String value, ServletRequest req) {
-    if (req == null) {
-      return;
-    }
-    String old = (String) req.getAttribute(att);
-    if (old == null || old.length() < 2) {
-      old = "";
-    } else {
-      if (old.contains(value)) {
-        return;
-      }
-      old = old.substring(1, old.length() - 1) + ",";
-    }
-    req.setAttribute(att, "[" + old + value + "]");
-  }
-
-  boolean returnBasedOnDoAllBlocks(boolean b, boolean doAllBlocks) {
-    if (doAllBlocks) {
-      return false;
-    }
-    return b;
-  }
-
-  // Item Relations code
+  /**
+   * Validates related-field constraints for this item.
+   *
+   * @param value the parameter value
+   * @param req   the servlet request
+   * @param meta  metadata context for the validation
+   * @return an error message if validation fails, or {@code null} if valid
+   */
   String isRelateValid(String value, ServletRequest req, Metadata meta) {
-    if (related == null || related.length() == 0) {
-      return null;
-    }
-    // check if simple equals condition
-    if (related.endsWith(":=")) {
-      return isRelatedEqual(value, req, meta);
-    }
-
-    List<String> andBlocks = parseBlocks(related, 0, "AND", ")&&(", "(", ")");
-    List<String> andOrBlocks = parseOrBlocksFromAndBlocks(andBlocks);
-    List<Boolean> orRequired = new ArrayList<>();
-    List<Boolean> andRequired = new ArrayList<>();
-    setAndOrConditions(value, req, andOrBlocks, orRequired, andRequired);
-
-    int andTrueCount = 0;
-    for (boolean and : andRequired) {
-      if (and) {
-        andTrueCount++;
-      }
-    }
-    boolean orFoundTrue = false;
-    for (boolean or : orRequired) {
-      if (or) {
-        orFoundTrue = true;
-        break;
-      }
-    }
-    String err = null;
-    if (andTrueCount == andRequired.size() && orFoundTrue && value.length() == 0) {
-      // TODO: add better message
-      err = " - Invalid relationship detected";
-    }
-    return err;
+    return RelationValidator.validate(relatedBlocks, related, value, req, meta);
   }
 
-  private void setAndOrConditions(String value, ServletRequest req, List<String> andOrBlocks, List<Boolean> orRequired,
-      List<Boolean> andRequired) {
-    boolean nextIsAnd = false;
-    boolean skipIteration = false;
-    for (int i = 0; i < andOrBlocks.size(); i++) {
-      if (skipIteration) {
-        skipIteration = false;
-        continue;
-      }
-      if (isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req)) {
-        setAndOrCondition(orRequired, andRequired, nextIsAnd, true);
-      } else {
-        setAndOrCondition(orRequired, andRequired, nextIsAnd, false);
-      }
-      nextIsAnd = false;
-      if (andOrBlocks.size() > i + 1) {
-        if (andOrBlocks.get(i + 1).equals("AND")) {
-          nextIsAnd = true;
-        }
-        skipIteration = true;
-      }
-    }
+  /**
+   * Returns the default error message for this item type.
+   *
+   * <p>Subclasses typically override this to return a type-specific message
+   * from the shield's error-message map.
+   *
+   * @return the default error message string
+   */
+  String getDefaultErrorMessage() {
+    return "Validation Error";
   }
 
-  private void setAndOrCondition(List<Boolean> orRequired, List<Boolean> andRequired, boolean nextIsAnd,
-      boolean value) {
-    if (nextIsAnd) {
-      andRequired.add(value);
-    } else {
-      orRequired.add(value);
-    }
-  }
-
-  private List<String> parseOrBlocksFromAndBlocks(List<String> andBlocks) {
-    List<String> andOrBlocks = new ArrayList<>();
-    List<String> blocks;
-    for (int i = 0; i < andBlocks.size(); i++) {
-      blocks = parseBlocks(andBlocks.get(i), 0, "OR", ")||(", "(", ")");
-      for (int j = 0; j < blocks.size(); j++) {
-        if (blocks.get(j).equals("||")) {
-          blocks.set(j, "OR");
-        } else if (blocks.get(j).endsWith(")||")) {
-          String block = blocks.get(j);
-          blocks.set(j, block.substring(1, block.length() - 3));
-          blocks.add(j + 1, "OR");
-        }
-      }
-      andOrBlocks.addAll(blocks);
-    }
-    return andOrBlocks;
-  }
-
-  private boolean isRelatedBlockMakingChildRequired(String block, String value, ServletRequest req) {
-    String[] tagKeyValuePair = block.split(":");
-    String parentValue = req.getParameter(tagKeyValuePair[0]);
-
-    int parentLen = 0;
-    if (parentValue != null) {
-      parentLen = parentValue.length();
-    }
-
-    if (tagKeyValuePair.length > 1) {
-      String[] ors = tagKeyValuePair[1].split("\\|\\|");
-      for (String or : ors) {
-        if (or.equals(parentValue)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    return parentLen > 0 && value.length() == 0;
-  }
-
-  private String isRelatedEqual(String value, ServletRequest req, Metadata meta) {
-    String[] tagKeyValuePair = related.split(":");
-    String parentValue = req.getParameter(tagKeyValuePair[0]);
-    if (value.equals(parentValue)) {
-      return null;
-    }
-    Item parentItem = meta.items.get(tagKeyValuePair[0]);
-    return parentItem == null ? null : " - does not match \"" + parentItem.display + "\"";
-  }
-
-  private List<String> parseBlocks(String s, int start, String andOr, String match, String reverseMatch,
-      String forwardMatch) {
-    List<String> blocks = new ArrayList<>();
-    int lastPos = start;
-    while (true) {
-      int pos = s.indexOf(match, lastPos);
-      if (pos > 0) {
-        start = s.lastIndexOf(reverseMatch, pos);
-        if (start != lastPos) {
-          blocks.add(s.substring(lastPos, start));
-        }
-        blocks.add(s.substring(start + reverseMatch.length(), pos));
-        blocks.add(andOr);
-        int end = s.indexOf(forwardMatch, pos + match.length());
-        blocks.add(s.substring(pos + match.length(), end));
-        lastPos = end + forwardMatch.length();
-      } else {
-        if (lastPos + 1 < s.length()) {
-          blocks.add(s.substring(lastPos, s.length()));
-        }
-        break;
-      }
-    }
-    return blocks;
-  }
-
-//log code
+  /**
+   * Returns type-specific properties for JSON serialization.
+   *
+   * <p>The default implementation returns {@code null}; subclasses override
+   * to provide additional detail (e.g. regex pattern, allowed characters).
+   *
+   * @return a properties string, or {@code null}
+   */
   String getProperties() {
     return null;
   }
 
+  /**
+   * Returns a JSON representation of this item.
+   *
+   * @return JSON string describing this item's configuration
+   */
   public String toString() {
-    return toJson(null, null, null, true);
-  }
-
-  public String toJson(String value, Modes thisMode, ServletRequest req, boolean verbose) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("{");
-
-    if (req != null) {
-      HttpServletRequest hreq = (HttpServletRequest) req;
-      sb.append("\"transid\":\"").append(hreq.getAttribute(Metadata.jsonEncode(Sanwaf.ATT_TRANS_ID))).append("\"");
-      sb.append(",\"ip\":\"").append(hreq.getRemoteAddr()).append("\"");
-      sb.append(",\"referer\":\"").append(Metadata.jsonEncode(hreq.getHeader("referer"))).append("\",");
-    }
-
-    if (shield != null && verbose) {
-      sb.append("\"shield\":{\"name\":\"").append(shield.name).append("\"");
-      sb.append(",\"mode\":\"").append(shield.mode).append("\"");
-      sb.append(",\"appversion\":\"").append(Sanwaf.securedAppVersion).append("\"");
-      sb.append("},");
-    }
-
-    sb.append("\"item\":{\"name\":\"").append(Metadata.jsonEncode(name)).append("\"");
-    sb.append(",\"display\":\"").append(Metadata.jsonEncode(display)).append("\"");
-    sb.append(",\"mode\":\"").append(mode).append("\"");
-    if (thisMode != null) {
-      sb.append(",\"action\":\"").append(thisMode).append("\"");
-    } else {
-      sb.append(",\"action\":\"").append("").append("\"");
-    }
-    sb.append(",\"type\":\"").append(getType()).append("\"");
-
-    if (value != null && value.length() > 0) {
-      sb.append(",\"value\":\"");
-      String mValue = value;
-      if (maskError.length() > 0) {
-        mValue = maskError;
-      }
-      sb.append(Metadata.jsonEncode(mValue.length() < 100 ? mValue : (mValue.substring(0, 100) + "..."))).append("\"");
-    } else {
-      sb.append(",\"value\":\"").append(value).append("\"");
-    }
-
-    if (shield != null) {
-      String errMsg = getErrorMessage(req, shield);
-      if (required && value != null && value.length() == 0) {
-        errMsg += getErrorMessage(req, shield, ItemFactory.XML_REQUIRED_MSG);
-      }
-      if (value != null && (value.length() < min || value.length() > max)) {
-        errMsg += modifyInvalidLengthErrorMsg(getErrorMessage(req, shield, ItemFactory.XML_INVALID_LENGTH_MSG), min,
-            max);
-      }
-
-      if (relatedErrMsg != null && relatedErrMsg.length() > 0) {
-        errMsg += relatedErrMsg;
-      }
-      sb.append(",\"error\":\"").append(Metadata.jsonEncode(errMsg)).append("\"");
-    }
-
-    if (value != null && shield != null && verbose) {
-      List<Point> errorPoints = new ArrayList<>();
-      errorPoints.addAll(getErrorPoints(shield, value));
-      sb.append(",\"samplePoints\":[");
-      boolean doneFirst = false;
-      for (Point p : errorPoints) {
-        if (doneFirst) {
-          sb.append(",");
-        } else {
-          doneFirst = true;
-        }
-        sb.append("{\"start\":\"").append(p.start).append("\"");
-        sb.append(",\"end\":\"").append(p.end).append("\"}");
-      }
-      sb.append("]");
-    }
-
-    if (shield != null && verbose) {
-      sb.append(",\"properties\": {");
-      sb.append("\"maxlength\":\"").append(max).append("\"");
-      sb.append(",\"minlength\":\"").append(min).append("\"");
-      sb.append(",\"msg\":\"").append(Metadata.jsonEncode(msg)).append("\"");
-      sb.append(",\"uri\":\"").append(Metadata.jsonEncode(String.valueOf(uri))).append("\"");
-      sb.append(",\"req\":\"").append(required).append("\"");
-      sb.append(",\"maxvalue\":\"").append(maxValue).append("\"");
-      sb.append(",\"minvalue\":\"").append(minValue).append("\"");
-      sb.append(",\"maskerr\":\"").append(Metadata.jsonEncode(maskError)).append("\"");
-      sb.append(",\"related\":\"").append(Metadata.jsonEncode(related)).append("\"");
-      String s = getProperties();
-      if (s != null && s.length() > 0) {
-        sb.append(",").append(s);
-      }
-      sb.append("}}");
-    }
-    sb.append("}");
-    return sb.toString();
-  }
-
-  String getErrorMessage(final ServletRequest req, final Shield shield) {
-    return getErrorMessage(req, shield, null);
-  }
-
-  String getErrorMessage(final ServletRequest req, final Shield shield, String errorMsgKey) {
-    String err = null;
-    if (msg != null && msg.length() > 0) {
-      err = msg;
-    }
-    if (err == null) {
-
-      // NEED TO check the rule error msg first, then, shield, then global
-
-      if (errorMsgKey == null) {
-        errorMsgKey = getType().toString();
-      }
-      err = shield.errorMessages.get(errorMsgKey);
-      if (err == null || err.length() == 0) {
-        err = shield.sanwaf.globalErrorMessages.get(errorMsgKey);
-      }
-    }
-    return modifyErrorMsg(req, err);
-  }
-
-  String modifyInvalidLengthErrorMsg(String errorMsg, int min, int max) {
-    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
-    if (i >= 0) {
-      errorMsg = errorMsg.substring(0, i) + min
-          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
-    }
-    i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER2);
-    if (i >= 0) {
-      errorMsg = errorMsg.substring(0, i) + max
-          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
-    }
-    return errorMsg;
+    return JsonFormatter.toJson(this, null, null, null, true, null, null);
   }
 }

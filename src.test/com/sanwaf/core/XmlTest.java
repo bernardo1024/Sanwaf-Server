@@ -1,76 +1,48 @@
 package com.sanwaf.core;
 
-import org.junit.Test;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.MethodOrderer;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class XmlTest {
   @Test
-  public void TestXmlInit() {
-    boolean error;
-    try {
-      URL url = null;
-      new Xml(url);
-      error = false;
-    } catch (IOException ioe) {
-      error = true;
-    }
-    assertTrue(error);
+  void TestXmlInit() {
+    assertThrows(IOException.class, () -> new Xml((URL) null));
   }
 
   @Test
-  public void TestXmlNullUrl() {
-    boolean error;
-    try {
-      URL url = new URL("lakdfsj");
-      new Xml(url);
-      error = false;
-    } catch (IOException ioe) {
-      error = true;
-    }
-    assertTrue(error);
+  void TestXmlNullUrl() {
+    // noinspection SpellCheckingInspection
+    assertThrows(IOException.class, () -> new Xml(new URL("lakdfsj")));
   }
 
   @Test
-  public void TestXmlToString() {
-    Xml xml;
-    try {
-      xml = new Xml(Sanwaf.class.getResource("/sanwaf.xml"));
-    } catch (IOException e) {
-      fail("SanWaf Failed to load properties file");
-      return;
-    }
-    assertTrue(xml.toString().length() > 0 && xml.toString().contains("<sanwaf>"));
+  public void TestXmlToString() throws IOException {
+    Xml xml = new Xml(Sanwaf.class.getResource("/sanwaf.xml"));
+    assertTrue(xml.toString().contains("<sanwaf>"));
   }
 
   @Test
-  public void testXmlPassingNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
-    Xml xml = new Xml("");
-    String s = xml.get(null, "test");
-    assertTrue(s.equals(""));
+  public void testXmlPassingNull() {
+    assertEquals("", new Xml("").get(null, "test"));
   }
 
   @Test
-  public void testXmlInvalidEndTag() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
-    Xml xml = new Xml("<sanwaf><foo>foo<foo></sanwaf>");
-    String s = xml.get("<sanwaf><foo>foo<foo></sanwaf>", "foo");
-    assertTrue(s.equals(""));
+  public void testXmlInvalidEndTag() {
+    String data = "<sanwaf><foo>foo<foo></sanwaf>";
+    Xml xml = new Xml(data);
 
-    assertTrue(xml.toString().equals("<sanwaf><foo>foo<foo></sanwaf>"));
-
-    s = xml.get("<sanwaf></foo>foo<foo></sanwaf>", "foo");
-    assertTrue(s.equals(""));
-
-    String[] sa = xml.getAll("<sanwaf></foo>foo<foo></sanwaf>", "foo");
-    assertTrue(sa.length == 0);
+    assertEquals("", xml.get(data, "foo"));
+    assertEquals(data, xml.toString());
+    assertEquals("", xml.get("<sanwaf></foo>foo<foo></sanwaf>", "foo"));
+    assertEquals(0, new Xml("<sanwaf></foo>foo<foo></sanwaf>").getAll("foo").length);
   }
 }
-

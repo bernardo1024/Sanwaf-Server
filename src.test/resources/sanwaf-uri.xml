@@ -1,128 +1,182 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
+<!--suppress ALL -->
 <sanwaf>
-	<global-settings>
-		<enabled>true</enabled>
-		<verbose>false</verbose>
-		<app.version>=${Your_Application_Release_Version}</app.version>	
-		<errorHandling>
-			<provideTrackId>true</provideTrackId>
-			<provideErrors>true</provideErrors>
-		</errorHandling>
-		<errorMessages>
-			<numeric><![CDATA[  Numeric error msg]]></numeric>
-			<numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
-			<alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
-			<alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
-			<char><![CDATA[  Character error msg]]></char>
-			<string><![CDATA[  String error msg]]></string>
-			<regex><![CDATA[  Regex error msg]]></regex>
-			<java><![CDATA[  Java error msg]]></java>
-			<constant><![CDATA[  Constant error msg {0}]]></constant>
-      <format><![CDATA[  Failed to conform to format: {0}]]></format>
-      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
-      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
-      <required><![CDATA[  <br/>Is a Required field]]></required>
-		</errorMessages>
-	</global-settings>
-	
-	<shields>
-		<shield>
-      <shield-settings>
-				<name>XSS</name>
-				<minLen>0</minLen>
-				<maxLen>-1</maxLen>
-      </shield-settings>
-			<regex-config>
-				<minLen>0</minLen>
-				<forceStringPatterns>
-					<enabled>false</enabled>
-					<exclusions>
-					</exclusions>
-				</forceStringPatterns>
-				<stringPatterns>
-					<item>
-						<key>xss-form-elements</key>
-						<value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
-					</item>
-				</stringPatterns>
-				<customPatterns>
-					<item>
-						<key>telephone</key>
-						<value><![CDATA[(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})]]></value>
-					</item>
-				</customPatterns>
-			</regex-config>
-			<metadata>
-				<enabled>
-					<parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</enabled>
-				<caseSensitive>
-					<parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</caseSensitive>
-				<secured>
-					<parameters>
-						<item><name>Numeric</name><type>n</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-						<item><name>NumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-						<item><name>Alphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-						<item><name>AlphanumericAndMore</name><type>a{?\s:}</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-            <item><name>String</name><type>s</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-            <item><name>Open</name><type>s</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-						<item><name>Char</name><type>c</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-						<item><name>Regex</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri>/foo/bar</uri></item>
-						<item><name>Constant</name><type>k{FOO,BAR,FAR}</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-						<item><name>Java</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
-						<item><name>MultipleUris</name><type>n</type><max></max><min></min><msg></msg><uri>/foo/bar:::/far/nar:::/tar/mar</uri></item>
-					</parameters>
-					<headers>
-						<item><name>aHeaderNumber</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
-					</headers>
-					<cookies>
-						<item><name>aCookieNumber</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
-					</cookies>
-				</secured>
-			</metadata>
-		</shield>
-		
-		<shield>
-      <shield-settings>
-				<name>ParmLength</name>
-				<minLen>-1</minLen>
-				<maxLen>-1</maxLen>
-      </shield-settings>
-			<regex-config>
-				<minLen>-1</minLen>
-				<forceStringPatterns>
-					<enabled>false</enabled>
-				</forceStringPatterns>
-				<stringPatterns></stringPatterns>
-				<customPatterns></customPatterns>
-			</regex-config>
-			<metadata>
-				<enabled>
-					<parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</enabled>
-				<caseSensitive>
-					<parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</caseSensitive>
-				<secured>
-					<parameters>
-						<item><name>MaxMinLen</name><type>s</type><max>-1</max><min>-1</min><msg></msg><uri></uri></item>
-					</parameters>
-					<headers></headers>
-					<cookies></cookies>
-				</secured>
-			</metadata>
-		</shield>
-	
-	</shields>
+    <global-settings>
+        <enabled>true</enabled>
+        <verbose>false</verbose>
+        <app.version>=${Your_Application_Release_Version}</app.version>
+        <errorHandling>
+            <provideTrackId>true</provideTrackId>
+            <provideErrors>true</provideErrors>
+        </errorHandling>
+        <errorMessages>
+            <numeric><![CDATA[  Numeric error msg]]></numeric>
+            <numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
+            <alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
+            <alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
+            <char><![CDATA[  Character error msg]]></char>
+            <string><![CDATA[  String error msg]]></string>
+            <regex><![CDATA[  Regex error msg]]></regex>
+            <java><![CDATA[  Java error msg]]></java>
+            <constant><![CDATA[  Constant error msg {0}]]></constant>
+            <format><![CDATA[  Failed to conform to format: {0}]]></format>
+            <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
+            <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+            <required><![CDATA[  <br/>Is a Required field]]></required>
+        </errorMessages>
+    </global-settings>
+
+    <shields>
+        <shield>
+            <shield-settings>
+                <name>XSS</name>
+                <minLen>0</minLen>
+                <maxLen>-1</maxLen>
+            </shield-settings>
+            <regex-config>
+                <minLen>0</minLen>
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                    <exclusions>
+                    </exclusions>
+                </forceStringPatterns>
+                <stringPatterns>
+                    <item>
+                        <key>xss-form-elements</key>
+                        <value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
+                    </item>
+                </stringPatterns>
+                <customPatterns>
+                    <item>
+                        <key>telephone</key>
+                        <value><![CDATA[(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})]]></value>
+                    </item>
+                </customPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </enabled>
+                <caseSensitive>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>Numeric</name>
+                            <type>n</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>NumericDelimited</name>
+                            <type>n{,}</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>Alphanumeric</name>
+                            <type>a</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>AlphanumericAndMore</name>
+                            <type>a{?\s:}</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>String</name>
+                            <type>s</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>Open</name>
+                            <type>s</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>Char</name>
+                            <type>c</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>Regex</name>
+                            <type>r{telephone}</type>
+                            <max>12</max>
+                            <min>12</min>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>Constant</name>
+                            <type>k{FOO,BAR,FAR}</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>Java</name>
+                            <type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type>
+                            <uri>/foo/bar</uri>
+                        </item>
+                        <item>
+                            <name>MultipleUris</name>
+                            <type>n</type>
+                            <uri>/foo/bar:::/far/nar:::/tar/mar</uri>
+                        </item>
+                    </parameters>
+                    <headers>
+                        <item>
+                            <name>aHeaderNumber</name>
+                            <type>n</type>
+                        </item>
+                    </headers>
+                    <cookies>
+                        <item>
+                            <name>aCookieNumber</name>
+                            <type>n</type>
+                        </item>
+                    </cookies>
+                </secured>
+            </metadata>
+        </shield>
+
+        <shield>
+            <shield-settings>
+                <name>ParmLength</name>
+                <minLen>-1</minLen>
+                <maxLen>-1</maxLen>
+            </shield-settings>
+            <regex-config>
+                <minLen>-1</minLen>
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                </forceStringPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </enabled>
+                <caseSensitive>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>MaxMinLen</name>
+                            <type>s</type>
+                            <max>-1</max>
+                            <min>-1</min>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+
+    </shields>
 </sanwaf>
 

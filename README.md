@@ -1,53 +1,62 @@
 # Sanwaf Framework Overview
- Sanwaf is a declarative data validation framework that secures your UI & Server without writing any code
 
-- [Sanwaf-UI](https://github.com/bernardo1024/Sanwaf-UI) is a Sanitation Web Application Firewall that runs on the Browser
-        
+Sanwaf is a declarative data validation framework that secures your UI & Server without writing any code
+
+- [Sanwaf-UI](https://github.com/bernardo1024/Sanwaf-UI) is a Sanitation Web Application Firewall that runs on the
+  Browser
+
        - Uses a declarative mechanism to add validation to HTML pages
        - Add validation to a UI elements by including custom Sanwaf-UI Attributes
        - Fully configurable look and feel
        - No custom code is required to perform validation on web pages
 
--  [Sanwaf-Server](https://github.com/bernardo1024/Sanwaf-Server) is a Sanitation Web Application Firewall that runs on the Server
-        
-       - Sanwaf-Server secures parameters, cookies, headers and endpoints prior to entering your application code
-       - Sanwaf-Server is configured with an XML file
-       - Can be used independently of Sanwaf-UI
-       - No custom code is required to perform validation on the server
+- [Sanwaf-Server](https://github.com/bernardo1024/Sanwaf-Server) is a Sanitation Web Application Firewall that runs on
+  the Server
 
-- [Sanwaf-UI-2-Server](https://github.com/bernardo1024/Sanwaf-UI-2-Server) Utility converts the Sanwaf-UI declarative validation into the server XML format
-        
+      - Sanwaf-Server secures parameters, cookies, headers and endpoints prior to entering your application code
+      - Sanwaf-Server is configured with an XML file
+      - Can be used independently of Sanwaf-UI
+      - No custom code is required to perform validation on the server
+
+- [Sanwaf-UI-2-Server](https://github.com/bernardo1024/Sanwaf-UI-2-Server) Utility converts the Sanwaf-UI declarative
+  validation into the server XML format
+
        - Provides for effortless Sanwaf-Server configuration using Sanwaf-UI attributes
        - Converts the Sanwaf-UI declarative Attributes into a Sanwaf-Server consumable form
        - Automate Sanwaf-Server configuration using this utility
 
-- [Sanwaf-Sample](https://github.com/bernardo1024/Sanwaf-Sample) project is a sample implementation of Sanwaf-UI and Sanwaf Server
+- [Sanwaf-Sample](https://github.com/bernardo1024/Sanwaf-Sample) project is a sample implementation of Sanwaf-UI and
+  Sanwaf Server
 
        - End-2-end sample of using Sanwaf-UI & Sanwaf-Server
        - Dynamically configure and test Sanwaf-UI 
        - Dynamically disable Browser Validation and run against Server (uses embedded Jetty)
 
 # Sanwaf-Server
-Sanwaf, short for Sanitation Web Application Firewall, is a filter/interceptor that is added to applications to increase the security posture.  It is a new security control meant to augment traditional WAFs on occasions where WAF rules need to be loosened, or when you allowlist parameters, headers, cookies, or URIs. Sanwaf can also be configured as a reverse proxy for an isolated control layer.
 
-Web Severs receive requests with Headers, Cookies, Parameters being sent from an untrusted client to your server.  A hacker can try to send malicious payloads to compromise your applications.  Sanwaf can be configured to detect attack payloads and will prevent submitted data from impacting your system.  
-	
+Sanwaf, short for Sanitation Web Application Firewall, is a filter/interceptor that is added to applications to increase
+the security posture. It is a new security control meant to augment traditional WAFs on occasions where WAF rules need
+to be loosened, or when you allowlist parameters, headers, cookies, or URIs. Sanwaf can also be configured as a reverse
+proxy for an isolated control layer.
+
+Web Severs receive requests with Headers, Cookies, Parameters being sent from an untrusted client to your server. A
+hacker can try to send malicious payloads to compromise your applications. Sanwaf can be configured to detect attack
+payloads and will prevent submitted data from impacting your system.
+
 Sanwaf sanitizes, or pre-validates your data prior to application code execution making your applications more secure.
 
 SanWaf is a dependency-free code so it is very easy to add to your Java application
 
-
-
 ## Compatibility
+
 The following section details the compatibility of SanWaf
 
 **JAVA**
-	
-	- tested with JDK 1.6, 1.7, 1.8, 1.11, 1.17+
 
+	- tested with JDK 8, 11, 17+
 
 **Javax / Jakarta Version Considerations**
-	
+
 **Sanwaf 0.1.***
 
 	- uses javax.servlet-api
@@ -59,24 +68,24 @@ The following section details the compatibility of SanWaf
 
 **Tests require JDK 17**
 
-To compile for JDK 11, do not run the tests: 
+To compile for JDK 11, do not run the tests:
+
 - open POM and set <compiler.target> to 11
-- open command prompt: 
+- open command prompt:
 
-	mvn install -Dmaven.test.skip=true
+  mvn install -Dmaven.test.skip=true
 
-Sanwaf only has 1 dependency (javax | jakarta), so will most likely work with any version of java. 
-
+Sanwaf only has 1 dependency (javax | jakarta), so will most likely work with any version of java.
 
 ## Building Sanwaf
+
 in the Sanwaf Project type:
-  
+
 	mvn clean package install
 
-
-
 ## Implementation
-Create an authentication filter to validate all the incoming request objects. 
+
+Create an authentication filter to validate all the incoming request objects.
 
 	//instanciate Sanwaf - you should create a logger that implements the com.sanwaf.log.Logger Interface
 	public static Sanwaf sanwaf = new Sanwaf();
@@ -94,9 +103,9 @@ Create an authentication filter to validate all the incoming request objects.
 
 	  //isThreat methods
 	  public boolean isThreat(String value)
-	  public boolean isThreat(String value, String shieldName)
-	  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req)
-	  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml)
+	  public static boolean isThreat(String value, String sXml)
+	  public boolean isThreat(String value, String shieldName, ServletRequest req)
+	  public boolean isThreat(String value, String shieldName, ServletRequest req, String xml)
 
 	  //For example, to test a parameter if it is safe using the configured XML...
 	  if(sanwaf.isThreat(request.getParameter("parameter_name")){
@@ -107,21 +116,23 @@ Create an authentication filter to validate all the incoming request objects.
 	  if(sanwaf.isThreat(request.getParameter("parameter_name"), "XSS", true, request, "<item><name>parameter_name</name><type>s</type><max>20</max><min>0</min><msg>some custom error message</msg><uri>/some/valid/uri</uri></item>");){
 	    //handle error condition
 	  }
-  
+
 When/If an error is detected, you pull the error info with these methods:
 
-	String sanwafTrackId = sanwaf.getTrackId(request);
+	String sanwafTrackId = Sanwaf.getTrackingId(request);
 	String parmsInErrorJson = sanwaf.getErrors(request); //for BLOCK mode
-	String parmsInDetectJson = sanwawf.getDetects(request); //for DETECT & DETECT_APP modes
-	
+	String parmsInDetectJson = Sanwaf.getDetects(request); //for DETECT & DETECT_APP modes
+
 To use Sanwaf to read allowlisted headers/cookies/parameters:
 
-	String value = sanwaf.getAllowListedValue("[Header Cookie Parameter]", Sanwaf.AllowListType.[HEADER COOKIE PARAMETER], request);
+	String value = sanwaf.getAllowListedValue("name", Sanwaf.AllowListType.[HEADER COOKIE PARAMETER], httpRequest);
 
 ## Sanwaf Quick Guide
+
 Please see the sanwaf-tempalte.xml file for full details of using sanwaf.
 
 ### Sanwaf Structure
+
 	<sanwaf>
 		[global settings]
 		<shields>
@@ -153,11 +164,12 @@ Please see the sanwaf-tempalte.xml file for full details of using sanwaf.
 	[regex settings]	- the shields regex settings
 	[metadata settings]	- the shields metadata settings (discussed in more detail below)
 
-
 ### Custom Datatypes
-In order to improve the performance of scanning submitted data as fast as possible, custom data types were built and are designed to fail fast. 
+
+In order to improve the performance of scanning submitted data as fast as possible, custom data types were built and are
+designed to fail fast.
 Use these data types whenever possible (instead of simply assigning all to the string data type that uses regex's).
-  
+
 	Notation	Description 
 		c	- Character
 		n 	- Number
@@ -175,13 +187,17 @@ Use these data types whenever possible (instead of simply assigning all to the s
 		f{} 	- The Format data type sets the element to use a specified Format 
 		d{}	- Same as format except, the specific format to apply to the element is based on another elements value
 
-**See [sanwaf-ui-attribute-builder.html](https://bernardo1024.github.io/sanwaf-ui-attribute-builder.html) to help build Sanwaf Attributes**
+**See [sanwaf-ui-attribute-builder.html](https://bernardo1024.github.io/sanwaf-ui-attribute-builder.html) to help build
+Sanwaf Attributes**
 
 ### Configuration
-You configure how submitted data (parameters/headers/cookies) get processed in the **shields/shield/metadata** section of this XML file.  
 
-Note the **enabled** and **caseSensitive** sections that control if the specific section will be enabled and how they will handle the caseSensitivy of parameters/headers/cookies.
- 
+You configure how submitted data (parameters/headers/cookies) get processed in the **shields/shield/metadata** section
+of this XML file.
+
+Note the **enabled** and **caseSensitive** sections that control if the specific section will be enabled and how they
+will handle the caseSensitivy of parameters/headers/cookies.
+
 Also note the **secured section** contains the following groups: endpoints, parameters, headers, cookies.
 
 	<metadata>
@@ -222,8 +238,9 @@ Also note the **secured section** contains the following groups: endpoints, para
 	<parameters></parameters>	- list of parameters to secure
 	<headers></headers>		- list of headers to secure
 	<cookies></cookies>		- list of cookies to secure
-	
+
 #### Endpoint Structure
+
 	- Endpoints are groupings of parameters so additional validation can occur, such as strict parameters values and simple to complex relationships
 	- <mode></mode> defines how the endpoint will be processed. valid modes are: BLOCK/DISABLED/DETECT/DETECT_ALL
 		where:
@@ -251,7 +268,6 @@ Also note the **secured section** contains the following groups: endpoints, para
 			</items>
 		</endpoint>
 	</endpoints>
-
 
 ### Item Format of the Secured Section
 
@@ -301,7 +317,6 @@ Also note the **secured section** contains the following groups: endpoints, para
 
 	<related></related>	- Used in endpoints only (see Sanwaf-ui project for details)
 				- Establishes a relationship that must be met between parameters
-	
 
 #### Examples
 
@@ -312,7 +327,8 @@ Also note the **secured section** contains the following groups: endpoints, para
 
 ### Custom Datatypes Guide
 
-**See [sanwaf-ui-attribute-builder.html](https://bernardo1024.github.io/sanwaf-ui-attribute-builder.html) to help build Sanwaf Attributes**
+**See [sanwaf-ui-attribute-builder.html](https://bernardo1024.github.io/sanwaf-ui-attribute-builder.html) to help build
+Sanwaf Attributes**
 
 	(Character)
 	c		DESCRIPTION:	Any single character
@@ -431,23 +447,22 @@ Also note the **secured section** contains the following groups: endpoints, para
 			FORMAT:		d{element:value1=format1;value2=format2;...}
 			EXAMPLE: 	d{country:USA=#####;Canada=A#A-#A#}, 55555 is valid if the element with id or name is equal to USA
 
-
 ## Sample code
 
-#### For the sample app, go to https://github.com/bernardo1024/SanwafSample
+#### For the sample app, go to https://github.com/bernardo1024/Sanwaf-Sample
 
-The following code is used for demonstration purposes.  Not all imports or code is provided.  
+The following code is used for demonstration purposes. Not all imports or code is provided.  
 Add Sanwaf as a dependency to your code:
 
 	<dependency>
 		<groupId>com.sanwaf</groupId>
 		<artifactId>sanwaf</artifactId>
-		<version>0.1.9</version>
+		<version>0.2.17</version>
 		<scope>compile</scope>
 	</dependency>
 
 Sample Filter Code:
-	
+
 	package com.sanwaf.sample;
 	
 	// import Sanwaf
@@ -461,57 +476,55 @@ Sample Filter Code:
 	
 	public class SampleAuthenticationFilter implements Filter {
 		// instantiate Sanwaf (if you dont specify an xml file, sanwaf.xml will be used if in your classpath)
-		static SanWaf sanwaf = new SanWaf(new SimpleLogger(), "/your-sanwaf-config-file.xml");
+		static Sanwaf sanwaf = new Sanwaf(new SimpleLogger(), "/your-sanwaf-config-file.xml");
 	
 		public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws SecurityException{
 			// call Sanwaf to check if requests are valid or not
 			if (sanwaf.isThreatDetected(req)) {
 				// Up to you how you want to handle this the error condition.
 				// Here we are throwing a SecurityException, passing the tracking ID and errors in json format  
-				throw new SecurityException(Sanwaf.getTrackId(request) + ", " + Sanwaf.getErrors(request));
+				throw new SecurityException(Sanwaf.getTrackingId((HttpServletRequest) req) + ", " + Sanwaf.getErrors((HttpServletRequest) req));
 			}
 			filterChain.doFilter(req, resp);
 		}
 	}
 
-
 ### Create a custom Logger
 
-You will need to create your own logger and pass it to Sanwaf's constructor otherwise the default logger will be used which is not performant.
+You will need to create your own logger and pass it to Sanwaf's constructor otherwise the default logger will be used
+which is not performant.
 
-Here is a simple example of creating a custom logger.  
+Here is a simple example of creating a custom logger.
 
 	//add the dependency to your pom
 	<dependency>
-		<groupId>log4j</groupId>
-		<artifactId>log4j</artifactId>
-		<version>1.2.17</version>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-api</artifactId>
+		<version>2.24.3</version>
 	</dependency>
 
 	//implement the code
-	import org.apache.log4j.Logger;
+	import org.apache.logging.log4j.LogManager;
+	import org.apache.logging.log4j.Logger;
 
-	public class TestLogger implements com.sanwaf.log.Logger {
-		static Logger log = Logger.getLogger(TestLogger.class);
+	public class Log4j2Logger implements com.sanwaf.log.Logger {
+		static Logger log = LogManager.getLogger(Log4j2Logger.class);
 
 		@Override
 		public void error(String msg) {
 			log.error(msg);
 		}
 		@Override
-		public void warn(String s) {
-			log.warm(java.util.logging.Level.WARNING, "Sanwaf-warn:\t{0}", s);
+		public void warn(String msg) {
+			log.warn(msg);
 		}
 		@Override
 		public void info(String msg) {
-			if(log.isInfoEnabled()) {
-				log.info(msg);
-			}
+			log.info(msg);
 		}
 	}
 
-The log4j.properties is not specified in this readme, so consult the documentation https://logging.apache.org/log4j/2.x/ 
-
+See the Log4j2 documentation for configuration details: https://logging.apache.org/log4j/2.x/
 
 ## License
 

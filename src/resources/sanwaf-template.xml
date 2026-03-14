@@ -3,257 +3,257 @@
 <!-- Sanwaf-Server - Sanitation Web Application Firewall, Configuration file -->
 
 <!-- 
-	OVERVIEW
-	********
-	Sanwaf - Sanitation Web Application Filter is a filter/intercepter added to application for increased protection.
+  OVERVIEW
+  ********
+  Sanwaf - Sanitation Web Application Filter is a filter/interceptor added to an application for increased protection.
 
-	Web Severs receive requests with Headers, Cookies, Parameters being sent from an untrusted client to your server.  
-	A hacker can try to use these submissions in an attack by attaching payloads to try to hack your server.
-	Sanwaf detects attack payloads and will prevent submitted data from impacting your system.
-	
-	Sanwaf works on the basis of sanitizing, or pre-validating data prior to application code execution.
-
-	IMPLEMENTATION
-	**************
-		Create an Filter or Intercepter to and call the Sanwaf.isThreatDetected() method to validate incoming requests.
-		For examples:
-	
-			public class SanwafFilter implements Filter {
-				static Sanwaf sanwaf = new Sanwaf();
-			
-				public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-					if (sanwaf.isThreatDetected( request )) {
-						// Up to you how you want to handle detected threats.  Typical patterns include:
-						// 		1. Throw Exception that will be caught by some global exception handler to display a proper error page
-						// 		2. Log the user out and redirect the user to a login page
-					}
-					filterChain.doFilter(request, response);
-				}
-			}
-	
-
-	ESCAPING STRINGS:
-	*****************
-	When using data that needs to be XML escaped, use the CDATA notation;
-				<![CDATA[__your_text_here__]]> 
-	
-	Please note the following limitations:
-			a. "<![CDATA[" must be first entry in the element with no spaces or other characters prior to it
-			b. "]]>" must be the last entry in the element
-
-		Example:
-			- GOOD: <element><![CDATA[__your_text_here__]]></element>
-
-			- BAD:  <element>      <![CDATA[__your_text_here__]]></element>
-
-
-	CUSTOM DATATYPES:
-	*****************
-	In order to improve the performance of scanning submitted data as fast as possible, custom data types were built and are designed to fail fast. 
-	Use these data types whenever possible (instead of simply assigning all to the string data type that uses regex's).
+  Web servers receive requests with headers, cookies, and parameters sent from an untrusted client to your server.
+  An attacker can try to use these submissions to attach payloads and compromise your server.
+  Sanwaf detects attack payloads and prevents submitted data from impacting your system.
   
-	SUMMARY: (see below for guide)
-	********
-		c		- Character
+  Sanwaf works on the basis of sanitizing, or pre-validating data prior to application code execution.
+
+  IMPLEMENTATION
+  **************
+    Create a Filter or Interceptor and call the Sanwaf.isThreatDetected() method to validate incoming requests.
+    For examples:
+  
+      public class SanwafFilter implements Filter {
+        static Sanwaf sanwaf = new Sanwaf();
+      
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+          if (sanwaf.isThreatDetected( request )) {
+            // Up to you how you want to handle detected threats.  Typical patterns include:
+            //     1. Throw Exception that will be caught by some global exception handler to display a proper error page
+            //     2. Log the user out and redirect the user to a login page
+          }
+          filterChain.doFilter(request, response);
+        }
+      }
+  
+
+  ESCAPING STRINGS:
+  *****************
+  When using data that needs to be XML escaped, use the CDATA notation;
+        <![CDATA[__your_text_here__]]> 
+  
+  Please note the following limitations:
+      a. "<![CDATA[" must be the first entry in the element with no spaces or other characters prior to it
+      b. "]]>" must be the last entry in the element
+
+    Example:
+      - GOOD: <element><![CDATA[__your_text_here__]]></element>
+
+      - BAD:  <element>      <![CDATA[__your_text_here__]]></element>
+
+
+  CUSTOM DATATYPES:
+  *****************
+  In order to improve the performance of scanning submitted data as fast as possible, custom data types were built and are designed to fail fast. 
+  Use these data types whenever possible (instead of simply assigning all to the string data type that uses regexes).
+  
+  SUMMARY: (see below for guide)
+  ********
+    c   - Character
     n   - Number
     n{} - Delimited list of Numbers
     i   - Integer
     i{} - Delimited list of Integers
-		a		- Alphanumeric
-		a{}	- Alphanumeric and stated additional characters
-    s   - String (uses regex's - most expensive - try to use sparingly)
+    a   - Alphanumeric
+    a{} - Alphanumeric and stated additional characters
+    s   - String (uses regexes - most expensive - try to use sparingly)
     o   - Open value. All strings allowed, only processes item attributes; no regex run against this type
-		k{}	- Must be equal to the of if the Constant values provided
+    k{} - Constant, must be equal to one of the values specified
     r{} - Custom regex expression (reusable per field regex capabilities)
     x{} - Inline regex expression specified for single parameter/header/cookie only
-		j{}	- Java Class.method - returns true/false for pass/fail
-		f{} - The Format data type sets the element to use a specified Format 
-		d{} - Same as format except, the specific format to apply to the element is based on another elements value
-		
-		See below for specifying max/min and parameter level error messages
+    j{} - Java Class.method - returns true/false for pass/fail
+    f{} - The Format data type sets the element to use a specified Format
+    d{} - Same as format except, the specific format to apply to the element is based on another element's value
+
+    See below for specifying max/min and parameter level error messages
 
 
-	CONFIGURATION:
-	**************
-	You configure how submitted data (endpoints/parameters/headers/cookies) get processed in the shields/shield/metadata/secured section of this XML file.
-	The secured section contains the following groups: endpoints, parameters, headers, cookies. 
-						
-		<secured>
-      <endpoints>
-        <endpoint>
-          <uri></uri>
-          <mode></mode>
-          <items>
-            <item><name></name><mode></mode><type></type><max></max><min></min><msg></msg></item>
-          </items>
-        </endpoint>
-      </endpoints>
-			<parameters>
-				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
-			</parameters>
-			<headers>
-				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
-			</headers>
-			<cookies>
-				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
-			</cookies>
-		</secured>
-		
-	Item Format:
-	***********
-		<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
-	where
-	
-		<name></name>	          - parameter/header/cookie name
-														- to specify many 'names' in one item tag by using the ':::' delimiter.  
-                            - for example:
-														  - <name>parameter1</name>
-														  - <name>parameter1:::parameter2:::parameter3</name>
-		<mode></mode>           - the mode of the items (detect, detect-all, disabled, block(default)
-		                          - the mode controls how the item will be processed
-		                          - use the detect & detect-all settings to log findings and not block requests
+  CONFIGURATION:
+  **************
+  You configure how submitted data (endpoints/parameters/headers/cookies) get processed in the shields/shield/metadata/secured section of this XML file.
+  The secured section contains the following groups: endpoints, parameters, headers, cookies. 
+            
+  <secured>
+    <endpoints>
+      <endpoint>
+        <uri></uri>
+        <mode></mode>
+        <items>
+          <item><name></name><mode></mode><type></type><max></max><min></min><msg></msg></item>
+        </items>
+      </endpoint>
+    </endpoints>
+    <parameters>
+      <item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
+    </parameters>
+    <headers>
+      <item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
+    </headers>
+    <cookies>
+      <item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
+    </cookies>
+  </secured>
+    
+  Item Format:
+  ***********
+    <item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
+  where
+
+    <name></name>           - parameter/header/cookie name
+                              - to specify many 'names' in one item tag by using the ':::' delimiter.
+                              - for example:
+                                - <name>parameter1</name>
+                                - <name>parameter1:::parameter2:::parameter3</name>
+    <mode></mode>           - the mode of the items (detect, detect-all, disabled, block(default))
+                              - the mode controls how the item will be processed
+                              - use the detect & detect-all settings to log findings and not block requests
     <display></display>     - the value to use in error messages to reference the element. if not provided, name will be used
-		<type></type>	          - the parameter data type (see Custom Data types above) (defaults to 's' if not specified)
-		<max></max>		          - the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
-		<min></min>		          - the min length allowed for this parameter (defaults to 0 if not specified) 
+    <type></type>           - the parameter data type (see Custom Data types above) (defaults to 's' if not specified)
+    <max></max>             - the max length allowed for this parameter (defaults to Integer.MAX_VALUE if not specified)
+    <min></min>             - the min length allowed for this parameter (defaults to 0 if not specified)
     <max-value></max-value> - the max value allowed for a numeric or numeric delimited parameter
-    <min-value></min-value> - the min value allowed for a numeric or numeric delimited parameter 
-		<msg></msg>		          - the error message for the parameter(s) (uses the shield or global error message is not specified)
-		<uri></uri>	            - the path that must exist for the parameter evaluation to occur 
-					                     - to specify many uri's for one item use the ':::' delimiter.
-		<req></req>             - true/false - specify that the parameter is required (used with max & min values)
-		                          - if you want a parameter to be between 4-10 char in length, but not required, this req to false
-    <mask-err></mask-err>   - the a value you want to mask the entered value with for when you want to hide it from being displayed in an error message (passwords...)
-		
-	EXAMPLE:
-	********
-		<parameters>
-			<item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><uri>/put/accounts</uri></item>
-			<item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
-			<item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
-			<item><name>count</name><type>n</type><max>0</max><min>1</min><req>true</req></item>
-		</parameters>
+    <min-value></min-value> - the min value allowed for a numeric or numeric delimited parameter
+    <msg></msg>             - the error message for the parameter(s) (uses the shield or global error message if not specified)
+    <uri></uri>             - the path that must exist for the parameter evaluation to occur
+                              - to specify many uri's for one item use the ':::' delimiter.
+    <req></req>             - true/false - specify that the parameter is required (used with max & min values)
+                              - if you want a parameter to be between 4-10 char in length, but not required, set req to false
+    <mask-err></mask-err>   - a value to mask the entered value with when you want to hide it from being displayed in an error message (passwords...)
+
+  EXAMPLE:
+  ********
+    <parameters>
+      <item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><uri>/put/accounts</uri></item>
+      <item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
+      <item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
+      <item><name>count</name><type>n</type><max>0</max><min>1</min><req>true</req></item>
+    </parameters>
 
 
-	***************************************************************************************************
-	* CUSTOM DATATYPE GUIDE                                                                 * 
-	***************************************************************************************************
-	
-	(Character)
-		c		DESCRIPTION:	Any single character
-				FORMAT: 		  c
-	
-  (Number)    
-    n   DESCRIPTION:  Any positive or negative numeric value 
-                      '+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
-        FORMAT:       n  
+  ***************************************************************************************************
+  * CUSTOM DATATYPE GUIDE                                                                           *
+  ***************************************************************************************************
+  
+  (Character)
+    c   DESCRIPTION:  Any single character
+        FORMAT:       c
+
+  (Number)
+    n   DESCRIPTION:  Any positive or negative numeric value
+                      ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)
+        FORMAT:       n
         EXAMPLE:      -321.123, 0.0001 - are valid
                       +12, 12.34.56 - are invalid
-                
+
   (Delimited list of Numbers)
     n{} DESCRIPTION:  A character separated list of numbers
         FORMAT:       n{<separator char>}
-                      Note: the min & max settings applies per delimited value  
+                      Note: the min & max settings apply per delimited value
         EXAMPLE:      using n{,}, -321.123,0.000,123,45 is valid
-                          
-  (Integer)    
-    i   DESCRIPTION:  Any positive or negative integer value 
-                      ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces)  
-        FORMAT:       i  
+
+  (Integer)
+    i   DESCRIPTION:  Any positive or negative integer value
+                      ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces)
+        FORMAT:       i
         EXAMPLE:      -3213, 1 - are valid
-                      +12, 12.34   - are invalid
-                
+                      +12, 12.34 - are invalid
+
   (Delimited list of Integers)
     i{} DESCRIPTION:  A character separated list of integers
         FORMAT:       i{<separator char>}
-                      Note: the min & max settings applies per delimited value  
+                      Note: the min & max settings apply per delimited value
         EXAMPLE:      using i{,}, -321,0,123,45 is valid
-                          
-	(Alphanumeric)
-		a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
-				FORMAT: 		  a
-				EXAMPLE:		  abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid 
-	
-	(Alphanumeric and stated additional characters)						
-		a{}	DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
-				FORMAT: 		  a{<characters to allow>}
-								      - For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
-				EXAMPLE:		  using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
-	
-  (String) 
-    s   DESCRIPTION:  Any string.  
-                      All regex's in the stringPatterns are executed against the string        
+
+  (Alphanumeric)
+    a   DESCRIPTION:  Valid chars are A-Z, a-z, 0-9.
+        FORMAT:       a
+        EXAMPLE:      abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid
+
+  (Alphanumeric and stated additional characters)
+    a{} DESCRIPTION:  Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
+        FORMAT:       a{<characters to allow>}
+                      - For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
+        EXAMPLE:      using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
+
+  (String)
+    s   DESCRIPTION:  Any string.
+                      All regexes in the stringPatterns are executed against the string
         FORMAT:       s
         EXAMPLE:      "Hello this string does not contain a XSS payload"
 
-  (Open) 
-    o   DESCRIPTION:  Open value.  
-                      any string provided, no regex's will run against this datatype        
+  (Open)
+    o   DESCRIPTION:  Open value.
+                      any string provided, no regexes will run against this datatype
         FORMAT:       o
         EXAMPLE:      "Hello this string does contain a XSS payload <script>alert(1)</script>"
 
-	(Constant)
-		k{}	DESCRIPTION: 	Constant, must be equal to one of the values specified
-				FORMAT: 		  k{<comma separated list of strings>}
-				EXAMPLE: 		  using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
+  (Constant)
+    k{} DESCRIPTION:  Constant, must be equal to one of the values specified
+        FORMAT:       k{<comma separated list of strings>}
+        EXAMPLE:      using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
 
   (Custom Regex)
     r{} DESCRIPTION:  Custom Regex Expression in this file (for reuse)
-			                Custom Regex's are specified in the Shield's customPatterns section
-			                Regex must not include the '/' markers nor any flags.  
-			                For example, only provide the value for "<regex>" below:
-                        /<regex>/gimsuy  
-						          - To store regex patterns in separate files you can use the format:
-						               file=filename|key
-						               where
-						               "file="     - marker indicating to pull regex from a file
-						               "filename"  - relative path to a file containing the regex
-						               "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
-        FORMAT:       r{CustomRegexName}  - for example: r{telephone} - where "telephone" is defined in the customPatterns xml section
-  
+                      Custom Regex's are specified in the Shield's customPatterns section
+                      Regex must not include the '/' markers nor any flags.
+                      For example, only provide the value for "<regex>" below:
+                        /<regex>/gimsuy
+                      - To store regex patterns in separate files you can use the format:
+                        file=filename|key
+                        where
+                        "file="     - marker indicating to pull regex from a file
+                        "filename"  - relative path to a file containing the regex
+                        "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
+        FORMAT:       r{CustomRegexName}  - for example: r{telephone} - where "telephone" is defined in the customPatterns XML section
+
   (Inline Regex)
     x{} DESCRIPTION:  Inline Regex Expression in this file (not for reuse, specified in the type)
-			                Regex must not include the '/' markers nor any flags.  
-			                For example, only provide the value for "<regex>" below:
-			                  /<regex>/gimsuy
-        FORMAT:       x{regex-statement}   - for example: x{^[^\s@]+@[^\s@]+$} 
-  
+                      Regex must not include the '/' markers nor any flags.
+                      For example, only provide the value for "<regex>" below:
+                        /<regex>/gimsuy
+        FORMAT:       x{regex-statement}   - for example: x{^[^\s@]+@[^\s@]+$}
+
   (Java)
-    j{} DESCRIPTION:  Java, call java class for processing
-			                -The key value and the ServletRequest object is passed to the method
-			                -The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
-			                  For example:
-			                    public static boolean methodName(String s, ServletRequest request)
-			                      return true for threat found, else false
+    j{} DESCRIPTION:  Java, call a Java class for processing
+                      -The key value and the ServletRequest object are passed to the method
+                      -The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+                        For example:
+                          public static boolean methodName(String s, ServletRequest request)
+                            return true for threat found, else false
         FORMAT:       j{fully_qualified_className.methodName()}
 
   (Format)
-    f{} DESCRIPTION:  The Format data type sets the element to use a Format 
-								      -6 special characters are provided to be used in formats:  
-											  #   - represents a number 
-											  #[] - represents a number within a specified range, for example: #[1-12] 
-											  A   - represents an upper case alphabetic character 
-			                  a   - represents a lower case alphabetic character 
-			                  c   - represents an upper or lower case alphabetic character 
-			                  x   - represents an upper or lower case character (any character) 
-											  Use a combination of the special and non-special characters to create formats 
-			  								  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
-			                    Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
-			                -You can set multiple formats for evaluation using the OR (||) operator 
-			                    For example: if you want to use 1 field for US ZIP long & short formats: f{#####||#####-####}
-			                -To use the special characters in a format, escape them if with backslash: \# \[ \] \A \a \c \x
-			                                  to add a postal code as well: f{#####||#####-####||A#A-#A#}
+    f{} DESCRIPTION:  The Format data type sets the element to use a Format
+                      - 6 special characters are provided to be used in formats:
+                        #   - represents a number
+                        #[] - represents a number within a specified range, for example: #[1-12]
+                        A   - represents an upper case alphabetic character
+                        a   - represents a lower case alphabetic character
+                        c   - represents an upper or lower case alphabetic character
+                        x   - represents an upper or lower case character (any character)
+                      Use a combination of the special and non-special characters to create formats
+                        For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
+                        Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}
+                      -You can set multiple formats for evaluation using the OR (||) operator
+                        For example: if you want to use 1 field for US ZIP long & short formats: f{#####||#####-####}
+                      -To use the special characters in a format, escape them with a backslash: \# \[ \] \A \a \c \x
+                        to add a postal code as well: f{#####||#####-####||A#A-#A#}
         FORMAT:       f{format-string}
-        
+
   (Dependent Format)
-    d{} DESCRIPTION:  Same as format except, the specific format to apply to the element is based on another elements value
-        FORMAT:       d{element:value1=format1;value2=format2;...} 
+    d{} DESCRIPTION:  Same as format except, the specific format to apply to the element is based on another element's value
+        FORMAT:       d{element:value1=format1;value2=format2;...}
                       where
                         element - is the id or name of the element you want to make the format dependent on
                         value - is the value of the element for the given format to be used
-                        format - is any format as specified it the format data type section above
+                        format - is any format as specified in the format data type section above
         EXAMPLE:      if you want to use a country element to determine the type of format to apply (zip or postal code):
-                        data-sw-type="d{country:USA=#####||#####-####;Canada=A#A-#A#}"  
+                        data-sw-type="d{country:USA=#####||#####-####;Canada=A#A-#A#}"
 
 
 
@@ -265,245 +265,246 @@
       DISABLED   - regex will be ignored
       DETECT     - log hits to warnings log, only the first item detected
       DETECT_ALL - log hits to warnings log all items detected 
+
   Modes can be applied to shields, endpoints, parameters, headers, cookies, customregex list, stringregex list
-  
-	  Mode order or precedence
-	  -shield (mode used as a default if not specified for the items below )
-	    -customregex (if mode specified, takes precedence over the item (parm/header/cookie) setting) 
-	    -stringregex (if mode specified, takes precedence over the item (parm/header/cookie) setting)
-	    -endpoints   (if mode specified, this overrides the item (parm/header/cookie) setting)
-	    -parameters  (uses shield mode if not specified)
-	    -headers     (uses shield mode if not specified)
-	    -cookies     (uses shield mode if not specified)
+    Mode order or precedence
+    -shield (mode used as a default if not specified for the items below )
+      -customregex (if mode specified, takes precedence over the item (param/header/cookie) setting) 
+      -stringregex (if mode specified, takes precedence over the item (param/header/cookie) setting)
+      -endpoints   (if mode specified, this overrides the item (param/header/cookie) setting)
+      -parameters  (uses shield mode if not specified)
+      -headers     (uses shield mode if not specified)
+      -cookies     (uses shield mode if not specified)
  -->
 
+<!--suppress ALL -->
 <sanwaf>
-	<global-settings>
-		<!-- Master Enabled Flag; must be true for Sanwaf to detect issues -->
-		<enabled>true</enabled>
+  <global-settings>
+    <!-- Master Enabled Flag; must be true for Sanwaf to detect issues -->
+    <enabled>true</enabled>
 
-		<!-- log startup and errors in verbose mode -->
-		<verbose>true</verbose>
-		
-		<!-- Application Release Version that is being protected, for logging purposes only -->
-		<app.version>=${Your_Application_Release_Version}</app.version>	
-	
-		<!-- Error Handling: Specify what to store in the request as attributes to be consumed by your application. 
-      provideTrackId  - add a tracking ID # as a request attribute
-      provideErrors   - add all WAF errors as a request attribute
-      logErrors       - log WAF errors to file when found
-      provideDetects  - add all WAF Detections as request attribute
-      logDetects      - log WAF detects to file when found
-		-->
-		<errorHandling>
-			<provideTrackId>true</provideTrackId>
+    <!-- log startup and errors in verbose mode -->
+    <verbose>true</verbose>
+
+    <!-- Application Release Version that is being protected, for logging purposes only -->
+    <app.version>=${Your_Application_Release_Version}</app.version>
+
+    <!-- Error Handling: Specify what to store in the request as attributes to be consumed by your application.
+   provideTrackId  - add a tracking ID # as a request attribute
+   provideErrors   - add all WAF errors as a request attribute
+   logErrors       - log WAF errors to file when found
+   provideDetects  - add all WAF Detections as request attribute
+   logDetects      - log WAF detects to file when found
+    -->
+    <errorHandling>
+      <provideTrackId>true</provideTrackId>
       <provideErrors>true</provideErrors>
       <logErrors>true</logErrors>
       <logErrorsVerbose>true</logErrorsVerbose>
       <provideDetects>true</provideDetects>
       <logDetects>true</logDetects>
       <logDetectsVerbose>true</logDetectsVerbose>
-		</errorHandling>
-	
-		<!-- Default Error Messages for data type violations.  Can be overridden by shield or parameter entries.
-			 You can set these values to anything you want including HTML characters.  
-			 Note the "{0}" markers for the alphanumericAndMore, numericDelimited and Constant data types.
-			 Used to splash the characters in the error message generated by Sanwaf; if not present, 
-			 additional characters, delimiters and constant values not be included in the error message.
-		-->
-		<errorMessages>
-			<char><![CDATA[ <b>Only a single character is permitted.</b>&nbsp;<i>For example: <b>a</b></i>]]></char>
+    </errorHandling>
+
+    <!-- Default Error Messages for data type violations.  Can be overridden by shield or parameter entries.
+      You can set these values to anything you want including HTML characters.
+      Note the "{0}" markers for the alphanumericAndMore, numericDelimited and Constant data types.
+      Used to splash the characters in the error message generated by Sanwaf; if not present,
+      additional characters, delimiters and constant values not be included in the error message.
+    -->
+    <errorMessages>
+      <char><![CDATA[ <b>Only a single character is permitted.</b>&nbsp;<i>For example: <b>a</b></i>]]></char>
       <numeric><![CDATA[ <b>Only numeric values are permitted.</b>&nbsp;<i>For example: <b>-123.456</b></i>]]></numeric>
       <numericDelimited><![CDATA[ <b>Only numeric values and numeric values separated by &quot;{0}&quot; are permitted.</b>&nbsp;<i>For example: <b>123,-123,123.456</b></i>]]></numericDelimited>
       <integer><![CDATA[ <b>Only integer values are permitted.</b>&nbsp;<i>For example: <b>-123 or 123</b></i>]]></integer>
       <integerDelimited><![CDATA[ <b>Only integer values and integer values separated by &quot;{0}&quot; are permitted.</b>&nbsp;<i>For example: <b>1,-1,123</b></i>]]></integerDelimited>
-			<alphanumeric><![CDATA[ <b>Only alphanumeric characters are permitted.</b>&nbsp;<i>For example: <b>abc123</b></i>]]></alphanumeric>
-			<alphanumericAndMore><![CDATA[ <b>Only alphanumeric characters and special characters: <i>{0}</i> are permitted.</b>&nbsp;<i>For example: <b>abc123{0}</b></i>]]></alphanumericAndMore>
-			<constant><![CDATA[ <b>Invalid value provided,</b>&nbsp;<i>value must be one of: <b>{0}</b></i>]]></constant>
+      <alphanumeric><![CDATA[ <b>Only alphanumeric characters are permitted.</b>&nbsp;<i>For example: <b>abc123</b></i>]]></alphanumeric>
+      <alphanumericAndMore><![CDATA[ <b>Only alphanumeric characters and special characters: <i>{0}</i> are permitted.</b>&nbsp;<i>For example: <b>abc123{0}</b></i>]]></alphanumericAndMore>
+      <constant><![CDATA[ <b>Invalid value provided,</b>&nbsp;<i>value must be one of: <b>{0}</b></i>]]></constant>
       <string><![CDATA[ <b>Invalid text provided.</b>&nbsp;<i>Recommended Correction: Add a space before any special characters, such as: <b>&nbsp;&lt;&nbsp;&gt;&nbsp;:</b></i>]]></string>
       <open><![CDATA[ <b>Invalid text provided.]]></open>
-			<regex><![CDATA[ Invalid value provided, please try again.]]></regex>
-			<java><![CDATA[ Invalid value provided.]]></java>
+      <regex><![CDATA[ Invalid value provided, please try again.]]></regex>
+      <java><![CDATA[ Invalid value provided.]]></java>
       <format><![CDATA[  Failed to conform to format: {0}]]></format>
       <dependentFormat><![CDATA[ Failed to conform to dependent format: {0}]]></dependentFormat>
       <invalidLength><![CDATA[ - invalid length. Must be between {0} and {1} characters]]></invalidLength>
       <required><![CDATA[ - is a required field]]></required>
-		</errorMessages>
-	</global-settings>
-	
-	<!-- List of shields configured to protect your system. You can use single or multiple shields to logically organize your system -->
-	<shields>
-		<shield>
+    </errorMessages>
+  </global-settings>
+
+  <!-- List of shields configured to protect your system. You can use single or multiple shields to logically organize your system -->
+  <shields>
+    <shield>
       <shield-settings>
         <!-- Name of the Shield.  Must be unique. -->
-				<name>XSS</name>
+        <name>XSS</name>
 
-				<!-- Shield Modes are: disabled, block(default), detect, detect-all.  the Shield mode is used if none is provided for a parameter, endpoint or regex -->
-				<mode>block</mode>
+        <!-- Shield Modes are: disabled, block(default), detect, detect-all.  The shield mode is used if none is provided for a parameter, endpoint or regex -->
+        <mode>block</mode>
 
-				<!-- Minimum length of parameter to trigger this shield.  For example, if you can not perform an XSS exploit in under 3 chars, set it to 3 -->
-				<minLen>3</minLen>
-				
-				<!-- Maximum length of parameter to trigger this shield; Enter -1 to use max supported range or Integer.MAX_VALUE (default value) -->
-				<maxLen>-1</maxLen>
+        <!-- Minimum length of parameter to trigger this shield.  For example, if you can not perform an XSS exploit in under 3 chars, set it to 3 -->
+        <minLen>3</minLen>
+
+        <!-- Maximum length of parameter to trigger this shield; Enter -1 to use max supported range or Integer.MAX_VALUE (default value) -->
+        <maxLen>-1</maxLen>
 
         <!-- child shield to use if parameter exceeds the maxLen of the shield.  used as a secondary layer of protection -->
-        <child></child>
-		
-				<!-- Localized error messages for this shield - overrides global values -->
-				<!-- 
-				<errorMessages>
-					<char><![CDATA[ ]]></char>
-					<numeric><![CDATA[ ]]></numeric>
-					<numericDelimited><![CDATA[ ]]></numericDelimited>
+        <child/>
+
+        <!-- Localized error messages for this shield - overrides global values -->
+        <!--
+        <errorMessages>
+          <char><![CDATA[ ]]></char>
+          <numeric><![CDATA[ ]]></numeric>
+          <numericDelimited><![CDATA[ ]]></numericDelimited>
           <integer><![CDATA[ ]]></integer>
           <integerDelimited><![CDATA[ ]]></integerDelimited>
-					<alphanumeric><![CDATA[ ]]></alphanumeric>
-					<alphanumericAndMore><![CDATA[ ]]></alphanumericAndMore>
-					<constant><![CDATA[ ]]></constant>
-					<string><![CDATA[ ]]></string>
+          <alphanumeric><![CDATA[ ]]></alphanumeric>
+          <alphanumericAndMore><![CDATA[ ]]></alphanumericAndMore>
+          <constant><![CDATA[ ]]></constant>
+          <string><![CDATA[ ]]></string>
           <open><![CDATA[ ]]></open>
-					<regex><![CDATA[ ]]></regex>
-					<java><![CDATA[ ]]></java>
-					<format><![CDATA[ ]]></format>
+          <regex><![CDATA[ ]]></regex>
+          <java><![CDATA[ ]]></java>
+          <format><![CDATA[ ]]></format>
           <dependentFormat><![CDATA[ ]]></dependentFormat>
           <invalidLength><![CDATA[ ]]></invalidLength>
           <required><![CDATA[ ]]></required>
-				</errorMessages>
-				-->
-	      </shield-settings>
-	
-			<!-- Regex configuration Section -->
+        </errorMessages>
+        -->
+      </shield-settings>
+
+      <!-- Regex configuration Section -->
       <regex-config>
-				<!-- Minimum length of parameter to trigger the regex processing -->
-				<minLen>3</minLen>
-				
-				<!-- Control whether to treat all non-secured parameters/headers/cookies as strings (regex) -->
-				<forceStringPatterns>
-					<enabled>false</enabled>
-					<!-- List of parameters to be ignored for the regex processing -->
-					<exclusions>
-						<item></item>
-					</exclusions>
-				</forceStringPatterns>
-				
-				<!-- String Patterns is a list of patterns that will automatically be run against every parameter marked as a string (s) datatype  
-						<item>   - item entry in stringPatterns
-              <key>   - the name of the pattern
-              <match> - pass/fail
-                        - pass: if regex matches, this is a pass
-                        - fail (default): - if regex matches, this is a failure
-              <value> - the pattern in a regular string format (no escaping quotes, backslashes...)
-                     NOTE: 	Do NOT wrap regex in "/.../i" format.
-                        All regex's are compiled with ignore case enabled
+        <!-- Minimum length of parameter to trigger the regex processing -->
+        <minLen>3</minLen>
+
+        <!-- Control whether to treat all non-secured parameters/headers/cookies as strings (regex) -->
+        <forceStringPatterns>
+          <enabled>false</enabled>
+          <!-- List of parameters to be ignored for the regex processing -->
+          <exclusions>
+            <item/>
+          </exclusions>
+        </forceStringPatterns>
+
+        <!-- String Patterns is a list of patterns that will automatically be run against every parameter marked as a string (s) datatype
+          <item>   - item entry in stringPatterns
+            <key>   - the name of the pattern
+            <match> - pass/fail
+                      - pass: if regex matches, this is a pass
+                      - fail (default): - if regex matches, this is a failure
+            <value> - the pattern in a regular string format (no escaping quotes, backslashes...)
+                      NOTE: Do NOT wrap regex in "/.../i" format.
+                      All regexes are compiled with ignore case enabled
                       - To store regex patterns in separate files you can use the format:
-                          file=<filename>|<key>
-                          where
-                          "file="     - marker indicating to pull regex from a file
-                          "filename"  - relative path to a file containing the regex
-                          "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
-					Note that values provided below are for demonstration purposes
-				-->
-				<stringPatterns>
-				<!-- 
-					<item>
-						<key>javascriptExpression</key>
-            <mode>disabled/block(default)/detect/detect-all</mode>
-            <match>fail(default)</match>
-						<value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
-					</item>
-					<item>
-						<key>xss-form-elements</key>
-						<value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
-					</item>
-				-->
-				</stringPatterns>
-				
-				<!-- Custom Patterns are a list of named patterns to be applied against one or more parameters/headers/cookies
-						Note that a pass/true is returned for matches; otherwise a fail/false is returned
-				 
-					<key>  - the name of the pattern 
-          <mode> - disabled, block(default), detect, detect-all
-          <match>- pass/fail
+                        file=<filename>|<key>
+                        where
+                        "file="     - marker indicating to pull regex from a file
+                        "filename"  - relative path to a file containing the regex
+                        "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
+          Note that values provided below are for demonstration purposes
+        -->
+        <stringPatterns>
+          <!--
+            <item>
+              <key>javascriptExpression</key>
+              <mode>disabled/block(default)/detect/detect-all</mode>
+              <match>fail(default)</match>
+              <value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
+            </item>
+            <item>
+              <key>xss-form-elements</key>
+              <value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
+            </item>
+          -->
+        </stringPatterns>
+
+        <!-- Custom Patterns are a list of named patterns to be applied against one or more parameters/headers/cookies
+          Note that a pass/true is returned for matches; otherwise a fail/false is returned
+
+          <key>   - the name of the pattern
+          <mode>  - disabled, block(default), detect, detect-all
+          <match> - pass/fail
                     - pass (default): if regex matches, this is a pass
                     - fail: - if regex matches, this is a failure
-					<item> - the pattern in a regular string format (no escaping quotes, backslashes...)
-									 NOTE: 	Do NOT wrap regex in "/.../i" format.
-											All regex's are compiled with ignore case enabled 
-                 - To store regex patterns in seperate files you can use the format:
-                     file=filename|key
-                     where
-                     "file="     - marker indicating to pull regex from a file
-                     "filename"  - relative path to a file containing the regex
-                     "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
-					Note that values provided below are for demonstration purposes
-				-->
-				<customPatterns>
-				<!-- 
-					<item><key>date</key><mode></mode><match>pass</match><value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value></item>
-					<item><key>telephone</key><value><![CDATA[(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})]]></value></item>
-				-->
-				</customPatterns>
+          <item>  - the pattern in a regular string format (no escaping quotes, backslashes...)
+                    NOTE: Do NOT wrap regex in "/.../i" format.
+                    All regexes are compiled with ignore case enabled
+                    - To store regex patterns in separate files you can use the format:
+                      file=filename|key
+                      where
+                      "file="     - marker indicating to pull regex from a file
+                      "filename"  - relative path to a file containing the regex
+                      "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
+          Note that values provided below are for demonstration purposes
+        -->
+        <customPatterns>
+          <!--
+            <item><key>date</key><mode></mode><match>pass</match><value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value></item>
+            <item><key>telephone</key><value><![CDATA[(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})]]></value></item>
+          -->
+        </customPatterns>
       </regex-config>
-	
-			<!-- Metadata configuration section -->
-			<metadata>
-				<!-- Indicate what request portions are protected -->
-				<enabled>
+
+      <!-- Metadata configuration section -->
+      <metadata>
+        <!-- Indicate what request portions are protected -->
+        <enabled>
           <endpoints>true</endpoints>
           <parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</enabled>
-				
-				<!-- Specify if the request portion is to be treated with case sensitivity -->
-				<caseSensitive>
+          <headers>true</headers>
+          <cookies>true</cookies>
+        </enabled>
+
+        <!-- Specify if the request portion is to be treated with case sensitivity -->
+        <caseSensitive>
           <endpoints>true</endpoints>
           <parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</caseSensitive>
-				
-				<!-- Secured section is where you specify endpoints or global parameters/headers/cookies to be protected by Sanwaf -->
-				<secured>
-				  <!-- endpoint's group parameters for given endpoint uri's allowing more complex processing such as required, and relationships
-				       see the Sanwaf-ui-2-server project for automating this section in your build pipeline -->
+          <headers>true</headers>
+          <cookies>true</cookies>
+        </caseSensitive>
+
+        <!-- Secured section is where you specify endpoints or global parameters/headers/cookies to be protected by Sanwaf -->
+        <secured>
+          <!-- endpoint's group parameters for given endpoint URIs allowing more complex processing such as required, and relationships
+            see the Sanwaf-ui-2-server project for automating this section in your build pipeline -->
           <endpoints>
             <endpoint>
               <!-- Mode that the endpoint is running under (default is block)-->
               <mode>block</mode>
               <!-- URI must be unique -->
-              <uri></uri>
-              <!-- if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  Use "<" or "less" to not fail if there are less parameters than specified. -->
-              <strict></strict>
+              <uri/>
+              <!-- if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  Use "<" or "less" to not fail if there are fewer parameters than specified. -->
+              <strict/>
               <!-- list of parameters for the URI -->
               <items>
-                <!--  note the additional attributes: <req> & <related>.  See the Sanwaf-ui project for details on using these paramters -->
-                <!-- 
+                <!--  note the additional attributes: <req> & <related>.  See the Sanwaf-ui project for details on using these parameters -->
+                <!--
                 <item><name></name><mode></mode><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-                 -->
+                -->
               </items>
             </endpoint>
           </endpoints>
-  				<parameters>
-					 <!-- 
+          <parameters>
+            <!--
             <item><name></name><mode></mode><type></type><max></max><min></min><max-value></max-value><min-value></min-value><mask-err></mask-err><msg></msg><format></format><req></req><related></related></item>
-					 -->
-					</parameters>
-					<headers>
-					</headers>
-					<cookies>
-					</cookies>
-				</secured>
-			</metadata>
-		</shield>
-		
-		<!-- child-shield's have the same XML format as the shield (including <child></child> tags)
-		     child-shield's are engaged when a shield specifies a <child></child> tag and the maxLen of the shield is violated 
-         child-shield's are intended to be used as a subsequent form of protection done for performance reasons -->
+            -->
+          </parameters>
+          <headers>
+          </headers>
+          <cookies>
+          </cookies>
+        </secured>
+      </metadata>
+    </shield>
+
+    <!-- child-shields have the same XML format as the shield (including <child></child> tags)
+      child-shields are engaged when a shield specifies a <child></child> tag and the maxLen of the shield is violated
+    child-shields are intended to be used as a subsequent form of protection done for performance reasons -->
     <child-shield>
     </child-shield>
 
-	</shields>
+  </shields>
 </sanwaf>
 

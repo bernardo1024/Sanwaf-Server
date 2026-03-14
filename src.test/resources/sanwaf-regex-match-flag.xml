@@ -1,102 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 
+<!--suppress ALL -->
 <sanwaf>
-	<global-settings>
-		<enabled>true</enabled>
-		<verbose>true</verbose>
-		<app.version>=${yourapp.release.version}</app.version>	
-		<errorHandling>
-      <provideTrackId>true</provideTrackId>
-      <provideErrors>true</provideErrors>
-      <logErrors>true</logErrors>
-      <logErrorsVerbose>true</logErrorsVerbose>
-      <provideDetects>true</provideDetects>
-      <logDetects>true</logDetects>
-      <logDetectsVerbose>true</logDetectsVerbose>
-		</errorHandling>
-		<errorMessages>
-			<numeric><![CDATA[  Numeric error msg]]></numeric>
-			<numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
-			<alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
-			<alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
-			<char><![CDATA[  Character error msg]]></char>
-			<string><![CDATA[  String error msg]]></string>
-			<regex><![CDATA[  Regex error msg]]></regex>
-			<java><![CDATA[  Java error msg]]></java>
-			<constant><![CDATA[  Constant error msg {0}]]></constant>
-      <format><![CDATA[  Failed to conform to format]]></format>
-      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
-      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
-      <required><![CDATA[  <br/>Is a Required field]]></required>
-		</errorMessages>
-	</global-settings>
-	
-	<shields>
-    <shield>
-      <shield-settings>
-        <mode>block</mode>
-        <name>XSS</name>
-        <minLen>2</minLen>
-        <maxLen>9999</maxLen>
-        <child></child>
-      </shield-settings>
-      <regex-config>
-        <minLen>5</minLen>
-        <forceStringPatterns>
-          <enabled>false</enabled>
-          <exclusions>
-            <item>unitTestStringExcluded</item>
-          </exclusions>
-        </forceStringPatterns>
-        <stringPatterns>
-          <item>
-            <key>javascriptExpression-MatchPass</key>
-            <match>pass</match>
-            <value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
-          </item>
-        </stringPatterns>
-        <customPatterns>
-          <item>
-            <key>date-MatchFail</key>
-            <match>fail</match>
-            <value><![CDATA[\d{3}\-\d{3}-\d{4}]]></value>
-          </item>
-          <item>
-            <key>date-MatchPass</key>
-            <match>pass</match>
-            <value><![CDATA[\d{3}\-\d{3}-\d{4}]]></value>
-          </item>
-          <item>
-            <key>date-NoMatch</key>
-            <value><![CDATA[\d{3}\-\d{3}-\d{4}]]></value>
-          </item>
-        </customPatterns>
-      </regex-config>
-      <metadata>
-        <enabled>
-          <endpoints>true</endpoints>
-          <parameters>true</parameters>
-          <headers>true</headers>
-          <cookies>true</cookies>
-        </enabled>
-        <caseSensitive>
-          <endpoints>true</endpoints>
-          <parameters>true</parameters>
-          <headers>true</headers>
-          <cookies>true</cookies>
-        </caseSensitive>
-        <secured>
-          <parameters>
-            <item><name>stringMatchPass</name><type>s</type></item>
+    <global-settings>
+        <enabled>true</enabled>
+        <verbose>true</verbose>
+        <app.version>=${yourapp.release.version}</app.version>
+        <errorHandling>
+            <provideTrackId>true</provideTrackId>
+            <provideErrors>true</provideErrors>
+            <logErrors>true</logErrors>
+            <logErrorsVerbose>true</logErrorsVerbose>
+            <provideDetects>true</provideDetects>
+            <logDetects>true</logDetects>
+            <logDetectsVerbose>true</logDetectsVerbose>
+        </errorHandling>
+        <errorMessages>
+            <numeric><![CDATA[  Numeric error msg]]></numeric>
+            <numericDelimited><![CDATA[  Numeric delimited error msg {0}]]></numericDelimited>
+            <alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
+            <alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
+            <char><![CDATA[  Character error msg]]></char>
+            <string><![CDATA[  String error msg]]></string>
+            <regex><![CDATA[  Regex error msg]]></regex>
+            <java><![CDATA[  Java error msg]]></java>
+            <constant><![CDATA[  Constant error msg {0}]]></constant>
+            <format><![CDATA[  Failed to conform to format]]></format>
+            <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
+            <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+            <required><![CDATA[  <br/>Is a Required field]]></required>
+        </errorMessages>
+    </global-settings>
 
-            <item><name>customMatchFail</name><type>r{date-MatchFail}</type></item>
-            <item><name>customMatchPass</name><type>r{date-MatchPass}</type></item>
-            <item><name>customNoMatch</name><type>r{date-NoMatch}</type></item>
-          </parameters>
-        </secured>
-      </metadata>
-    </shield>
-	</shields>
+    <shields>
+        <shield>
+            <shield-settings>
+                <mode>block</mode>
+                <name>XSS</name>
+                <minLen>2</minLen>
+                <maxLen>9999</maxLen>
+            </shield-settings>
+            <regex-config>
+                <minLen>5</minLen>
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                    <exclusions>
+                        <item>unitTestStringExcluded</item>
+                    </exclusions>
+                </forceStringPatterns>
+                <stringPatterns>
+                    <item>
+                        <key>javascriptExpression-MatchPass</key>
+                        <match>pass</match>
+                        <value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
+                    </item>
+                </stringPatterns>
+                <customPatterns>
+                    <item>
+                        <key>date-MatchFail</key>
+                        <match>fail</match>
+                        <value><![CDATA[\d{3}\-\d{3}-\d{4}]]></value>
+                    </item>
+                    <item>
+                        <key>date-MatchPass</key>
+                        <match>pass</match>
+                        <value><![CDATA[\d{3}\-\d{3}-\d{4}]]></value>
+                    </item>
+                    <item>
+                        <key>date-NoMatch</key>
+                        <value><![CDATA[\d{3}\-\d{3}-\d{4}]]></value>
+                    </item>
+                </customPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <endpoints>true</endpoints>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </enabled>
+                <caseSensitive>
+                    <endpoints>true</endpoints>
+                    <parameters>true</parameters>
+                    <headers>true</headers>
+                    <cookies>true</cookies>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>stringMatchPass</name>
+                            <type>s</type>
+                        </item>
+
+                        <item>
+                            <name>customMatchFail</name>
+                            <type>r{date-MatchFail}</type>
+                        </item>
+                        <item>
+                            <name>customMatchPass</name>
+                            <type>r{date-MatchPass}</type>
+                        </item>
+                        <item>
+                            <name>customNoMatch</name>
+                            <type>r{date-NoMatch}</type>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+    </shields>
 </sanwaf>
 

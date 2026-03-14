@@ -1,29 +1,26 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ErrorMessagesTest {
   static Sanwaf sanwaf;
   static Shield shield;
-  static Shield shieldBadPlaceholders;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-customErrors.xml");
       shield = UnitTestUtil.getShield(sanwaf, "XSS");
-      shieldBadPlaceholders = UnitTestUtil.getShield(sanwaf, "BadPlaceholders");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -46,12 +43,17 @@ public class ErrorMessagesTest {
   }
 
   @Test
+  public void modifyInvalidLengthErrorMsgTest() {
+    String result = JsonFormatter.modifyInvalidLengthErrorMsg("between {0} and {1} chars", 5, 100);
+    assertEquals("between 5 and 100 chars", result);
+  }
+
+  @Test
   public void constantDatatatypeErrorMsgTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "k{foo,bar,far}", "", null, Integer.MAX_VALUE, 0);
     ItemConstant p = new ItemConstant(id);
-    String s = p.getErrorMessage(req, shield);
+    String s = JsonFormatter.getErrorMessage(p, req, shield);
     assertTrue(s.contains("foo"));
   }
 }
-

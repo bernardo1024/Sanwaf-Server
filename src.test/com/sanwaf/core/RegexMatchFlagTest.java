@@ -1,27 +1,26 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class RegexMatchFlagTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-regex-match-flag.xml");
       shield = UnitTestUtil.getShield(sanwaf, "xss");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -29,7 +28,7 @@ public class RegexMatchFlagTest {
   public void testStringMatchPass() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("stringMatchPass", "javascript:");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -45,7 +44,7 @@ public class RegexMatchFlagTest {
     // <item><name>customMatchPass</name><type>r{date-MatchPass}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customMatchPass", "416-555-5555");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 
   @Test
@@ -53,7 +52,6 @@ public class RegexMatchFlagTest {
     // <item><name>customNoMatch</name><type>r{date-NoMatch}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customNoMatch", "416-555-5555");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertFalse(sanwaf.isThreatDetected(request));
   }
 }
-

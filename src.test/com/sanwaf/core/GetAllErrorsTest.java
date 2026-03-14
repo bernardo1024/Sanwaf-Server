@@ -1,29 +1,27 @@
 package com.sanwaf.core;
 
-import static org.junit.Assert.*;
+import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 
-import jakarta.servlet.http.Cookie;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import com.sanwaf.core.Shield;
-import com.sanwaf.core.Sanwaf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class GetAllErrorsTest {
   static Sanwaf sanwaf;
-  static Shield shield;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     try {
-      sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-getAllErrors.xml");
-      shield = UnitTestUtil.getShield(sanwaf, "xss");
+      sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-getAllErrors.xml.broken");
     } catch (IOException ioe) {
-      assertTrue(false);
+      fail();
     }
   }
 
@@ -35,11 +33,11 @@ public class GetAllErrorsTest {
     assertTrue(sanwaf.isThreatDetected(request, true, false));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\""));
-    assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 2);
-    String s = sanwaf.getAllErrors(request);
+    assertEquals(2, getItemCount(b, "\"item\":{\"name\":\""));
+    String s = sanwaf.rescanAndGetAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_BLOCK\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);
+    assertTrue(s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
+    assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
   @Test
@@ -50,27 +48,27 @@ public class GetAllErrorsTest {
     assertTrue(sanwaf.isThreatDetected(request));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\""));
-    assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 1);
-    String s = sanwaf.getAllErrors(request);
+    assertEquals(1, getItemCount(b, "\"item\":{\"name\":\""));
+    String s = sanwaf.rescanAndGetAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_BLOCK\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);
+    assertTrue(s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
+    assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
   @Test
   public void testCookie() {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    Cookie[] cookies = new Cookie[] {new Cookie("string_BLOCK", "sBLOCK"),new Cookie("string_NO_MODE", "sBLOCK")};
+    Cookie[] cookies = new Cookie[] { new Cookie("string_BLOCK", "sBLOCK"), new Cookie("string_NO_MODE", "sBLOCK") };
     request.setCookies(cookies);
     request.setCookies(cookies);
     assertTrue(sanwaf.isThreatDetected(request));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\""));
-    assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 1);
-    String s = sanwaf.getAllErrors(request);
+    assertEquals(1, getItemCount(b, "\"item\":{\"name\":\""));
+    String s = sanwaf.rescanAndGetAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_BLOCK\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);
+    assertTrue(s.contains("\"item\":{\"name\":\"string_NO_MODE\""));
+    assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
   @Test
@@ -82,11 +80,11 @@ public class GetAllErrorsTest {
     assertTrue(sanwaf.isThreatDetected(request));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\""));
-    assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 1);
-    String s = sanwaf.getAllErrors(request);
+    assertEquals(1, getItemCount(b, "\"item\":{\"name\":\""));
+    String s = sanwaf.rescanAndGetAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_BLOCK\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_NO_MODE\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);
+    assertTrue(s.contains("\"item\":{\"name\":\"estring_NO_MODE\""));
+    assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
   @Test
@@ -98,12 +96,12 @@ public class GetAllErrorsTest {
     request.addParameter("string_DISABLED", "sBLOCK");
     request.addParameter("string_NO_MODE", "sBLOCK");
     assertTrue(sanwaf.isThreatDetected(request));
-    String s = sanwaf.getAllErrors(request);
+    String s = sanwaf.rescanAndGetAllErrors(request);
     assertTrue(s != null && s.contains("\"action\":\"BLOCK\",\"type\":\"STRING\",\"value\":\"sBLOCK\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);
+    assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
     s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_DETECT\""));
-    assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_DETECT_ALL\""));
+    assertTrue(s.contains("\"item\":{\"name\":\"string_DETECT_ALL\""));
   }
 
   @Test
@@ -114,30 +112,35 @@ public class GetAllErrorsTest {
     request.addParameter("custom_BLOCK", "--------");
     request.addParameter("custom_DISABLED", "--------");
     request.addParameter("custom_NO_MODE", "--------");
-    assertTrue(sanwaf.isThreatDetected(request, true));
-    String s = sanwaf.getAllErrors(request);
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);
-    assertTrue(s != null && s.contains(""));
+    assertTrue(sanwaf.isThreatDetected(request, false, true));
+    String s = sanwaf.rescanAndGetAllErrors(request);
+    assertEquals(2, getItemCount(s, "\"item\":{\"name\":\""));
     s = Sanwaf.getDetects(request);
-    assertTrue(s != null && s.contains(""));
+    assertNotNull(s);
   }
 
   static int getItemCount(String s, String match) {
     int count = 0;
-    int start = 0;
-    int end = 0;
-    while(true) {
-      start = s.indexOf(match, end);
-      if(start < 0) {
-        break;
-      }
-      end = start + match.length();
+    for (int i = s.indexOf(match); i >= 0; i = s.indexOf(match, i + match.length())) {
       count++;
     }
     return count;
   }
 
-
+  @Test
+  public void testAllDetectsBeforeBlocksMultiValuedParam() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    // multi_test is defined twice in XML (detect then block), but with combined
+    // metadata the block item overwrites the detect item (same key).
+    // Single-pass: blocks on first bad value.
+    // noinspection SpellCheckingInspection
+    request.addParameter("multi_test", "sBLOCKval1", "sBLOCKval2");
+    assertTrue(sanwaf.isThreatDetected(request));
+    String errors = Sanwaf.getErrors(request);
+    assertNotNull(errors);
+    assertTrue(errors.contains("\"value\":\"sBLOCKval1\""));
+    assertEquals(1, getItemCount(errors, "\"item\":{\"name\":\"multi_test\""));
+  }
 
   @Test
   public void testEndpointNoMode() {
@@ -147,7 +150,7 @@ public class GetAllErrorsTest {
     assertTrue(sanwaf.isThreatDetected(request));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\"estring_NO_MODE"));
-    assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 1);
+    assertEquals(1, getItemCount(b, "\"item\":{\"name\":\""));
   }
 
   @Test
@@ -158,10 +161,10 @@ public class GetAllErrorsTest {
     assertTrue(sanwaf.isThreatDetected(request));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\"estring_BLOCK"));
-    assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 1);
-    String s = sanwaf.getAllErrors(request);
+    assertEquals(1, getItemCount(b, "\"item\":{\"name\":\""));
+    String s = sanwaf.rescanAndGetAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_BLOCK\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 1);
+    assertEquals(1, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
   @Test
@@ -169,10 +172,10 @@ public class GetAllErrorsTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/detect.jsp");
     request.addParameter("estring_DETECT", "sDETECT");
-    assertTrue(!sanwaf.isThreatDetected(request, true, true));
+    assertFalse(sanwaf.isThreatDetected(request, true, true));
     String s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_DETECT\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 1);
+    assertEquals(1, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
   @Test
@@ -180,11 +183,10 @@ public class GetAllErrorsTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/detectall.jsp");
     request.addParameter("estring_DETECT_ALL", "sDETECTALL");
-    assertTrue(!sanwaf.isThreatDetected(request, true, true));
+    assertFalse(sanwaf.isThreatDetected(request, true, true));
     String s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_DETECT_ALL\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 1);
+    assertEquals(1, getItemCount(s, "\"item\":{\"name\":\""));
   }
 
 }
-

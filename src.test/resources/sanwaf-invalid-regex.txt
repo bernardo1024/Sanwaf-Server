@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<sanwaf>
+    <global-settings>
+        <enabled>true</enabled>
+    </global-settings>
+    <shields>
+        <shield>
+            <shield-settings>
+                <name>XSS</name>
+            </shield-settings>
+            <regex-config>
+                <customPatterns>
+                    <item>
+                        <key>broken</key>
+                        <mode>block</mode>
+                        <value><![CDATA[[invalid]]></value>
+                    </item>
+                </customPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <parameters>true</parameters>
+                </enabled>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>testParam</name>
+                            <type>r{broken}</type>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+    </shields>
+</sanwaf>
